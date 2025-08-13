@@ -51,10 +51,10 @@ with Session() as session:
             session.add(fila)
             session.commit()
             session.refresh(fila)
-            return
+            return True
         except:
             session.rollback()
-            raise
+            return False
 
     def filtrar_filas(filters: dict = None, limit: int = 0):
         """
@@ -122,12 +122,12 @@ with Session() as session:
     def pop(id: int):
         fila = session.get(Fila, id)
         if fila is None:
-            return None
+            return False
 
         try:
             session.delete(fila)
             session.commit()
-            return 
+            return True
         except:
             session.rollback()
-            raise
+            return False

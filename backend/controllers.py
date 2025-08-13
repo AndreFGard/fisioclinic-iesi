@@ -1,5 +1,5 @@
-from fastapi import FastAPI
-
+from fastapi import FastAPI, HTTPException
+from repositories.data import *
 from schemas import *
 
 app = FastAPI()
@@ -59,3 +59,25 @@ def cadastro_paciente(cadastro:cadastro_schema):
     "cellphoneCountry": "BR"
     }
     return {}
+
+@app.get("/fila")
+def fila_all():
+    return get_base()
+
+@app.post("fila/filter")
+def filtro_fila(filtros: dict):
+    return filtrar_filas(filtros)
+
+@app.post("/fila")
+def add_fila(c: fila_schema):
+    if(emfileirar(c)):
+        return {"add": "ok"}
+    else:
+        raise HTTPException(status_code=400, detail="Informações faltando ou mal formatadas")
+
+@app.delete("/fila/{id}")
+def pop_fila(id: int):
+    if(pop(id)):
+        return {"removido": "ok"}
+    else:
+        raise HTTPException(status_code=400, detail="ID inexistente")
