@@ -5,6 +5,7 @@ from sqlalchemy.sql import *
 Base = declarative_base()
 
 class Fila(Base):
+    """NAO MUDE SEM MUDAR O MODELO EM SCHEMAS.PY"""
     __tablename__ = "fila"
     id = Column(Integer, primary_key=True, autoincrement=True)
     nome = Column(String, nullable=False)
@@ -18,6 +19,7 @@ class Fila(Base):
     procura = Column(Date, nullable=False)
     situacao = Column(String)
     obs = Column(String)
+    data_procura = Column(String)
 
     def __init__(self, nome, tel1, disciplina, procura, **kwargs):
         # obrigatórios

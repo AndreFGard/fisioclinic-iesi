@@ -1,17 +1,17 @@
-from data import *
+from data import FilaRepository
 
-x = filtrar_filas({"nome": {
+
+r = FilaRepository()
+x = r.filtrar_filas({"nome": {
     "ilike": "%ped%",
 }})
 
 print(x)
 
 print('\n')
-print(get_base())
+print(r.get_base())
 print('\n\n')
 
-editar(1, {
-    "diagnostico": "escoliose"
-})
 
-print(get_base())
+
+print(r.get_base())

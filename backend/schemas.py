@@ -30,6 +30,7 @@ class fila_schema(BaseModel):
     procura: str
     situacao: Optional[str] = None
     obs: Optional[str] = None
+    data_procura: Optional[str] = None
 
 class edicao_schema(BaseModel):
     nome: Optional[str] = None  

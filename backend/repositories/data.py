@@ -1,6 +1,8 @@
-from tabelas import *
+from tabelas import Fila, Base
 import json
 from datetime import date
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy import create_engine,inspect,and_,any_,all_,asc
 
 db = create_engine("sqlite:///fisio.db")
 Session = sessionmaker(bind=db)
@@ -31,32 +33,42 @@ def todict(obj):
             out[c] = v
     return out
 
-with Session() as session:
-    def emfileirar(dados: dict) -> Fila:
+class FilaRepository:
+    def __init__(self, db_url="sqlite:///fisio.db"):
+        self.session = Session()
+        self.db = create_engine(db_url)
+
+    def __del__(self):
+        self.session.close()
+
+
+
+    def emfileirar(self, dados: dict) -> Fila:
         """
         Insere uma instância de Fila no banco a partir de um dicionário.
         - dados: dicionário com todos os campos da tabela (obrigatórios + opcionais)
         todos os campos devem estar com os nomes adequados
         """
-        obrigatorios = ["nome", "tel1", "disciplina", "procura"]
-        for campo in obrigatorios:
-            if campo not in dados:
-                raise ValueError(f"Campo obrigatório '{campo}' faltando")
+        with Session() as session:
+            obrigatorios = ["nome", "tel1", "disciplina", "procura"]
+            for campo in obrigatorios:
+                if campo not in dados:
+                    raise ValueError(f"Campo obrigatório '{campo}' faltando")
 
-        if isinstance(dados["procura"], str):
-            dados["procura"] = date.fromisoformat(dados["procura"])
+            if isinstance(dados["procura"], str):
+                dados["procura"] = date.fromisoformat(dados["procura"])
 
-        try:
-            fila = Fila(**dados)
-            session.add(fila)
-            session.commit()
-            session.refresh(fila)
-            return True
-        except:
-            session.rollback()
-            return False
+            try:
+                fila = Fila(**dados)
+                session.add(fila)
+                session.commit()
+                session.refresh(fila)
+                return
+            except:
+                session.rollback()
+                raise
 
-    def filtrar_filas(filters: dict = None, limit: int = 0):
+    def filtrar_filas(self, filters: dict = None, limit: int = 0):
         """
         Recebe um dicionário de filtros e aplica na tabela de fila
         O dicionário deve conter o nome da coluna como chave
@@ -68,71 +80,73 @@ with Session() as session:
                     "gt": lower_bound
                 }
         """
-        q = session.query(Fila)
-        conditions = []
+        with Session() as session:
+            q = session.query(Fila)
+            conditions = []
 
-        if filters:
-            for field, spec in filters.items():
-                col = getattr(Fila, field)
+            if filters:
+                for field, spec in filters.items():
+                    col = getattr(Fila, field)
 
-                if isinstance(spec, dict):
-                    for op, raw_val in spec.items():
-                        if op not in OPS:
-                            raise ValueError(f"Operador desconhecido: {op}")
-                        val = raw_val
-                        if op == "in" and not isinstance(val, (list, tuple, set)):
-                            val = [val]
+                    if isinstance(spec, dict):
+                        for op, raw_val in spec.items():
+                            if op not in OPS:
+                                raise ValueError(f"Operador desconhecido: {op}")
+                            val = raw_val
+                            if op == "in" and not isinstance(val, (list, tuple, set)):
+                                val = [val]
+                            if col == "procura" and isinstance(val, str):
+                                val = date.fromisoformat(val)
+                            conditions.append(OPS[op](col, val))
+                    else:
+                        #se so tem o elemento ao inves de dict
+                        #é igyaldade
+                        val = spec
                         if col == "procura" and isinstance(val, str):
                             val = date.fromisoformat(val)
-                        conditions.append(OPS[op](col, val))
-                else:
-                    #se so tem o elemento ao inves de dict
-                    #é igyaldade
-                    val = spec
-                    if col == "procura" and isinstance(val, str):
-                        val = date.fromisoformat(val)
-                    conditions.append(col == val)
+                        conditions.append(col == val)
 
-        if conditions:
-            q = q.filter(and_(*conditions))
-        
-        q = q.order_by(asc(Fila.procura))
-        if limit:
-            q = q.limit(limit)
+            if conditions:
+                q = q.filter(and_(*conditions))
 
-        rows = q.all()
-        result = [todict(r) for r in rows]
+            if limit:
+                q = q.limit(limit)
 
-        return json.dumps(result)
+            rows = q.all()
+            result = [todict(r) for r in rows]
+
+            return json.dumps(result)
     
-    def get_id(nome: str):
-        fila = session.query(Fila).filter(Fila.nome == nome).first()
-        if fila:
-            return fila.id
-        return None
+    def get_id(self, nome: str):
+        with Session() as session:
+            fila = session.query(Fila).filter(Fila.nome == nome).first()
+            if fila:
+                return fila.id
+            return None
 
-    def get_base():
+    def get_base(self, ):
         """
         visualização padrão da fila que deve aparecer no site
         ordenado por data de procura
         """
-        q = session.query(Fila).order_by(asc(Fila.procura))
-        rows = q.all()
-        return json.dumps([todict(r) for r in rows])
+        with Session() as session:
+            q = session.query(Fila).order_by(asc(Fila.procura))
+            rows = q.all()
+            return json.dumps([todict(r) for r in rows])
 
-    def pop(id: int):
-        fila = session.get(Fila, id)
-        if fila is None:
-            return False
+    def pop(self, id: int):
+        with Session() as session:
+            fila = session.get(Fila, id)
+            if fila is None:
+                return None
 
-        try:
-            session.delete(fila)
-            session.commit()
-            return True
-        except:
-            session.rollback()
-            return False
-    
+            try:
+                session.delete(fila)
+                session.commit()
+                return 
+            except:
+                session.rollback()
+                raise
     def editar(id: int, updates: dict):
         fila = session.query(Fila).filter(Fila.id == id).first()
         if not fila:
