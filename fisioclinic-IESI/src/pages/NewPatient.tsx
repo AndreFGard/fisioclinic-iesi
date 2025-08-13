@@ -111,9 +111,14 @@ export default function NewPatient() {
     e.preventDefault();
 
     // Validação básica dos campos obrigatórios
-    if (!patientData.fullName || !patientData.birthDate) {
+    if (
+      !patientData.fullName ||
+      !patientData.birthDate ||
+      !patientData.neighborhood ||
+      !patientData.city
+    ) {
       alert(
-        "Por favor, preencha todos os campos obrigatórios na seção de Dados Pessoais."
+        "Por favor, preencha todos os campos obrigatórios na seção de Dados Pessoais e Endereço."
       );
       setTouched((t) => ({ ...t, birthDate: true }));
       return;
