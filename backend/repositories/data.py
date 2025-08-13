@@ -1,8 +1,8 @@
-from tabelas import Fila, Base
+from repositories.tabelas import Fila, Base
 import json
 from datetime import date
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy import create_engine,inspect,and_,any_,all_,asc
+from sqlalchemy import Engine, create_engine,inspect,and_,any_,all_,asc
 
 db = create_engine("sqlite:///fisio.db")
 Session = sessionmaker(bind=db)
@@ -34,14 +34,8 @@ def todict(obj):
     return out
 
 class FilaRepository:
-    def __init__(self, db_url="sqlite:///fisio.db"):
-        self.session = Session()
-        self.db = create_engine(db_url)
-
-    def __del__(self):
-        self.session.close()
-
-
+    def __init__(self, engine:Engine):
+        self.db = engine
 
     def emfileirar(self, dados: dict) -> Fila:
         """

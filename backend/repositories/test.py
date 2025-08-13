@@ -1,7 +1,8 @@
-from data import FilaRepository
+from sqlalchemy import create_engine
+from repositories.data import FilaRepository
 
 
-r = FilaRepository()
+r = FilaRepository(create_engine("sqlite:///fisio.db"))
 x = r.filtrar_filas({"nome": {
     "ilike": "%ped%",
 }})
