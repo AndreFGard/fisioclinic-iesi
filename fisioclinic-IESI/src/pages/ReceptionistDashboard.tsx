@@ -1,24 +1,10 @@
+"use client"
+
 import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
 import NavBar from "@/components/NavBar";
-import { DataTable } from "@/components/table-fila-de-espera/data-table"; // ajuste o caminho
-import { columns, FilaDeEspera } from "@/components/table-fila-de-espera/columns"; // ajuste o caminho
-import { 
-  UserPlus, 
-  Users, 
-  UserCog, 
-  Clock, 
-  Search,
-  Bell,
-  LogOut,
-  Calendar,
-  Phone,
-  Mail
-} from "lucide-react";
+import { FilaDeEsperaTable } from "@/components/table-fila-de-espera/data-table";
+import { columns as columnsFactory, FilaDeEspera } from "@/components/table-fila-de-espera/columns";
 
 async function getData(): Promise<FilaDeEspera[]> {
   return [
@@ -95,13 +81,12 @@ async function getData(): Promise<FilaDeEspera[]> {
   ];
 }
 
-
 const ReceptionistDashboard = () => {
   const [appointments, setAppointments] = useState<FilaDeEspera[]>([]);
 
   useEffect(() => {
     async function fetchData() {
-      const data: FilaDeEspera[] = await getData();
+      const data = await getData();
       setAppointments(data);
     }
     fetchData();
@@ -110,14 +95,16 @@ const ReceptionistDashboard = () => {
   return (
     <div className="min-h-screen bg-background">
       <NavBar setor="Recepção" />
-
       <div className="container mx-auto py-10">
         <Card>
           <CardHeader>
             <CardTitle>Agendamentos</CardTitle>
           </CardHeader>
           <CardContent>
-            <DataTable columns={columns} data={appointments} />
+            <FilaDeEsperaTable 
+              columns={columnsFactory(setAppointments)} 
+              data={appointments} 
+            />
           </CardContent>
         </Card>
       </div>
