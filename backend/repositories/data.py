@@ -1,4 +1,4 @@
-from .tabelas import *
+from tabelas import *
 import json
 from datetime import date
 
@@ -95,7 +95,8 @@ with Session() as session:
 
         if conditions:
             q = q.filter(and_(*conditions))
-
+        
+        q = q.order_by(asc(Fila.procura))
         if limit:
             q = q.limit(limit)
 
@@ -131,3 +132,19 @@ with Session() as session:
         except:
             session.rollback()
             return False
+    
+    def editar(id: int, updates: dict):
+        fila = session.query(Fila).filter(Fila.id == id).first()
+        if not fila:
+            return False
+
+        for key, value in updates.items():
+            if(value == None):
+                continue
+            # converter data se for string e coluna procura
+            if key == "procura" and isinstance(value, str):
+                value = date.fromisoformat(value)
+            setattr(fila, key, value)
+        
+        session.commit()
+        return True

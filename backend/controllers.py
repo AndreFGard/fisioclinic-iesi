@@ -81,3 +81,10 @@ def pop_fila(id: int):
         return {"removido": "ok"}
     else:
         raise HTTPException(status_code=400, detail="ID inexistente")
+    
+@app.put("/fila/{id}")
+def edit_fila(id: int, change: edicao_schema):
+    if(editar(id, change)):
+        return {"editado": "ok"}
+    else:
+        raise HTTPException(status_code=400, detail="ID inexistente")
