@@ -5,3 +5,6 @@ x = filtrar_filas({"nome": {
 }})
 
 print(x)
+
+print('\n')
+print(get_base())

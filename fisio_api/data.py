@@ -103,3 +103,31 @@ with Session() as session:
         result = [todict(r) for r in rows]
 
         return json.dumps(result)
+    
+    def get_id(nome: str):
+        fila = session.query(Fila).filter(Fila.nome == nome).first()
+        if fila:
+            return fila.id
+        return None
+
+    def get_base():
+        """
+        visualização padrão da fila que deve aparecer no site
+        ordenado por data de procura
+        """
+        q = session.query(Fila).order_by(asc(Fila.procura))
+        rows = q.all()
+        return json.dumps([todict(r) for r in rows])
+
+    def pop(id: int):
+        fila = session.get(Fila, id)
+        if fila is None:
+            return None
+
+        try:
+            session.delete(fila)
+            session.commit()
+            return 
+        except:
+            session.rollback()
+            raise
