@@ -1,5 +1,12 @@
 import { useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Link } from "react-router-dom";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -20,24 +27,25 @@ const userTypes: UserTypeOption[] = [
     type: "fisioterapeuta",
     label: "Fisioterapeuta",
     icon: <Stethoscope className="h-5 w-5" />,
-    description: "Acesso completo ao sistema"
+    description: "Acesso completo ao sistema",
   },
   {
     type: "aluno",
     label: "Aluno",
     icon: <GraduationCap className="h-5 w-5" />,
-    description: "Acompanhamento de pacientes"
+    description: "Acompanhamento de pacientes",
   },
   {
     type: "recepcionista",
     label: "Recepcionista",
     icon: <UserCheck className="h-5 w-5" />,
-    description: "Agendamentos e cadastros"
-  }
+    description: "Agendamentos e cadastros",
+  },
 ];
 
 export default function LoginForm() {
-  const [selectedUserType, setSelectedUserType] = useState<UserType>("fisioterapeuta");
+  const [selectedUserType, setSelectedUserType] =
+    useState<UserType>("fisioterapeuta");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -62,7 +70,7 @@ export default function LoginForm() {
           </CardDescription>
         </div>
       </CardHeader>
-      
+
       <CardContent className="space-y-6">
         {/* Seletor de tipo de usuário */}
         <div className="space-y-3">
@@ -82,11 +90,13 @@ export default function LoginForm() {
                 }`}
               >
                 <div className="flex items-center gap-3">
-                  <div className={`p-2 rounded-md ${
-                    selectedUserType === userType.type
-                      ? "bg-primary text-primary-foreground"
-                      : "bg-muted text-muted-foreground"
-                  }`}>
+                  <div
+                    className={`p-2 rounded-md ${
+                      selectedUserType === userType.type
+                        ? "bg-primary text-primary-foreground"
+                        : "bg-muted text-muted-foreground"
+                    }`}
+                  >
                     {userType.icon}
                   </div>
                   <div className="flex-1">
@@ -126,7 +136,7 @@ export default function LoginForm() {
               required
             />
           </div>
-          
+
           <div className="space-y-2">
             <Label htmlFor="password" className="text-sm font-medium">
               Senha
@@ -142,8 +152,8 @@ export default function LoginForm() {
             />
           </div>
 
-          <Button 
-            type="submit" 
+          <Button
+            type="submit"
             className="w-full h-11 bg-primary hover:bg-primary/90 text-primary-foreground font-medium"
           >
             Entrar no Sistema
@@ -154,6 +164,18 @@ export default function LoginForm() {
           <button className="text-sm text-primary hover:text-primary/80 transition-colors">
             Esqueceu sua senha?
           </button>
+        </div>
+
+        <div className="text-center pt-4 border-t">
+          <p className="text-sm text-muted-foreground mb-2">
+            Área administrativa
+          </p>
+          <Link
+            to="/new-patient"
+            className="text-sm text-primary hover:text-primary/80 transition-colors underline"
+          >
+            Cadastrar Novo Paciente
+          </Link>
         </div>
       </CardContent>
     </Card>
