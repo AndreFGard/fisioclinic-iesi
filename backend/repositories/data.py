@@ -51,10 +51,10 @@ with Session() as session:
             session.add(fila)
             session.commit()
             session.refresh(fila)
-            return
+            return True
         except:
             session.rollback()
-            raise
+            return False
 
     def filtrar_filas(filters: dict = None, limit: int = 0):
         """
@@ -95,7 +95,8 @@ with Session() as session:
 
         if conditions:
             q = q.filter(and_(*conditions))
-
+        
+        q = q.order_by(asc(Fila.procura))
         if limit:
             q = q.limit(limit)
 
@@ -122,12 +123,28 @@ with Session() as session:
     def pop(id: int):
         fila = session.get(Fila, id)
         if fila is None:
-            return None
+            return False
 
         try:
             session.delete(fila)
             session.commit()
-            return 
+            return True
         except:
             session.rollback()
-            raise
+            return False
+    
+    def editar(id: int, updates: dict):
+        fila = session.query(Fila).filter(Fila.id == id).first()
+        if not fila:
+            return False
+
+        for key, value in updates.items():
+            if(value == None):
+                continue
+            # converter data se for string e coluna procura
+            if key == "procura" and isinstance(value, str):
+                value = date.fromisoformat(value)
+            setattr(fila, key, value)
+        
+        session.commit()
+        return True
