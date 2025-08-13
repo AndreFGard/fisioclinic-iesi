@@ -14,12 +14,12 @@ class cadastro_schema(BaseModel):
 class fila_schema(BaseModel):
     nome: str  
     tel1: str
-    tel2: Optional[str]         
-    bairro: Optional[str]
-    diagnostico: Optional[str]
-    disciplina: str
-    hospital: Optional[str]
-    doutor: Optional[str]
+    tel2: Optional[str] = None         
+    bairro: Optional[str] = None
+    diagnostico: Optional[str] = None
+    disciplina: str 
+    hospital: Optional[str] = None
+    doutor: Optional[str] = None
     procura: str
-    situacao: Optional[str]
-    obs: Optional[str]
+    situacao: Optional[str] = None
+    obs: Optional[str] = None

@@ -1,4 +1,4 @@
-from tabelas import *
+from .tabelas import *
 import json
 from datetime import date
 

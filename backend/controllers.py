@@ -64,7 +64,7 @@ def cadastro_paciente(cadastro:cadastro_schema):
 def fila_all():
     return get_base()
 
-@app.post("fila/filter")
+@app.post("/fila/filter")
 def filtro_fila(filtros: dict):
     return filtrar_filas(filtros)
 
