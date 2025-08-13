@@ -70,9 +70,16 @@ export function AreaSelect({
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className={cn("h-11 w-full justify-between font-normal", className)}
+          className={cn(
+            "h-11 w-full justify-between font-normal text-primary-foreground hover:text-primary-foreground group",
+            className
+          )}
         >
-          <span className={cn(!display && "text-muted-foreground")}>
+          <span
+            className={cn(
+              !display && "text-muted-foreground group-hover:text-white"
+            )}
+          >
             {display || placeholder}
           </span>
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
