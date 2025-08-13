@@ -1,5 +1,6 @@
 from fastapi import FastAPI, HTTPException
 from repositories.data import *
+from services.rabbitmq_utils import envia_para_fila
 from schemas import *
 
 app = FastAPI()
@@ -10,8 +11,7 @@ def read_root():
 
 @app.post("/cadastro_paciente")
 def cadastro_paciente(cadastro:cadastro_schema):
-    #algumas informaçoes tiveram que ser colocadas em campos improvisados 
-    data = {
+    body = {
     "name":cadastro.nome,
     "birthName": None,
     "flagWhatsapp": False,
@@ -58,7 +58,8 @@ def cadastro_paciente(cadastro:cadastro_schema):
     "acceptMinorPatient": False,
     "cellphoneCountry": "BR"
     }
-    return {}
+    envia_para_fila(body)
+    return {"status": "ok"}
 
 @app.get("/fila")
 def fila_all():
