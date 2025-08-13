@@ -3,13 +3,20 @@ from typing import Optional
 
 class cadastro_schema(BaseModel):
     nome: str  
-    telefone: str         
+    cpf : str | None = None
+    genero : str | None = None
+    dataNascimento: str
+    telefone1: str  
+    telefone2: str | None = None                
     bairro: str
-    diagnostico: str
-    disciplina: str
-    hospital: str
-    doutor: str
+    cidade: str
+    diagnostico: str | None = None
+    disciplina: str 
+    hospital: str | None = None
+    doutor: str | None = None
     dataProcura: str
+    situacao: str
+    observacao: str | None = None
 
 class fila_schema(BaseModel):
     nome: str  
