@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Stethoscope, GraduationCap, UserCheck } from "lucide-react";
 
-type UserType = "medico" | "aluno" | "recepcionista";
+type UserType = "fisioterapeuta" | "aluno" | "recepcionista";
 
 interface UserTypeOption {
   type: UserType;
@@ -17,8 +17,8 @@ interface UserTypeOption {
 
 const userTypes: UserTypeOption[] = [
   {
-    type: "medico",
-    label: "Médico",
+    type: "fisioterapeuta",
+    label: "Fisioterapeuta",
     icon: <Stethoscope className="h-5 w-5" />,
     description: "Acesso completo ao sistema"
   },
@@ -37,7 +37,7 @@ const userTypes: UserTypeOption[] = [
 ];
 
 export default function LoginForm() {
-  const [selectedUserType, setSelectedUserType] = useState<UserType>("medico");
+  const [selectedUserType, setSelectedUserType] = useState<UserType>("fisioterapeuta");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
