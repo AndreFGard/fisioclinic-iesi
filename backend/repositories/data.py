@@ -1,4 +1,4 @@
-from tabelas import *
+from .tabelas import *
 import json
 from datetime import date
 
@@ -103,7 +103,7 @@ with Session() as session:
         rows = q.all()
         result = [todict(r) for r in rows]
 
-        return json.dumps(result)
+        return result
     
     def get_id(nome: str):
         fila = session.query(Fila).filter(Fila.nome == nome).first()
@@ -118,7 +118,7 @@ with Session() as session:
         """
         q = session.query(Fila).order_by(asc(Fila.procura))
         rows = q.all()
-        return json.dumps([todict(r) for r in rows])
+        return [todict(r) for r in rows]
 
     def pop(id: int):
         fila = session.get(Fila, id)
