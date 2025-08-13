@@ -13,6 +13,9 @@ function Calendar({
   showOutsideDays = true,
   ...props
 }: CalendarProps) {
+  const captionLayout = (props as any)?.captionLayout as string | undefined;
+  const isDropdownCaption =
+    typeof captionLayout === "string" && captionLayout.includes("dropdown");
   return (
     <DayPicker
       showOutsideDays={showOutsideDays}
@@ -21,11 +24,17 @@ function Calendar({
         months: "flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0",
         month: "space-y-4",
         caption: "flex justify-center pt-1 relative items-center",
-        caption_label: "text-sm font-medium",
-        nav: "space-x-1 flex items-center",
+        caption_label: isDropdownCaption ? "sr-only" : "text-sm font-medium",
+        caption_dropdowns: "flex items-center gap-2",
+        dropdown:
+          "h-8 rounded-md border border-input bg-background px-2 pr-6 text-sm shadow-sm outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+        dropdown_month: "w-[8.5rem] capitalize",
+        dropdown_year: "w-[5.75rem] tabular-nums",
+        dropdown_icon: "ml-1 opacity-60",
+        nav: isDropdownCaption ? "hidden" : "space-x-1 flex items-center",
         nav_button: cn(
           buttonVariants({ variant: "outline" }),
-          "h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100"
+          "h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
         ),
         nav_button_previous: "absolute left-1",
         nav_button_next: "absolute right-1",
@@ -52,8 +61,12 @@ function Calendar({
         ...classNames,
       }}
       components={{
-        IconLeft: ({ ..._props }) => <ChevronLeft className="h-4 w-4" />,
-        IconRight: ({ ..._props }) => <ChevronRight className="h-4 w-4" />,
+        IconLeft: ({ ..._props }) => (
+          <ChevronLeft aria-label="Mês anterior" className="h-4 w-4" />
+        ),
+        IconRight: ({ ..._props }) => (
+          <ChevronRight aria-label="Próximo mês" className="h-4 w-4" />
+        ),
       }}
       {...props}
     />
