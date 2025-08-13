@@ -44,3 +44,12 @@ class edicao_schema(BaseModel):
     procura: Optional[str] = None
     situacao: Optional[str] = None
     obs: Optional[str] = None
+
+class Prontuario(BaseModel):
+    id: Optional[int] = None
+    user_id: Optional[int] = None
+    conteudo: Optional[str|dict] = None
+    eh_formato: bool = False
+    formato_instanciado: Optional[int] = None
+
+Prontuario(id=1,user_id=1,conteudo='{"oi":"eae"}', formato_instanciado=2)
