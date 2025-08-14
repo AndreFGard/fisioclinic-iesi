@@ -49,13 +49,13 @@ export async function createPatient(patient: PatientData){
             },
             body: JSON.stringify(patient),
         });
-
+        console.log(JSON.stringify(response))
         if (!response.ok) {
             const errorMessage = `Erro ao criar o paciente: ${response.status} ${response.statusText}`;
             throw new Error(errorMessage);
         }
 
-        return response;
+        return await response.json();
     } catch (error) {
         console.error("Erro ao criar o paciente:", error);
         throw error;

@@ -81,16 +81,20 @@ def cadastro_paciente(cadastro:cadastro_schema):
     "acceptMinorPatient": False,
     "cellphoneCountry": "BR"
     }
+    import random
+    cd = dict(cadastro)
+    cd["id"] = random.randint(0,1000000*1000)
     try:
         response = envia_para_fila_rpc(body)
+        idp = response["patient"]["id"]
+        cd["id"] = idp
     except:
         print("rabbit mq error")
-    idp = response["patient"]["id"]
-    cd = dict(cadastro)
-    cd["id"] = idp
-    create_paciente(cd)
+    
+    
+    id = create_paciente(cd)
     response = 200
-    return {"resposta": response}
+    return {"id": id}
 
 @app.get("/buscar_paciente/{id_paciente}")
 def buscar_paciente(id_paciente: str):

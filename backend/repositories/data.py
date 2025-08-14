@@ -334,16 +334,14 @@ with Session() as session:
     # ---------- INSERÇÕES ----------
 
     def create_paciente(etc: dict):
-
-        try:
+        with Session() as session:
             p = Paciente(**etc)
             session.add(p)
             session.commit()
             session.refresh(p)
-            return True
-        except:
-            session.rollback()
-            return False
+            return p.id
+            
+
 
 
     def create_agendamento(agendamento_id: int, nome: str, user_id: str, paciente_id: int):

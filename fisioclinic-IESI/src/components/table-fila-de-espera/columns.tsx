@@ -57,7 +57,7 @@ export const columns = (
       );
     },
     cell: ({ row }) => {
-      const rawDate = row.getValue("data da procura") as string;
+      const rawDate = row.getValue("procura") as string;
       if (!rawDate) return`${(row.getValue('procura'))}`;
       const date = new Date(rawDate);
       return (
