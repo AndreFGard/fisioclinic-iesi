@@ -81,8 +81,10 @@ export const columns = (
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           className={`text-center transition-colors duration-200 ${
-            column.getIsSorted() ? "text-black-600" : "text-black-600 hover:text-blue-600"
-          } hover:bg-transparent focus:bg-transparent active:bg-transparent text-black-600`}
+            column.getIsSorted()
+              ? "text-blue-700 font-semibold"
+              : "text-gray-700 hover:text-blue-600 hover:bg-gray-100"
+          } rounded-md px-2 py-1 flex items-center justify-start gap-1`}
         >
           Data da Procura
           <ArrowUpDown className="ml-2 h-4 w-4" />
@@ -161,8 +163,10 @@ export const columns = (
         variant="ghost"
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         className={`text-center transition-colors duration-200 ${
-          column.getIsSorted() ? "text-black-600" : "text-black-600 hover:text-blue-600"
-        } hover:bg-transparent focus:bg-transparent active:bg-transparent text-black-600`}
+          column.getIsSorted()
+            ? "text-blue-700 font-semibold"
+            : "text-gray-700 hover:text-blue-600 hover:bg-gray-100"
+        } rounded-md px-2 py-1 flex items-center justify-start gap-1`}
       >
         Prioridade
         <ArrowUpDown className="ml-2 h-4 w-4" />
