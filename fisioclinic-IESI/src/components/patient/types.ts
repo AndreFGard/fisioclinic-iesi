@@ -14,7 +14,7 @@ export interface PatientData {
 
   // Dados clínicos
   diagnostico: string;
-  area: string;
+  disciplina: string;
   hospital: string;
   doutor: string;
   procura: Date | undefined;
