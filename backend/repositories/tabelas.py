@@ -68,7 +68,7 @@ class Prontuario(Base):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     titulo = Column(String, nullable=False)
-    conteudo = Column(Text, nullable=False)
+    conteudo = Column(JSON, nullable=False)
     grupo_id = Column(Integer, ForeignKey("grupo.id"), nullable=True)
     dono_id = Column(String, ForeignKey("user.id"), nullable=False)
     #todo: adicionar paciente id quando tiver tabeka de 

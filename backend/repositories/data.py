@@ -215,7 +215,7 @@ with Session() as session:
         
         return [todict(r) for r in grupos]
     
-    def create_prontuario(titulo: str, conteudo: str, dono_id: str, grupo_id: int = None, check_membership: bool = False):
+    def create_prontuario(titulo: str, conteudo: Any, dono_id: str, grupo_id: int = None, check_membership: bool = False):
         dono = session.get(User, dono_id)
         if dono is None:
             raise ValueError(f"Dono (User) com id='{dono_id}' não encontrado")

@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import Optional
+from typing import Optional, Any
 
 class cadastro_schema(BaseModel):
     nome: str  
@@ -34,7 +34,7 @@ class add_schema(BaseModel):
 
 class pront_schema(BaseModel):
     titulo: str
-    conteudo: str
+    conteudo: Any
     user: str
     grupo: Optional[int] = None
 
