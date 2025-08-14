@@ -104,8 +104,9 @@ def agendar_paciente(agendamento: agendamento_schema):
 from placeholders import filaData
 @app.get("/fila")
 def fila_all():
-    return filaData
-    return get_base()
+    x =  get_base()
+    print(x)
+    return x
 
 @app.post("/fila/filter")
 def filtro_fila(filtros: dict):
@@ -113,7 +114,7 @@ def filtro_fila(filtros: dict):
 
 @app.post("/fila")
 def add_fila(c: fila_schema):
-    if(emfileirar(c)):
+    if(emfileirar(c.model_dump())):
         return {"add": "ok"}
     else:
         raise HTTPException(status_code=400, detail="Informações faltando ou mal formatadas")
@@ -126,10 +127,8 @@ def pop_fila(id: int):
         raise HTTPException(status_code=400, detail="ID inexistente")
     
 @app.put("/fila/{id}")
-def edit_fila(id: int, change: edicao_schema):
-    print(change)
-    return 200
-    if(editar(id, change)):
+def edit_fila(id: int, new_data: fila_schema):
+    if(editar(id, new_data.model_dump())):
         return {"editado": "ok"}
     else:
         raise HTTPException(status_code=400, detail="ID inexistente")
@@ -142,6 +141,7 @@ def patch_fila(id:int, change: dict):
 
 #rota catch all pra produção
 from pathlib import Path
+from placeholders import filaData
 build_path = Path(__file__).parent / "dist"
 
 try:

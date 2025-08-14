@@ -1,5 +1,5 @@
 from datetime import datetime
-
+from schemas import fila_schema
 # Dados convertidos para o formato do banco e schemas (fila_schema/Fila)
 
 filaData = [
@@ -73,3 +73,7 @@ filaData = [
         "situacao": "Concluído",
         "obs": None,
     },]
+
+fila_schemas = [fila_schema(**{k: v for k, v in item.items()}) for item in filaData[1:]]
+# from repositories.data import emfileirar
+# [emfileirar(a.model_dump()) for a in fila_schemas]

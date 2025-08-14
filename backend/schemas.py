@@ -19,6 +19,7 @@ class cadastro_schema(BaseModel):
     observacao: str | None = None
 
 class fila_schema(BaseModel):
+    id: Optional[int]
     nome: str  
     tel1: str
     tel2: Optional[str] = None         
@@ -31,18 +32,7 @@ class fila_schema(BaseModel):
     situacao: Optional[str] = None
     obs: Optional[str] = None
 
-class edicao_schema(BaseModel):
-    nome: Optional[str] = None  
-    tel1: Optional[str] = None
-    tel2: Optional[str] = None         
-    bairro: Optional[str] = None
-    diagnostico: Optional[str] = None
-    disciplina: Optional[str] = None
-    hospital: Optional[str] = None
-    doutor: Optional[str] = None
-    procura: Optional[str] = None
-    situacao: Optional[str] = None
-    obs: Optional[str] = None
+
 class ScheduleItem(BaseModel):
     id: int
     idScheduleReturn: Optional[int] = None
