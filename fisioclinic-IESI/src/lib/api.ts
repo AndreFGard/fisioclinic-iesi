@@ -4,8 +4,8 @@ export type FilaDeEspera = {
   id: string
   nome: string
   idade: number
-  "telefone-1": string
-  "telefone-2": string
+  tel1: string
+  tel2: string
   bairro: string
   diagnostico: string
   disciplina: string

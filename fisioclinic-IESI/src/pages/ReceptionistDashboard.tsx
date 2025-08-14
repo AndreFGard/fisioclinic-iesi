@@ -45,8 +45,8 @@ const placeholderAppointments = [{
   id: "1",
   nome: "Ana DO PLACEHOLDER",
   idade: 28,
-  "telefone-1": "(11) 91234-5678",
-  "telefone-2": "(11) 99876-5432",
+  "tel1": "(11) 91234-5678",
+  "tel2": "(11) 99876-5432",
   bairro: "Centro",
   diagnostico: "Fratura no braço",
   disciplina: "Ortopedia",
@@ -76,8 +76,8 @@ const ReceptionistDashboard = () => {
   // Filtragem por nome ou telefones
   const filteredAppointments = appointments.filter(patient =>
     patient.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    patient["telefone-1"].includes(searchTerm) ||
-    patient["telefone-2"].includes(searchTerm)
+    patient["tel1"].includes(searchTerm) ||
+    patient["tel2"].includes(searchTerm)
   );
 
   return (

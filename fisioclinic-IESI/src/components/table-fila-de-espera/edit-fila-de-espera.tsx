@@ -48,13 +48,13 @@ export function EditPatientDialog({ patient, setChange }: { patient: FilaDeEsper
             placeholder="Idade"
           />
           <Input
-            value={editedPatient["telefone-1"]}
-            onChange={(e) => handleInputChange("telefone-1", e.target.value)}
+            value={editedPatient["tel1"]}
+            onChange={(e) => handleInputChange("tel1", e.target.value)}
             placeholder="Telefone 1"
           />
           <Input
-            value={editedPatient["telefone-2"]}
-            onChange={(e) => handleInputChange("telefone-2", e.target.value)}
+            value={editedPatient["tel2"]}
+            onChange={(e) => handleInputChange("tel2", e.target.value)}
             placeholder="Telefone 2"
           />
           <Input

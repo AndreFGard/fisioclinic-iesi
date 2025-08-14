@@ -6,8 +6,8 @@ class cadastro_schema(BaseModel):
     cpf : str | None = None
     genero : str | None = None
     dataNascimento: str
-    telefone1: str  
-    telefone2: str | None = None                
+    tel1: str  
+    tel2: str | None = None                
     bairro: str
     cidade: str
     diagnostico: str | None = None
