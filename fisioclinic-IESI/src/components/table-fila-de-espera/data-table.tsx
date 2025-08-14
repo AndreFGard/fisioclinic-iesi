@@ -15,15 +15,20 @@ import {
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { WaitingQueueRowChange } from "./columns"
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
+  changesLog: WaitingQueueRowChange[],
+  setChangesLog: React.Dispatch<React.SetStateAction<WaitingQueueRowChange[]>>
 }
 
 export function FilaDeEsperaTable<TData, TValue>({
   columns,
   data,
+  changesLog,
+  setChangesLog
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
@@ -77,6 +82,14 @@ export function FilaDeEsperaTable<TData, TValue>({
           <option value="Não compareceu">Não compareceu</option>
           <option value="Não conseguimos contato">Não conseguimos contato</option>
         </select>
+
+        <Button
+          onClick={() => console.log("Salvando modificações...")}
+          disabled={changesLog.length === 0} // Desabilita o botão se não houver alterações
+          className="bg-blue-600 text-white hover:bg-blue-700"
+        >
+          Salvar modificações ({changesLog.length})
+        </Button>
       </div>
 
       {/* TABELA */}

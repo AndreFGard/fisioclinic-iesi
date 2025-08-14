@@ -4,13 +4,40 @@ import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import NavBar from "@/components/NavBar";
 import { FilaDeEsperaTable } from "@/components/table-fila-de-espera/data-table";
-import { columns as columnsFactory, FilaDeEspera } from "@/components/table-fila-de-espera/columns";
+import { columns as columnsFactory, FilaDeEspera, WaitingQueueRowChange } from "@/components/table-fila-de-espera/columns";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react"; // ou o ícone que você estiver usando
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { UserPlus } from "lucide-react";
 
+
+const CommitChangesButton = ({ trigger }) => {
+  const [data, setData] = useState(null);
+
+  useEffect(() => {
+    // Função para buscar ou atualizar dados
+    async function fetchData() {
+      console.log("Atualizando porque 'trigger' mudou:", trigger);
+      const response = await fetch(`/api/data?param=${trigger}`);
+      const result = await response.json();
+      setData(result);
+    }
+
+    fetchData();
+  }, [trigger]); // O efeito será executado sempre que 'trigger' mudar
+
+  return (
+    <div>
+      <h1>Dados Atualizados</h1>
+      {data ? (
+        <pre>{JSON.stringify(data, null, 2)}</pre>
+      ) : (
+        <p>Carregando...</p>
+      )}
+    </div>
+  );
+};
 
 // Função para buscar dados (simulação de API)
 async function getData(): Promise<FilaDeEspera[]> {
@@ -372,6 +399,9 @@ async function getData(): Promise<FilaDeEspera[]> {
 const ReceptionistDashboard = () => {
   const [appointments, setAppointments] = useState<FilaDeEspera[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [changesLog, setChangesLog] = useState<WaitingQueueRowChange[]>([]);
+  const logRowChange = (c: WaitingQueueRowChange) => setChangesLog([...changesLog, c])
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -424,8 +454,10 @@ const ReceptionistDashboard = () => {
           </CardHeader>
           <CardContent>
             <FilaDeEsperaTable
-              columns={columnsFactory(setAppointments)}
+              columns={columnsFactory(setAppointments,logRowChange)}
               data={filteredAppointments}
+              changesLog={changesLog}
+              setChangesLog={setChangesLog}
             />
           </CardContent>
         </Card>

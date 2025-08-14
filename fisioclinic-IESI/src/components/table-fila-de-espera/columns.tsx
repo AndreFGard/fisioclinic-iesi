@@ -22,6 +22,12 @@ export type FilaDeEspera = {
   situacao: string
 }
 
+export type WaitingQueueRowChange = {
+  id: string
+  fieldName: string
+  newValue: any
+}
+
 function handleEdit(patient: FilaDeEspera) {
   console.log("Editar paciente:", patient);
 }
@@ -56,7 +62,8 @@ const equalsFilter = (row: any, columnId: string, filterValue: string) => {
 }
 
 export const columns = (
-  setData: React.Dispatch<React.SetStateAction<FilaDeEspera[]>>
+  setData: React.Dispatch<React.SetStateAction<FilaDeEspera[]>>,
+  logRowChange: (change: WaitingQueueRowChange) => void
 ): ColumnDef<FilaDeEspera>[] => [
     { accessorKey: "nome", header: "Nome" },
     {
@@ -137,6 +144,14 @@ export const columns = (
               item.id === row.original.id ? { ...item, situacao: novoStatus } : item
             )
           );
+
+          logRowChange({
+            id: row.original.id, // Log the row ID
+            fieldName: "situacao", // Log the field name
+            newValue: novoStatus, // Log the new value
+          });
+
+          console.log(`row id is ${row.original.id}`)
         };
 
         return (
