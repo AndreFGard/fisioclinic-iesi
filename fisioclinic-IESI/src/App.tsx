@@ -9,6 +9,7 @@ import ReceptionistDashboard from "./pages/ReceptionistDashboard";
 import NewPatient from "./pages/NewPatient";
 import Patient from "./pages/Patient";
 import Consultation from "./pages/Consultation";
+import ScrollToTop from "./components/ScrollToTop";
 
 const queryClient = new QueryClient();
 
@@ -18,18 +19,19 @@ const App = () => (
       <Toaster />
       <Sonner />
       <Router>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route
-            path="/receptionist-dashboard"
-            element={<ReceptionistDashboard />}
-          />
-          <Route path="/new-patient" element={<NewPatient />} />
-          <Route path="/patient/:id" element={<Patient />} />
-          <Route path="/consultation/:id" element={<Consultation />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <ScrollToTop />
+          <Routes>
+            <Route path="/" element={<Index />} />
+            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+            <Route
+              path="/receptionist-dashboard"
+              element={<ReceptionistDashboard />}
+            />
+            <Route path="/new-patient" element={<NewPatient />} />
+            <Route path="/patient/:id" element={<Patient />} />
+            <Route path="/consultation/:id" element={<Consultation />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
       </Router>
     </TooltipProvider>
   </QueryClientProvider>
