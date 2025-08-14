@@ -22,11 +22,7 @@ export type FilaDeEspera = {
   situacao: string
 }
 
-export type WaitingQueueRowChange = {
-  id: string
-  fieldName: string
-  newValue: any
-}
+
 
 function handleEdit(patient: FilaDeEspera) {
   console.log("Editar paciente:", patient);
