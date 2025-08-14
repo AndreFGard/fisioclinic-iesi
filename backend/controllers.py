@@ -3,8 +3,9 @@ from fastapi import FastAPI, File, HTTPException,Body
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from repositories.data import *
-from services.rabbitmq_utils import envia_para_fila_rpc
+from services.rabbitmq_utils import *
 from services.consumidor_cadastro import iniciar_consumidor
+from services.consumidor_get_paciente import iniciar_consumidor_busca_paciente
 from schemas import *
 
 app = FastAPI()   
@@ -14,8 +15,7 @@ import threading
 @app.on_event("startup")
 def startup_event():
     threading.Thread(target=iniciar_consumidor, daemon=True).start()
-
-
+    threading.Thread(target=iniciar_consumidor_busca_paciente, daemon=True).start()
 
 @app.post("/cadastro_paciente")
 def cadastro_paciente(cadastro:cadastro_schema):
@@ -68,6 +68,11 @@ def cadastro_paciente(cadastro:cadastro_schema):
     }
     response = envia_para_fila_rpc(body)
     return {"resposta": response}
+
+@app.get("/buscar_paciente/{id_paciente}")
+def buscar_paciente(id_paciente: str):
+    resposta = envia_para_fila_rpc_busca_paciente(id_paciente)
+    return resposta
 
 @app.post("/agendar_paciente")
 def agendar_paciente(agendamento: agendamento_schema):

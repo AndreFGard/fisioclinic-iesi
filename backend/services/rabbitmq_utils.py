@@ -44,3 +44,46 @@ def envia_para_fila_rpc(paciente_data: dict):
     connection.close()
 
     return response_data.get("body")
+
+def envia_para_fila_rpc_busca_paciente(id_paciente: str):
+    params = pika.URLParameters(RABBITMQ_URL)
+    connection = pika.BlockingConnection(params)
+    channel = connection.channel()
+
+    # Fila exclusiva para resposta
+    result = channel.queue_declare(queue='', exclusive=True)
+    callback_queue = result.method.queue
+
+    corr_id = str(uuid.uuid4())
+    response_data = {}
+
+    def on_response(ch, method, props, body):
+        if props.correlation_id == corr_id:
+            try:
+                response_data["body"] = json.loads(body)
+            except json.JSONDecodeError:
+                response_data["body"] = body.decode()
+            ch.stop_consuming()
+
+    channel.basic_consume(
+        queue=callback_queue,
+        on_message_callback=on_response,
+        auto_ack=True
+    )
+
+    # Publica o ID como mensagem
+    channel.basic_publish(
+        exchange='',
+        routing_key='pacientes_get',
+        body=json.dumps({"idPaciente": id_paciente}),
+        properties=pika.BasicProperties(
+            reply_to=callback_queue,
+            correlation_id=corr_id
+        )
+    )
+
+    # Aguarda resposta
+    channel.start_consuming()
+    connection.close()
+
+    return response_data.get("body")
