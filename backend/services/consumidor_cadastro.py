@@ -31,8 +31,8 @@ def iniciar_consumidor():
             print("trying rabbitmq connection again")
             time.sleep(1)
     if not connection:
-        print("giving up")
-        exit(1)
+        print("giving up: CONSUMER IS OFF")
+        return False
     print("RABBIMQ CONNECTED")
     channel = connection.channel()
     channel.queue_declare(queue='pacientes', durable=True)
