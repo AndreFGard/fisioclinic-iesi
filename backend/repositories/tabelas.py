@@ -94,13 +94,31 @@ class Prontuario(Base):
 
 class Paciente(Base):
     __tablename__ = "paciente"
+    '''
+    class cadastro_schema(BaseModel):
+    nome: str  
+    cpf : str | None = None
+    genero : str | None = None
+    nascimento: str | date
+    tel1: str  
+    tel2: str | None = None                
+    bairro: str
+    cidade: str
+    diagnostico: str | None = None
+    disciplina: str 
+    hospital: str | None = None
+    doutor: str | None = None
+    procura: str
+    situacao: str
+    obs: str | None = None
+    '''
     id = Column(Integer, primary_key=True)
     nome = Column(String, nullable=False)
     cpf = Column(String)
     genero = Column(String)
     nascimento = Column(Date)
-    telefone1 = Column(String)
-    telefone2 = Column(String)
+    tel1 = Column(String)
+    tel2 = Column(String)
     bairro = Column(String)
     cidade = Column(String)
     diagnostico = Column(String)
@@ -116,41 +134,10 @@ class Paciente(Base):
     agendamentos = relationship("Agendamento", back_populates="paciente")
     prontuarios = relationship("Prontuario", back_populates="paciente")
 
-    def __init__(
-        self,
-        nome: str,
-        cpf: str = None,
-        genero: str = None,
-        nascimento: Date = None,
-        telefone1: str = None,
-        telefone2: str = None,
-        tel1: str = None,
-        tel2: str = None,
-        bairro: str = None,
-        cidade: str = None,
-        diagnostico: str = None,
-        disciplina: str = None,
-        hospital: str = None,
-        doutor: str = None,
-        procura: str = None,
-        situacao: str = None,
-        obs: str = None
-    ):
-        self.nome = nome
-        self.cpf = cpf
-        self.genero = genero
-        self.nascimento = nascimento
-        self.telefone1 = telefone1 or tel1
-        self.telefone2 = telefone2 or tel2
-        self.bairro = bairro
-        self.cidade = cidade
-        self.diagnostico = diagnostico
-        self.disciplina = disciplina
-        self.hospital = hospital
-        self.doutor = doutor
-        self.procura = procura
-        self.situacao = situacao
-        self.obs = obs
+    def __init__(self, **kwargs):
+        for key, value in kwargs.items():
+            if hasattr(self, key):
+                setattr(self, key, value)
 
 class Agendamento(Base):
     __tablename__ = "agendamento"

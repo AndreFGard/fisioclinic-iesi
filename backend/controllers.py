@@ -162,6 +162,12 @@ def new_pront(u: pront_schema):
         raise HTTPException(status_code=400, detail="Grupo não existe ou não é membro")
     
 
+@app.post("/user/new")
+def new_user(u: user_schema):
+    if(create_user(u.username, u.senha, u.email)):
+        return {"criado": "ok"}
+    else:
+        raise HTTPException(status_code=400, detail="Usuário já existe")
 
 @app.post("/grupo/new")
 def new_user(u: grupo_schema):

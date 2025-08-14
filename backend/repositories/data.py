@@ -1,4 +1,4 @@
-from repositories.tabelas import *
+from .tabelas import *
 import json
 from datetime import date
 from schemas import fila_schema
@@ -333,21 +333,10 @@ with Session() as session:
         return [todict(r) for r in aa]
     # ---------- INSERÇÕES ----------
 
-    def create_paciente(id, nome, cpf, genero, nascimento, telefone1, telefone2,
-                    bairro, cidade, diagnostico, disciplina, hospital, doutor,
-                    procura, situacao, obs):
-        """
-        Cria (ou retorna existente) um Paciente com PK = id.
-        Usa EXATAMENTE o construtor definido na classe Paciente.
-        """
-        existing = session.get(Paciente, id)
-        if existing:
-            return True
+    def create_paciente(etc: dict):
 
         try:
-            p = Paciente(id, nome, cpf, genero, nascimento, telefone1, telefone2,
-                        bairro, cidade, diagnostico, disciplina, hospital, doutor,
-                        procura, situacao, obs)
+            p = Paciente(**etc)
             session.add(p)
             session.commit()
             session.refresh(p)
