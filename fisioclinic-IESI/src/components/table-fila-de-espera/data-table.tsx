@@ -75,13 +75,21 @@ export function FilaDeEsperaTable<TData, TValue>({
             table.getColumn("situacao")?.setFilterValue(e.target.value)
           }
         >
-          <option value="">Todas as situações</option>
-          <option value="Fila de espera">Fila de espera</option>
-          <option value="Em tratamento">Em tratamento</option>
-          <option value="Triagem">Triagem</option>
-          <option value="Concluído">Concluído</option>
-          <option value="Não compareceu">Não compareceu</option>
-          <option value="Não conseguimos contato">Não conseguimos contato</option>
+          <option value="">Todas as disciplinas</option>
+          <option value="Ortopedia">Ortopédica</option>
+          <option value="Traumatologia">Traumatológica</option>
+          <option value="Cardiologia">Cardiologia / Cardiovascular</option>
+          <option value="Pneumologia">Pneumologia</option>
+          <option value="Neurologia">Neurológica</option>
+          <option value="Pediatria">Pediátrica</option>
+          <option value="Geriatrica">Geriátrica</option>
+          <option value="Desportiva">Desportiva / Esportiva</option>
+          <option value="Oncologica">Oncológica</option>
+          <option value="Uroginecologica">Uroginecológica / Pélvica</option>
+          <option value="Dermatofuncional">Dermatofuncional</option>
+          <option value="Ocupacional">Ocupacional / Ergonomia</option>
+          <option value="Aquatica">Aquática</option>
+          <option value="Fisioterapia">Fisioterapia</option>
         </select>
 
         {/* BOTAO de salvar modificacoes*/ }

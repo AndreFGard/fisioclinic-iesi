@@ -23,7 +23,7 @@ const Index = () => {
       {/* Footer com informações da clínica */}
       <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 text-center">
         <p className="text-sm text-muted-foreground">
-          © 2024 FisioClínica - Sistema de Gestão
+          © 2025 Clínica Escola de Fisioterapia da UFPE - Sistema de Gestão
         </p>
       </div>
     </div>
