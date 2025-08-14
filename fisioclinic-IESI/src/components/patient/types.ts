@@ -37,7 +37,7 @@ export interface DocumentRecord {
   type: "atestado" | "declaracao" | "receita" | "exame" | "relatorio";
   name: string;
   date: Date;
-  downloadUrl?: string;
+  url?: string;
 }
 
 export interface MedicalRecord {

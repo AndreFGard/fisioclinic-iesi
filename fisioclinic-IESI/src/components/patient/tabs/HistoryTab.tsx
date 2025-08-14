@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   Card,
   CardContent,
@@ -10,12 +11,24 @@ import { Badge } from "@/components/ui/badge";
 import { Calendar, Download, Eye, History } from "lucide-react";
 import { ConsultationRecord } from "../types";
 import { getDocumentTypeIcon, getDocumentTypeName, formatDate } from "../utils";
+import examplePdf from "@/assets/pdfs/example.pdf";
 
 interface HistoryTabProps {
   consultations: ConsultationRecord[];
 }
 
 export default function HistoryTab({ consultations }: HistoryTabProps) {
+  const [viewingPdf, setViewingPdf] = useState<string | null>(null);
+
+  const handleDownload = (url: string, filename: string) => {
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", filename);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
     <Card className="bg-card/80 backdrop-blur-sm border-0 shadow-medical">
       <CardHeader className="p-4 sm:p-6">
@@ -104,16 +117,48 @@ export default function HistoryTab({ consultations }: HistoryTabProps) {
                             </div>
                           </div>
                           <div className="flex items-center gap-1">
-                            <Button size="sm" variant="ghost">
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              onClick={() =>
+                                setViewingPdf(
+                                  viewingPdf === document.id
+                                    ? null
+                                    : document.id
+                                )
+                              }
+                            >
                               <Eye className="h-4 w-4" />
                             </Button>
-                            <Button size="sm" variant="ghost">
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              onClick={() =>
+                                handleDownload(examplePdf, document.name)
+                              }
+                            >
                               <Download className="h-4 w-4" />
                             </Button>
                           </div>
                         </div>
                       ))}
                     </div>
+                    {viewingPdf &&
+                      consultation.documents.some(
+                        (d) => d.id === viewingPdf
+                      ) && (
+                        <div className="mt-4">
+                          <iframe
+                            src={examplePdf}
+                            title={
+                              consultation.documents.find(
+                                (d) => d.id === viewingPdf
+                              )?.name
+                            }
+                            className="w-full h-[600px] rounded-md border"
+                          />
+                        </div>
+                      )}
                   </div>
                 )}
               </CardContent>
