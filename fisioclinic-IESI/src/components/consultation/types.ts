@@ -43,6 +43,7 @@ export interface TemplateField {
   rows?: string[];
   columns?: string[];
   rowHeader?: boolean;
+  pdfUrl?: string;
 }
 
 export interface PatientData {

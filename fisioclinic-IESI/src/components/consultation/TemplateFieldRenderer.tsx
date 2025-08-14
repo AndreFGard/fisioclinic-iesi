@@ -255,9 +255,20 @@ export function TemplateFieldRenderer({
       }
 
       case "toggle": {
+        const pdfUrl = (field as any).pdfUrl as string | undefined;
         return isToggleOpen ? (
-          <div className="mt-2 p-3 border border-gray-200 rounded-lg bg-gray-50 text-xs sm:text-sm whitespace-pre-wrap overflow-x-auto">
-            {(field as any).content}
+          <div className="mt-2 p-3 border border-gray-200 rounded-lg bg-gray-50 text-xs sm:text-sm">
+            {pdfUrl ? (
+              <iframe
+                src={pdfUrl}
+                title={field.label}
+                className="w-full h-[600px] rounded"
+              />
+            ) : (
+              <div className="text-muted-foreground text-xs sm:text-sm">
+                Arquivo não disponível.
+              </div>
+            )}
           </div>
         ) : null;
       }

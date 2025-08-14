@@ -1,5 +1,8 @@
 import { TemplateOption } from "./types";
 import escala_ashworth from "@/assets/escala-ashworth.png";
+import bodyFunctionsPDF from "@/assets/pdfs/Funções_Corporais-Lista_de_Deficiências.pdf";
+import appendix1PDF from "@/assets/pdfs/Apêndice_1-Atividades_Fundamentais.pdf";
+import appendix2PDF from "@/assets/pdfs/Apêndice_2-Avaliação_da_Marcha.pdf";
 
 // Templates por área da clínica
 export const clinicTemplates: TemplateOption[] = [
@@ -333,7 +336,7 @@ export const clinicTemplates: TemplateOption[] = [
       },
 
       // Tabela: Objetivos (Curto / Médio / Longo)
-      
+
       {
         id: "treatment_objectives_table",
         type: "table",
@@ -350,7 +353,7 @@ export const clinicTemplates: TemplateOption[] = [
         label: "Reteste para o nível de atividade e estrutural",
       },
       // Tabela: Reteste (Datas 1..4) para duas linhas
-      
+
       {
         id: "retest_activity_structural_table",
         type: "table",
@@ -382,7 +385,7 @@ export const clinicTemplates: TemplateOption[] = [
       },
 
       // Tabela: Plano de tratamento detalhado
-      
+
       {
         id: "detailed_treatment_plan_table",
         type: "table",
@@ -404,164 +407,24 @@ export const clinicTemplates: TemplateOption[] = [
         placeholder:
           "Registre aqui a evolução do paciente ao longo do tratamento",
       },
-
-      // Conteúdos adicionais (renderizados como botão toggle)
-      
+      // Conteúdos adicionais (renderizados como botão toggle com PDF)
       {
         id: "body_functions_deficiencies",
         type: "toggle",
         label: "Funções Corporais – Lista de deficiências",
-        content: `1.	Mobilidade Passiva – Amplitude de Movimento (ADM)
-- Muscular
-o	Encurtamento estrutural/funcional
-o	Tônus dependente (ver 6.)
-- Tecido conectivo, tecidos conectivos (fáscia, cápsula articular etc)
-- Neural
-- Pele (tecido cicatricial)
-- Edema, linfático	2.	Força muscular – Endurance
-- Neurológico
-- Inibitório
-- Atrófico
-- Cardíaco (ver 9.)
-- Vascular (ver 9.)
-- Pulmonar (ver 10.)
-
-                                        
--
-3.	Coordenação
-- Padrões temporais/espaciais
-- Intramuscular
-- Intermuscular
-- Destreza, acurácia terminal, habilidade, precisão
-- Velocidade	4. Equilíbrio*
-- Vestibular (ver 5.)
-- Coordenação (ver 3.)
-- Força muscular (ver 2.)
-- Tônus (ver 6.)
-- Sensibilidade (ver 5.)
-- ADM (ver 1.)
-
-*Manter a posição é uma “atividade” de acordo com a CIF
-5.	 Sensibilidade
-- Proprioceptiva
-- Tátil
-- Visual
-- Vestibular 
-- Auditiva	6. Tônus
-- Hipotonicidade
-o	Tônus postural
-- Hipertonicidade
-o	Espasticidade
-o	Rigidez
-o	Hipertonia reflexa – espasmo por dor
-- Distonia
-- Hiperatividade reflexa
-7.	Dor – avalie qual estrutura
-- Final da amplitude
-- Arco de dor
-- Dependente da carga
-- Inflamatória
-- Neural
-- Muscular
-- Outras	8. Funções neuropsicológicas
-- Emocional
-o	Insegurança, medo depressão, instabilidade emocional
-- Atenção, concentração
-- Apraxia
-- Afasia
-- Orientação espacial/temporal
-- Consciência
-- Déficits cognitivos
-- Outros
-8.	Sistema cardiovascular
-- Função da circulação do corpo
-- Força/endurance	10. Sistema pulmonar
- - Respiração
- - Força/endurance`,
+        pdfUrl: bodyFunctionsPDF,
       },
-
-      
       {
         id: "appendix_fundamental_activities",
         type: "toggle",
         label: "Apêndice 1: Atividades Fundamentais",
-        content: `Apêndice 1: Atividades Fundamentais
-
-Essa lista descreve atividade de vida diária fundamentais. Se necessário adicione atividades para seu paciente*
-
-Atividade	Independente (I)
-Normal (N)
-Modificado (M) descreva como	Possível apenas com assistência (leve assistência, moderada assistência, considerável assistência)	Impossível
-Rolar de supino para direita ou esquerda 1,3			
-Passar de deitado para sentado 1,3,6			
-Manter-se sentado 1,3,6,7			
-Sentado para de pé, de pé para sentado 2,6,7			
-De pé 2,3,7			
-De pé em Tandem, apoio em uma perna (D/E) 2			
-Caminhar 3,5,6,7			
-Caminhar rápido/correr 6			
-Subir escadas 3,6,9			
-Descer escadas 9			
-Atividades básicas de vida diária (descrever qual atividade)			
-Atividades de membro superior (descreva qual) 4,8			
- 
-Se não for possível avaliar o nível de independência da atividade, é possível avaliar o tempo ou distância que realizar a tarefa.
-
-Se for apropriado verifique também atividades como: transferências, transições (mudanças da posição do corpo), manutenção de certas posições, andando em terreno irregular, descendo até o chão, manejo da cadeira de rodas, pegando objetos do chão, carregando objetos, ...
-
-1.	Trunk Control Teste
-2.	Berg Balance Scale
-3.	Chedoke Mc Master Stroke Assessement
-4.	Dash Test
-5.	Functional Ambulation Categories
-6.	Rivermead Motor Assessement
-7.	Tinetti Test
-8.	Action Reseach Arm Test
-9.	Barthel Index
-10.	Functional Independence Measure (FIM) and Functional Assessement Measure (FAM)`,
+        pdfUrl: appendix1PDF,
       },
-
-      
       {
         id: "appendix_gait_assessment",
         type: "toggle",
         label: "Apêndice 2: Avaliação da Marcha",
-        content: `Apêndice 2: Avaliação da Marcha
-
-Ajuda necessária:
-Velocidade habitual da marcha:          
-                       	5m/10m/20m Teste de velocidade da marcha:
-
-Comprimento do passo:
-
-
-Fases da marcha – Esquerda
-
-	Contato Inicial	Resposta à Carga	Apoio Médio	Apoio
-Terminal	Pré balanço	Balanço Inicial	Balanço
-Médio	Balanço Terminal
-Cabeça								
-Tronco								
-Pelve								
-Quadril								
-Joelho								
-Tornozelo/pé								
-Artelhos								
-
-Fases da marcha – Direita
-
-	Contato Inicial	Resposta à Carga	Apoio Médio	Apoio
-Terminal	Pré balanço	Balanço Inicial	Balanço
-Médio	Balanço Terminal
-Cabeça								
-Tronco								
-Pelve								
-Quadril								
-Joelho								
-Tornozelo/pé								
-Artelhos								
-
-Teste para a marcha: Dynamic Gait Index, 6Minute Gait Test, Functional Walking Categories, FAC, TUG etc.`,
+        pdfUrl: appendix2PDF,
       },
     ],
   },
