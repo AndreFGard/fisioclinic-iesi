@@ -3,6 +3,7 @@ export interface ConsultationData {
   date: Date;
   time: string;
   professional: string;
+  student: string
   area: string;
   type: "consulta" | "retorno" | "avaliacao";
   observations: string;
