@@ -109,7 +109,7 @@ def agendar_paciente(agendamento: agendamento_schema):
                 "dateSchudule": item.dateSchudule,
                 "local": 1,
                 "idCalendar": 234,
-                "procedures": 1,
+                "procedures": [1],
                 "hour": item.hour
             }
             for item in agendamento.schedule
