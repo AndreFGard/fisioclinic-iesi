@@ -13,6 +13,7 @@ export type FilaDeEspera = {
   "medico(a)": string
   "data da procura": string
   situacao: string
+  prioridade: string
 }
 
 export type PatientData = {

@@ -4,16 +4,72 @@ import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import NavBar from "@/components/NavBar";
 import { FilaDeEsperaTable } from "@/components/table-fila-de-espera/data-table";
-import { columns as columnsFactory, FilaDeEspera } from "@/components/table-fila-de-espera/columns";
+import { columns as columnsFactory } from "@/components/table-fila-de-espera/columns";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react"; 
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { UserPlus } from "lucide-react";
+import { FilaDeEspera as ApiFilaDeEspera, replaceEntireWaitingQueueRow } from "@/lib/api";
+
+// Interface para os dados locais da fila de espera
+interface LocalFilaDeEspera {
+  id: string;
+  nome: string;
+  idade: number;
+  "telefone-1": string;
+  "telefone-2": string;
+  bairro: string;
+  diagnostico: string;
+  disciplina: string;
+  hospital: string;
+  "medico(a)": string;
+  "data da procura": string;
+  situacao: string;
+  prioridade: string;
+}
+
+// Função para converter do formato local para o formato da API
+function convertToApiFormat(local: LocalFilaDeEspera): ApiFilaDeEspera {
+  return {
+    id: local.id,
+    nome: local.nome,
+    idade: local.idade,
+    tel1: local["telefone-1"],
+    tel2: local["telefone-2"],
+    bairro: local.bairro,
+    diagnostico: local.diagnostico,
+    disciplina: local.disciplina,
+    hospital: local.hospital,
+    "medico(a)": local["medico(a)"],
+    "data da procura": local["data da procura"],
+    situacao: local.situacao,
+    prioridade: local.prioridade
+  };
+}
+
+// Função para converter do formato da API para o formato local
+function convertFromApiFormat(api: ApiFilaDeEspera): LocalFilaDeEspera {
+  return {
+    id: api.id,
+    nome: api.nome,
+    idade: api.idade,
+    "telefone-1": api.tel1,
+    "telefone-2": api.tel2,
+    bairro: api.bairro,
+    diagnostico: api.diagnostico,
+    disciplina: api.disciplina,
+    hospital: api.hospital,
+    "medico(a)": api["medico(a)"],
+    "data da procura": api["data da procura"],
+    situacao: api.situacao,
+    prioridade: api.prioridade
+  };
+}
 
 
 // Função para buscar dados (simulação de API)
-async function getData(): Promise<FilaDeEspera[]> {
+async function getData(): Promise<LocalFilaDeEspera[]> {
   return [
     {
       id: "1",
@@ -124,7 +180,8 @@ async function getData(): Promise<FilaDeEspera[]> {
 }
 
 const Receptionist = () => {
-  const [appointments, setAppointments] = useState<FilaDeEspera[]>([]);
+  const [appointments, setAppointments] = useState<LocalFilaDeEspera[]>([]);
+  const [changesLog, setChangesLog] = useState<ApiFilaDeEspera[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
 
@@ -135,6 +192,33 @@ const Receptionist = () => {
     }
     fetchData();
   }, []);
+
+  // Função para lidar com alterações em uma linha da tabela
+  const handleRowChange = (change: ApiFilaDeEspera) => {
+    // Adiciona a alteração ao log de alterações
+    setChangesLog(prev => {
+      const exists = prev.find(item => item.id === change.id);
+      if (exists) {
+        return prev.map(item => item.id === change.id ? change : item);
+      } else {
+        return [...prev, change];
+      }
+    });
+    
+    // Atualiza o estado local também
+    setAppointments(prev => {
+      // Converte o item da API para o formato local antes de atualizar
+      const localChange = convertFromApiFormat(change);
+      return prev.map(item => item.id === localChange.id ? localChange : item);
+    });
+  };
+  
+  // Função para tratar alterações na prioridade
+  const handlePriorityChange = (id: string, newPriority: string) => {
+    setAppointments(prev =>
+      prev.map(p => (p.id === id ? { ...p, prioridade: newPriority } : p))
+    );
+  };
 
   // Filtragem por nome ou telefones
   const filteredAppointments = appointments.filter(patient =>
@@ -178,8 +262,14 @@ const Receptionist = () => {
           </CardHeader>
           <CardContent>
             <FilaDeEsperaTable
-              columns={columnsFactory(setAppointments)}
-              data={filteredAppointments}
+              columns={columnsFactory(
+                (newData) => setAppointments(newData as unknown as LocalFilaDeEspera[]),
+                handleRowChange,
+                handlePriorityChange
+              )}
+              data={filteredAppointments.map(item => convertToApiFormat(item))}
+              changesLog={changesLog}
+              setChangesLog={setChangesLog}
             />
           </CardContent>
         </Card>
