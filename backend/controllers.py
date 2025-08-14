@@ -101,8 +101,10 @@ def agendar_paciente(agendamento: agendamento_schema):
     }
     return {"status": "ok"}
 
+from placeholders import filaData
 @app.get("/fila")
 def fila_all():
+    return filaData
     return get_base()
 
 @app.post("/fila/filter")
@@ -125,6 +127,7 @@ def pop_fila(id: int):
     
 @app.put("/fila/{id}")
 def edit_fila(id: int, change: edicao_schema):
+    print(change)
     return 200
     if(editar(id, change)):
         return {"editado": "ok"}
