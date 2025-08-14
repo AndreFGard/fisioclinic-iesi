@@ -15,6 +15,50 @@ export type FilaDeEspera = {
   situacao: string
 }
 
+export type PatientData = {
+  nome: string;
+  cpf: string;
+  id: string | number | undefined;
+  nascimento: Date | undefined;
+  genero: string| undefined;
+
+  // Contato
+  tel1: string | undefined;
+  tel2: string | undefined;
+  bairro: string | undefined;
+  cidade: string | undefined;
+
+  // Dados clínicos
+  diagnostico: string | undefined;
+  disciplina: string | undefined;
+  hospital: string | undefined;
+  doutor: string | undefined;
+  procura: Date | undefined;
+  situacao: string | undefined;
+  obs: string | undefined;
+}
+
+export async function createPatient(patient: PatientData){
+    try {
+        const response = await fetch(`${apiUrl}/cadastro_paciente`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(patient),
+        });
+
+        if (!response.ok) {
+            const errorMessage = `Erro ao criar o paciente: ${response.status} ${response.statusText}`;
+            throw new Error(errorMessage);
+        }
+
+        return response;
+    } catch (error) {
+        console.error("Erro ao criar o paciente:", error);
+        throw error;
+    }
+}
 
 export async function replaceEntireWaitingQueueRow(patient: FilaDeEspera): Promise<Response> {
     const { id } = patient;
