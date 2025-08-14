@@ -331,19 +331,25 @@ with Session() as session:
         )
         aa = session.execute(stmt).scalars().all()
         return [todict(r) for r in aa]
+    
+    def get_prontuarios_by_paciente(paciente_id):
+        x = session.query(Prontuario).filter_by(paciente_id=paciente_id).all()
+        return [todict(r) for r in x]
+    
+    def get_paciente_by_id(paciente_id):
+        """Retorna o objeto Paciente ou None."""
+        paciente = session.get(Paciente, paciente_id)
+        return todict(paciente)
+
     # ---------- INSERÇÕES ----------
 
     def create_paciente(etc: dict):
-
-        try:
+        with Session() as session:
             p = Paciente(**etc)
             session.add(p)
             session.commit()
             session.refresh(p)
-            return True
-        except:
-            session.rollback()
-            return False
+            return p.id
 
 
     def create_agendamento(agendamento_id: int, nome: str, user_id: str, paciente_id: int):
