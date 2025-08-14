@@ -138,19 +138,19 @@ export default function PersonalDataTab({
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
             <div className="sm:col-span-2">
-              <Label htmlFor="fullName" className="text-sm font-medium">
+              <Label htmlFor="nome" className="text-sm font-medium">
                 Nome Completo
               </Label>
               {isEditing ? (
                 <Input
-                  id="fullName"
-                  value={patientData.fullName}
-                  onChange={(e) => onInputChange("fullName", e.target.value)}
+                  id="nome"
+                  value={patientData.nome}
+                  onChange={(e) => onInputChange("nome", e.target.value)}
                   className="h-10 sm:h-11 text-sm"
                 />
               ) : (
                 <div className="h-10 sm:h-11 px-3 py-2 bg-muted/50 rounded-md flex items-center text-sm">
-                  {patientData.fullName}
+                  {patientData.nome}
                 </div>
               )}
             </div>
@@ -178,8 +178,8 @@ export default function PersonalDataTab({
               <Label className="text-sm font-medium">Data de Nascimento</Label>
               {isEditing ? (
                 <DatePicker
-                  date={patientData.birthDate}
-                  setDate={(date) => onInputChange("birthDate", date)}
+                  date={patientData.nascimento}
+                  setDate={(date) => onInputChange("nascimento", date)}
                   placeholder="Selecione a data de nascimento"
                   fromYear={1920}
                   toYear={new Date().getFullYear()}
@@ -190,8 +190,8 @@ export default function PersonalDataTab({
                 />
               ) : (
                 <div className="h-11 px-3 py-2 bg-muted/50 rounded-md flex items-center">
-                  {patientData.birthDate
-                    ? formatDate(patientData.birthDate)
+                  {patientData.nascimento
+                    ? JSON.stringify(patientData.nascimento)
                     : "Não informado"}
                 </div>
               )}
@@ -201,8 +201,8 @@ export default function PersonalDataTab({
               <Label className="text-sm font-medium">Gênero</Label>
               {isEditing ? (
                 <Select
-                  value={patientData.gender}
-                  onValueChange={(value) => onInputChange("gender", value)}
+                  value={patientData.genero}
+                  onValueChange={(value) => onInputChange("genero", value)}
                 >
                   <SelectTrigger className="h-10 sm:h-11 text-sm">
                     <SelectValue placeholder="Selecione o gênero" />
@@ -218,7 +218,7 @@ export default function PersonalDataTab({
                 </Select>
               ) : (
                 <div className="h-11 px-3 py-2 bg-muted/50 rounded-md flex items-center">
-                  {patientData.gender || "Não informado"}
+                  {patientData.genero || "Não informado"}
                 </div>
               )}
             </div>
@@ -245,49 +245,49 @@ export default function PersonalDataTab({
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
             <div>
-              <Label htmlFor="cellphone">Telefone Principal</Label>
+              <Label htmlFor="tel1">Telefone Principal</Label>
               {isEditing ? (
                 <Input
-                  id="cellphone"
-                  value={patientData.cellphone}
-                  onChange={(e) => onInputChange("cellphone", e.target.value)}
+                  id="tel1"
+                  value={patientData.tel1}
+                  onChange={(e) => onInputChange("tel1", e.target.value)}
                   placeholder="(00) 00000-0000"
                   className="h-11"
                 />
               ) : (
                 <div className="h-11 px-3 py-2 bg-muted/50 rounded-md flex items-center">
                   <Phone className="h-4 w-4 mr-2 text-muted-foreground" />
-                  {patientData.cellphone || "Não informado"}
+                  {patientData.tel1 || "Não informado"}
                 </div>
               )}
             </div>
 
             <div>
-              <Label htmlFor="cellphone2">Telefone Secundário</Label>
+              <Label htmlFor="tel2">Telefone Secundário</Label>
               {isEditing ? (
                 <Input
-                  id="cellphone2"
-                  value={patientData.cellphone2}
-                  onChange={(e) => onInputChange("cellphone2", e.target.value)}
+                  id="tel2"
+                  value={patientData.tel2}
+                  onChange={(e) => onInputChange("tel2", e.target.value)}
                   placeholder="(00) 00000-0000"
                   className="h-11"
                 />
               ) : (
                 <div className="h-11 px-3 py-2 bg-muted/50 rounded-md flex items-center">
                   <Phone className="h-4 w-4 mr-2 text-muted-foreground" />
-                  {patientData.cellphone2 || "Não informado"}
+                  {patientData.tel2 || "Não informado"}
                 </div>
               )}
             </div>
 
             <div>
-              <Label htmlFor="neighborhood">Bairro</Label>
+              <Label htmlFor="bairro">Bairro</Label>
               {isEditing ? (
                 <Input
-                  id="neighborhood"
-                  value={patientData.neighborhood}
+                  id="bairro"
+                  value={patientData.bairro}
                   onChange={(e) =>
-                    onInputChange("neighborhood", e.target.value)
+                    onInputChange("bairro", e.target.value)
                   }
                   placeholder="Bairro"
                   className="h-11"
@@ -295,25 +295,25 @@ export default function PersonalDataTab({
               ) : (
                 <div className="h-11 px-3 py-2 bg-muted/50 rounded-md flex items-center">
                   <MapPinIcon className="h-4 w-4 mr-2 text-muted-foreground" />
-                  {patientData.neighborhood || "Não informado"}
+                  {patientData.bairro || "Não informado"}
                 </div>
               )}
             </div>
 
             <div>
-              <Label htmlFor="city">Cidade</Label>
+              <Label htmlFor="cidade">Cidade</Label>
               {isEditing ? (
                 <Input
-                  id="city"
-                  value={patientData.city}
-                  onChange={(e) => onInputChange("city", e.target.value)}
+                  id="cidade"
+                  value={patientData.cidade}
+                  onChange={(e) => onInputChange("cidade", e.target.value)}
                   placeholder="Cidade"
                   className="h-11"
                 />
               ) : (
                 <div className="h-11 px-3 py-2 bg-muted/50 rounded-md flex items-center">
                   <MapPinIcon className="h-4 w-4 mr-2 text-muted-foreground" />
-                  {patientData.city || "Não informado"}
+                  {patientData.cidade || "Não informado"}
                 </div>
               )}
             </div>
@@ -340,20 +340,20 @@ export default function PersonalDataTab({
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
             <div>
-              <Label htmlFor="diagnosis">Diagnóstico</Label>
+              <Label htmlFor="diagnostico">Diagnóstico</Label>
               {isEditing ? (
                 <DiagnosisSelect
-                  value={patientData.diagnosis}
-                  onChange={(value) => onInputChange("diagnosis", value)}
+                  value={patientData.diagnostico}
+                  onChange={(value) => onInputChange("diagnostico", value)}
                   options={diagnosisOptions}
                   placeholder="Selecione ou digite para adicionar"
                 />
               ) : (
                 <div className="h-11 px-3 py-2 bg-muted/50 rounded-md flex items-center">
                   {diagnosisOptions.find(
-                    (d) => d.value === patientData.diagnosis
+                    (d) => d.value === patientData.diagnostico
                   )?.label ||
-                    patientData.diagnosis ||
+                    patientData.diagnostico ||
                     "Não informado"}
                 </div>
               )}
@@ -397,19 +397,19 @@ export default function PersonalDataTab({
             </div>
 
             <div>
-              <Label htmlFor="doctor">Médico</Label>
+              <Label htmlFor="doutor">Médico</Label>
               {isEditing ? (
                 <Input
-                  id="doctor"
-                  value={patientData.doctor}
-                  onChange={(e) => onInputChange("doctor", e.target.value)}
+                  id="doutor"
+                  value={patientData.doutor}
+                  onChange={(e) => onInputChange("doutor", e.target.value)}
                   placeholder="Nome do médico"
                   className="h-11"
                 />
               ) : (
                 <div className="h-11 px-3 py-2 bg-muted/50 rounded-md flex items-center">
                   <User className="h-4 w-4 mr-2 text-muted-foreground" />
-                  {patientData.doctor || "Não informado"}
+                  {patientData.doutor || "Não informado"}
                 </div>
               )}
             </div>
@@ -418,8 +418,8 @@ export default function PersonalDataTab({
               <Label>Data da Procura</Label>
               {isEditing ? (
                 <DatePicker
-                  date={patientData.seekDate}
-                  setDate={(date) => onInputChange("seekDate", date)}
+                  date={patientData.procura}
+                  setDate={(date) => onInputChange("procura", date)}
                   placeholder="Selecione a data da procura"
                   fromYear={2020}
                   toYear={new Date().getFullYear() + 1}
@@ -431,19 +431,19 @@ export default function PersonalDataTab({
               ) : (
                 <div className="h-11 px-3 py-2 bg-muted/50 rounded-md flex items-center">
                   <CalendarDays className="h-4 w-4 mr-2 text-muted-foreground" />
-                  {patientData.seekDate
-                    ? formatDate(patientData.seekDate)
+                  {patientData.procura
+                    ? JSON.stringify(patientData.procura)
                     : "Não informado"}
                 </div>
               )}
             </div>
 
             <div>
-              <Label htmlFor="status">Situação</Label>
+              <Label htmlFor="situacao">Situação</Label>
               {isEditing ? (
                 <Select
-                  value={patientData.status}
-                  onValueChange={(value) => onInputChange("status", value)}
+                  value={patientData.situacao}
+                  onValueChange={(value) => onInputChange("situacao", value)}
                 >
                   <SelectTrigger className="h-11">
                     <SelectValue placeholder="Selecione a situação" />
@@ -461,26 +461,26 @@ export default function PersonalDataTab({
                 </Select>
               ) : (
                 <div className="h-11 px-3 py-2 bg-muted/50 rounded-md flex items-center">
-                  {getStatusBadge(patientData.status)}
+                  {getStatusBadge(patientData.situacao)}
                 </div>
               )}
             </div>
 
             <div className="md:col-span-2">
-              <Label htmlFor="observations">Observações</Label>
+              <Label htmlFor="obs">Observações</Label>
               {isEditing ? (
                 <Textarea
-                  id="observations"
-                  value={patientData.observations}
+                  id="obs"
+                  value={patientData.obs}
                   onChange={(e) =>
-                    onInputChange("observations", e.target.value)
+                    onInputChange("obs", e.target.value)
                   }
                   placeholder="Observações gerais sobre o paciente ou tratamento"
                   className="min-h-[100px]"
                 />
               ) : (
                 <div className="min-h-[100px] p-3 bg-muted/50 rounded-md">
-                  {patientData.observations || "Nenhuma observação registrada"}
+                  {patientData.obs || "Nenhuma observação registrada"}
                 </div>
               )}
             </div>
