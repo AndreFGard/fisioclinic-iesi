@@ -1,7 +1,8 @@
 import pika
 import json
+#comando para rodar o rabbitmq: docker run -d --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3-management
 
-RABBITMQ_URL = ""
+RABBITMQ_URL = "amqp://guest:guest@localhost:5672/"
 
 def envia_para_fila(paciente_data: dict):
     params = pika.URLParameters(RABBITMQ_URL)
