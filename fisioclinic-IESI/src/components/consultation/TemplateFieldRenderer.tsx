@@ -24,6 +24,17 @@ export function TemplateFieldRenderer({
   value,
   onFieldChange,
 }: TemplateFieldRendererProps) {
+  // Para headers, renderizamos apenas o título
+  if (field.type === "header") {
+    return (
+      <div className="mb-4 mt-6 first:mt-0">
+        <h3 className="text-sm sm:text-base font-semibold text-gray-900 border-b border-gray-200 pb-2">
+          {field.label}
+        </h3>
+      </div>
+    );
+  }
+
   const renderField = () => {
     switch (field.type) {
       case "text":

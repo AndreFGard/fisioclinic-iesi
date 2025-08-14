@@ -28,7 +28,8 @@ export interface TemplateField {
     | "checkbox"
     | "radio"
     | "number"
-    | "date";
+    | "date"
+    | "header";
   label: string;
   placeholder?: string;
   required?: boolean;
