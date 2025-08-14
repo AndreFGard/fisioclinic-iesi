@@ -1,95 +1,22 @@
 import { TemplateOption } from "./types";
+import escala_ashworth from "@/assets/escala-ashworth.png";
+import bodyFunctionsPDF from "@/assets/pdfs/Funções_Corporais-Lista_de_Deficiências.pdf";
+import appendix1PDF from "@/assets/pdfs/Apêndice_1-Atividades_Fundamentais.pdf";
+import appendix2PDF from "@/assets/pdfs/Apêndice_2-Avaliação_da_Marcha.pdf";
 
 // Templates por área da clínica
 export const clinicTemplates: TemplateOption[] = [
   {
-    id: "neuro-basic",
-    name: "Ficha Neurológica Básica",
-    area: "neurologia",
-    description: "Avaliação neurológica padrão com testes motores e cognitivos",
-    fields: [
-      {
-        id: "glasgow",
-        type: "select",
-        label: "Escala de Glasgow",
-        required: true,
-        options: [
-          "15 - Normal",
-          "14",
-          "13",
-          "12",
-          "11",
-          "10",
-          "9",
-          "8",
-          "7",
-          "6",
-          "5",
-          "4",
-          "3",
-        ],
-      },
-      {
-        id: "reflexes",
-        type: "checkbox",
-        label: "Reflexos Alterados",
-        options: ["Patelar", "Aquileu", "Bicipital", "Tricipital", "Babinski"],
-      },
-      {
-        id: "motor_strength",
-        type: "textarea",
-        label: "Força Motora",
-        placeholder: "Descreva a avaliação da força motora por segmentos",
-        required: true,
-      },
-      {
-        id: "sensitivity",
-        type: "textarea",
-        label: "Sensibilidade",
-        placeholder: "Avaliação da sensibilidade táctil, dolorosa e vibratória",
-      },
-      {
-        id: "coordination",
-        type: "radio",
-        label: "Coordenação",
-        options: [
-          "Normal",
-          "Alterada - Leve",
-          "Alterada - Moderada",
-          "Alterada - Grave",
-        ],
-      },
-    ],
-  },
-  {
-    id: "neuro-evaluation",
+    id: "neurofunctional-physiotherapy",
     name: "Ficha de Avaliação em Fisioterapia Neurofuncional",
     area: "neurologia",
     description:
       "Avaliação neurofuncional completa com dados pessoais, exame físico e plano de tratamento",
     fields: [
       {
-        id: "therapist_student",
-        type: "text",
-        label: "Terapeuta/aluno",
-        required: true,
-      },
-      {
         id: "personal_data_section",
         type: "header",
         label: "Dados Pessoais",
-      },
-      {
-        id: "birth_date",
-        type: "date",
-        label: "Data de Nascimento",
-        required: true,
-      },
-      {
-        id: "age",
-        type: "number",
-        label: "Idade",
-        required: true,
       },
       {
         id: "marital_status",
@@ -118,11 +45,6 @@ export const clinicTemplates: TemplateOption[] = [
         id: "address",
         type: "textarea",
         label: "Endereço",
-      },
-      {
-        id: "phones",
-        type: "text",
-        label: "Telefones",
       },
       {
         id: "household_members",
@@ -160,8 +82,9 @@ export const clinicTemplates: TemplateOption[] = [
       {
         id: "additional_info",
         type: "textarea",
-        label:
-          "Informações relevantes adicionais (como diagnóstico, contraindicações, bandeiras vermelhas, amarelas etc.)",
+        label: "Informações relevantes adicionais",
+        sublabel:
+          "(como diagnóstico, contraindicações, bandeiras vermelhas, amarelas etc.)",
       },
       {
         id: "information_source",
@@ -254,8 +177,9 @@ export const clinicTemplates: TemplateOption[] = [
       {
         id: "disease_history",
         type: "textarea",
-        label:
-          "História da doença (início, desenvolvimento desde o ictus, diagnóstico prévio e outras informações relevantes)",
+        label: "História da doença",
+        sublabel:
+          "(início, desenvolvimento desde o ictus, diagnóstico prévio e outras informações relevantes)",
         required: true,
       },
       {
@@ -306,6 +230,8 @@ export const clinicTemplates: TemplateOption[] = [
         type: "header",
         label:
           "Nível estrutural – Exame físico da função e estrutura corporais",
+        sublabel:
+          "encontrar a razão para a limitação da atividade (Exame neurológico, testes específicos, ADM, força, tônus, dor e sensibilidade)",
       },
       {
         id: "general_inspection",
@@ -320,8 +246,8 @@ export const clinicTemplates: TemplateOption[] = [
       {
         id: "muscle_strength_detailed",
         type: "textarea",
-        label:
-          "Força muscular (Proximal/intermediária/distal para MMSS e MMII)",
+        label: "Força muscular",
+        sublabel: "(Proximal/intermediária/distal para MMSS e MMII)",
       },
       {
         id: "coordination",
@@ -342,6 +268,8 @@ export const clinicTemplates: TemplateOption[] = [
         id: "muscle_tone",
         type: "textarea",
         label: "Tônus",
+        consultImage: escala_ashworth,
+        imageLabel: "Escala de Ashworth",
       },
       {
         id: "superficial_sensitivity",
@@ -382,13 +310,14 @@ export const clinicTemplates: TemplateOption[] = [
         id: "deficiency_hypothesis",
         type: "textarea",
         label:
-          "Após o exame físico e o teste-tratamento, qual a sua hipótese para a causa da deficiência que limita a atividade",
+          "Após o exame físico e o teste-tratamento, qual a sua hipótese para a causa da deficiência que limita a atividade?",
+        sublabel: "(Função e estrutura corporais)",
       },
       {
         id: "structural_test",
         type: "textarea",
-        label:
-          "Qual o teste para a causa da deficiência que você usou (nível estrutural)?",
+        label: "Qual o teste para a causa da deficiência que você usou?",
+        sublabel: "(nível estrutural)",
       },
       {
         id: "positive_points",
@@ -405,30 +334,71 @@ export const clinicTemplates: TemplateOption[] = [
         type: "header",
         label: "Plano de Tratamento",
       },
+
+      // Tabela: Objetivos (Curto / Médio / Longo)
+
       {
-        id: "short_term_objectives",
-        type: "textarea",
-        label: "Objetivos de Curto Prazo",
+        id: "treatment_objectives_table",
+        type: "table",
+        label: "Objetivos",
+        rowHeader: false,
+        rows: [""], // quantidade de linhas para preencher
+        columns: ["Curto", "Médio", "Longo"],
       },
+
+      // Seção: Reteste para o nível de atividade e estrutural
       {
-        id: "medium_term_objectives",
-        type: "textarea",
-        label: "Objetivos de Médio Prazo",
+        id: "retest_section",
+        type: "header",
+        label: "Reteste para o nível de atividade e estrutural",
       },
+      // Tabela: Reteste (Datas 1..4) para duas linhas
+
       {
-        id: "long_term_objectives",
-        type: "textarea",
-        label: "Objetivos de Longo Prazo",
+        id: "retest_activity_structural_table",
+        type: "table",
+        label: "",
+        rowHeader: false,
+        rows: [""],
+        columns: [
+          "Teste para a limitação da atividade",
+          "Data 1",
+          "Data 2",
+          "Data 3",
+          "Data 4",
+        ],
       },
+
       {
-        id: "academics",
-        type: "text",
-        label: "Acadêmicos",
+        id: "retest_deficiency_cause_table",
+        type: "table",
+        label: "",
+        rowHeader: false,
+        rows: [""],
+        columns: [
+          "Teste para a causa da deficiência",
+          "Data 1",
+          "Data 2",
+          "Data 3",
+          "Data 4",
+        ],
       },
+
+      // Tabela: Plano de tratamento detalhado
+
       {
-        id: "responsible_teacher",
-        type: "text",
-        label: "Professora responsável",
+        id: "detailed_treatment_plan_table",
+        type: "table",
+        label: "Plano de tratamento",
+        rows: [""],
+        rowHeader: false,
+        columns: [
+          "Objetivo/razões/propostas",
+          "Posição",
+          "Padrões/movimento ou atividade",
+          "Técnicas",
+          "Outros",
+        ],
       },
       {
         id: "evolution",
@@ -437,101 +407,24 @@ export const clinicTemplates: TemplateOption[] = [
         placeholder:
           "Registre aqui a evolução do paciente ao longo do tratamento",
       },
-    ],
-  },
-  {
-    id: "resp-basic",
-    name: "Ficha Respiratória Básica",
-    area: "respiratoria",
-    description:
-      "Avaliação respiratória com capacidade pulmonar e padrão respiratório",
-    fields: [
+      // Conteúdos adicionais (renderizados como botão toggle com PDF)
       {
-        id: "respiratory_rate",
-        type: "number",
-        label: "Frequência Respiratória (rpm)",
-        required: true,
+        id: "body_functions_deficiencies",
+        type: "toggle",
+        label: "Funções Corporais – Lista de deficiências",
+        pdfUrl: bodyFunctionsPDF,
       },
       {
-        id: "saturation",
-        type: "number",
-        label: "Saturação de O2 (%)",
-        required: true,
+        id: "appendix_fundamental_activities",
+        type: "toggle",
+        label: "Apêndice 1: Atividades Fundamentais",
+        pdfUrl: appendix1PDF,
       },
       {
-        id: "breathing_pattern",
-        type: "radio",
-        label: "Padrão Respiratório",
-        options: [
-          "Normal",
-          "Taquipneia",
-          "Bradipneia",
-          "Dispneia",
-          "Ortopneia",
-        ],
-      },
-      {
-        id: "chest_expansion",
-        type: "textarea",
-        label: "Expansibilidade Torácica",
-        placeholder: "Avaliação da expansibilidade em diferentes regiões",
-      },
-      {
-        id: "auscultation",
-        type: "checkbox",
-        label: "Ausculta Pulmonar",
-        options: [
-          "Murmúrio Vesicular Normal",
-          "Sibilos",
-          "Roncos",
-          "Estertores",
-          "Diminuição do MV",
-        ],
-      },
-    ],
-  },
-  {
-    id: "cardio-basic",
-    name: "Ficha Cardiológica Básica",
-    area: "cardiologia",
-    description:
-      "Avaliação cardiovascular com sinais vitais e capacidade funcional",
-    fields: [
-      {
-        id: "heart_rate",
-        type: "number",
-        label: "Frequência Cardíaca (bpm)",
-        required: true,
-      },
-      {
-        id: "blood_pressure",
-        type: "text",
-        label: "Pressão Arterial (mmHg)",
-        placeholder: "Ex: 120/80",
-        required: true,
-      },
-      {
-        id: "functional_class",
-        type: "radio",
-        label: "Classe Funcional (NYHA)",
-        options: ["Classe I", "Classe II", "Classe III", "Classe IV"],
-      },
-      {
-        id: "exercise_tolerance",
-        type: "textarea",
-        label: "Tolerância ao Exercício",
-        placeholder: "Descreva a capacidade de exercício do paciente",
-      },
-      {
-        id: "cardiac_rhythm",
-        type: "radio",
-        label: "Ritmo Cardíaco",
-        options: [
-          "Sinusal Regular",
-          "Sinusal Irregular",
-          "Fibrilação Atrial",
-          "Outro",
-        ],
+        id: "appendix_gait_assessment",
+        type: "toggle",
+        label: "Apêndice 2: Avaliação da Marcha",
+        pdfUrl: appendix2PDF,
       },
     ],
   },

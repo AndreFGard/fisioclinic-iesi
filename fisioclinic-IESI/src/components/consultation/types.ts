@@ -3,6 +3,7 @@ export interface ConsultationData {
   date: Date;
   time: string;
   professional: string;
+  students: string;
   area: string;
   type: "consulta" | "retorno" | "avaliacao";
   observations: string;
@@ -29,11 +30,20 @@ export interface TemplateField {
     | "radio"
     | "number"
     | "date"
-    | "header";
+    | "header"
+    | "table"
+    | "toggle";
   label: string;
+  sublabel?: string;
   placeholder?: string;
   required?: boolean;
   options?: string[];
+  consultImage?: string; // URL da imagem para consulta;
+  imageLabel?: string;
+  rows?: string[];
+  columns?: string[];
+  rowHeader?: boolean;
+  pdfUrl?: string;
 }
 
 export interface PatientData {

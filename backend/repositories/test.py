@@ -1,3 +1,3 @@
 from data import *
 
-print(get_prontuarios_permitidos("alice", 1))
+print(get_agendamentos_do_paciente_por_responsavel(123, "alice"))

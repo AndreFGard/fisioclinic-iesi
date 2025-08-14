@@ -95,13 +95,26 @@ export function ConsultationBasicData({
 
           <div className="space-y-2">
             <Label htmlFor="professional" className="text-xs sm:text-sm">
-              Profissional
+              Fisioterapeuta Responsável
             </Label>
             <Input
               id="professional"
               value={consultationData.professional}
               onChange={(e) => onInputChange("professional", e.target.value)}
               placeholder="Nome do profissional"
+              className="h-8 sm:h-11 text-xs sm:text-sm"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="students" className="text-xs sm:text-sm">
+              Acadêmicos
+            </Label>
+            <Input
+              id="students"
+              value={consultationData.students || ""}
+              onChange={(e) => onInputChange("students", e.target.value)}
+              placeholder="Nome dos alunos"
               className="h-8 sm:h-11 text-xs sm:text-sm"
             />
           </div>

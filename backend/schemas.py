@@ -1,6 +1,5 @@
 from pydantic import BaseModel
-from typing import Optional
-from datetime import date
+from typing import Optional, Any
 
 class cadastro_schema(BaseModel):
     nome: str  
@@ -21,6 +20,48 @@ class cadastro_schema(BaseModel):
 
 
 
+class user_schema(BaseModel):
+    username: str
+    senha: str
+    email: str
+
+class grupo_schema(BaseModel):
+    criador: str
+    nome: str
+
+class add_schema(BaseModel):
+    user: str
+    grupo: int
+    give_manager: bool = False
+
+class pront_schema(BaseModel):
+    titulo: str
+    conteudo: Any
+    user: str
+    paciente: int
+    grupo: Optional[int] = None
+
+class user_schema(BaseModel):
+    username: str
+    senha: str
+    email: str
+
+class grupo_schema(BaseModel):
+    criador: str
+    nome: str
+
+class add_schema(BaseModel):
+    user: str
+    grupo: int
+    give_manager: bool = False
+
+class pront_schema(BaseModel):
+    titulo: str
+    conteudo: Any
+    user: str
+    paciente: int
+    grupo: Optional[int] = None
+
 class fila_schema(BaseModel):
     id: Optional[int]
     nome: str  
@@ -34,6 +75,7 @@ class fila_schema(BaseModel):
     procura: str
     situacao: Optional[str] = None
     obs: Optional[str] = None
+
 
 
 class ScheduleItem(BaseModel):

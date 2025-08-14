@@ -7,29 +7,34 @@ from dotenv import load_dotenv
 load_dotenv()
 
 RABBITMQ_URL = "amqp://guest:guest@localhost:5672/"
-API_SAUDE_URL = "https://api.tisaude.com/api/patients/create" # url para o POST Paciente da API
 API_SAUDE_TOKEN = os.getenv("API_SAUDE_TOKEN", "")
 
 def callback(ch, method, properties, body):
     try:
-        paciente_data = json.loads(body.decode())
+        msg = json.loads(body.decode())
+        id_paciente = msg.get("idPaciente")
         headers = {"Accept": "application/json"}
         if API_SAUDE_TOKEN:
             headers["Authorization"] = f"Bearer {API_SAUDE_TOKEN}"
+        # Faz requisição GET na URL externa
 
-        response = requests.post(API_SAUDE_URL, json=paciente_data, headers=headers)
+        url = f"https://api.tisaude.com/api/patients/{id_paciente}"
+        response = requests.get(url,headers=headers)
+
         if response.ok:
             result = response.json()
         else:
             result = f"erro: {response.status_code} - {response.text}"
 
-        # Se o produtor enviou reply_to, manda a resposta
+        # Se o produtor indicou reply_to, devolve resposta
         if properties.reply_to:
             ch.basic_publish(
                 exchange='',
                 routing_key=properties.reply_to,
                 body=json.dumps(result),
-                properties=pika.BasicProperties(correlation_id=properties.correlation_id)
+                properties=pika.BasicProperties(
+                    correlation_id=properties.correlation_id
+                )
             )
 
         ch.basic_ack(delivery_tag=method.delivery_tag)
@@ -41,11 +46,13 @@ def callback(ch, method, properties, body):
                 exchange='',
                 routing_key=properties.reply_to,
                 body=json.dumps(error_msg),
-                properties=pika.BasicProperties(correlation_id=properties.correlation_id)
+                properties=pika.BasicProperties(
+                    correlation_id=properties.correlation_id
+                )
             )
         ch.basic_nack(delivery_tag=method.delivery_tag, requeue=False)
 import time
-def iniciar_consumidor():
+def iniciar_consumidor_busca_paciente():
     params = pika.URLParameters(RABBITMQ_URL)
     connection = None
     for i in range(7):
@@ -57,10 +64,9 @@ def iniciar_consumidor():
     if not connection:
         print("giving up: CONSUMER IS OFF")
         return False
-    print("RABBIMQ CONNECTED")
+    print("RABBIMQ GET_PACIENTE CONNECTED")
     channel = connection.channel()
-    channel.queue_declare(queue='pacientes', durable=True)
+    channel.queue_declare(queue='pacientes_get', durable=True)
     channel.basic_qos(prefetch_count=1)
-    channel.basic_consume(queue='pacientes', on_message_callback=callback)
+    channel.basic_consume(queue='pacientes_get', on_message_callback=callback)
     channel.start_consuming()
-
