@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import {
   PatientHeader,
   PatientTabs,
@@ -15,6 +15,7 @@ import {
 
 export default function Patient() {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const [patientData, setPatientData] = useState<PatientData>(mockPatientData);
   const [consultations] = useState<ConsultationRecord[]>(mockConsultations);
   const [medicalRecords] = useState<MedicalRecord[]>(mockMedicalRecords);
@@ -50,11 +51,14 @@ export default function Patient() {
 
   const handleEdit = () => setIsEditing(true);
   const handleCancel = () => setIsEditing(false);
+  const handleBack = () => {
+    navigate("/");
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-cyan-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 p-2 sm:p-4 lg:p-6">
       <div className="max-w-7xl mx-auto w-full">
-        <PatientHeader patientData={patientData} />
+        <PatientHeader patientData={patientData} onBack={handleBack} />
 
         <PatientTabs
           activeTab={activeTab}

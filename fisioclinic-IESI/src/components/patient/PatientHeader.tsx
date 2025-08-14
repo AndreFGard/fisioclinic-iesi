@@ -12,9 +12,13 @@ import { getStatusBadge, calculateAge } from "./utils";
 
 interface PatientHeaderProps {
   patientData: PatientData;
+  onBack?: () => void;
 }
 
-export default function PatientHeader({ patientData }: PatientHeaderProps) {
+export default function PatientHeader({
+  patientData,
+  onBack,
+}: PatientHeaderProps) {
   const navigate = useNavigate();
 
   return (
@@ -25,7 +29,7 @@ export default function PatientHeader({ patientData }: PatientHeaderProps) {
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => navigate("/")}
+              onClick={onBack || (() => navigate("/"))}
               className="flex items-center gap-2 self-start"
             >
               <ArrowLeft className="h-4 w-4" />

@@ -23,7 +23,7 @@ import { Separator } from "@/components/ui/separator";
 import AreaSelect from "@/components/AreaSelect";
 import DiagnosisSelect from "@/components/DiagnosisSelect";
 import { DatePicker } from "@/components/ui/date-picker";
-import { UserPlus, MapPin, Save, Stethoscope } from "lucide-react";
+import { UserPlus, MapPin, Save, Stethoscope, ArrowLeft } from "lucide-react";
 
 interface PatientData {
   // Dados pessoais
@@ -107,6 +107,10 @@ export default function NewPatient() {
     }));
   };
 
+  const handleBack = () => {
+    navigate("/");
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -144,8 +148,11 @@ export default function NewPatient() {
       // Simular delay de API
       await new Promise((resolve) => setTimeout(resolve, 2000));
 
+      // Simular retorno da API com ID do paciente criado
+      const createdPatientId = Math.floor(Math.random() * 1000) + 1;
+
       alert("Paciente cadastrado com sucesso!");
-      navigate("/");
+      navigate(`/patient/${createdPatientId}`);
       return;
     } catch (error) {
       console.error("Erro ao cadastrar paciente:", error);
@@ -160,6 +167,17 @@ export default function NewPatient() {
       <div className="max-w-5xl mx-auto">
         <Card className="bg-card/80 backdrop-blur-sm border-0 shadow-medical">
           <CardHeader className="text-center space-y-4">
+            <div className="flex items-center justify-between mb-4">
+              <Button
+                variant="ghost"
+                onClick={handleBack}
+                className="flex items-center gap-2 text-muted-foreground hover:text-foreground"
+              >
+                <ArrowLeft className="h-4 w-4" />
+                Voltar
+              </Button>
+              <div className="flex-1" />
+            </div>
             <div className="mx-auto w-16 h-16 bg-gradient-medical rounded-full flex items-center justify-center">
               <UserPlus className="h-8 w-8 text-white" />
             </div>
