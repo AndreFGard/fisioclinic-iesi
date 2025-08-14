@@ -6,7 +6,7 @@ import { Edit, Trash2, ArrowUpDown } from "lucide-react"
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import * as React from "react";
-import { WaitingQueueRowChange, FilaDeEspera, replaceEntireWaitingQueueRow } from "@/lib/api"
+import {  FilaDeEspera, replaceEntireWaitingQueueRow } from "@/lib/api"
 import { EditPatientDialog,handleDeleteToast } from "../table-fila-de-espera/edit-fila-de-espera";
 
 
@@ -20,7 +20,7 @@ const equalsFilter = (row: any, columnId: string, filterValue: string) => {
 
 export const columns = (
   setData: React.Dispatch<React.SetStateAction<FilaDeEspera[]>>,
-  logRowChange: (change: WaitingQueueRowChange) => void
+  sendRowChange: (change: FilaDeEspera) => void
 ): ColumnDef<FilaDeEspera>[] => [
     { accessorKey: "nome", header: "Nome" },
     {
@@ -101,12 +101,8 @@ export const columns = (
               item.id === row.original.id ? { ...item, situacao: novoStatus } : item
             )
           );
-
-          logRowChange({
-            id: row.original.id, // Log the row ID
-            fieldName: "situacao", // Log the field name
-            newValue: novoStatus, // Log the new value
-          });
+          row.original.situacao = novoStatus; // Atualiza o valor na linha original
+          sendRowChange(row.original);
 
           console.log(`row id is ${row.original.id}`)
         };
@@ -135,22 +131,7 @@ export const columns = (
           <div className="flex justify-center space-x-2">
             <EditPatientDialog 
               patient={patient} 
-              setChange={(updatedPatient) => {
-                // Update the data state
-                setData(prev =>
-                  prev.map(item =>
-                    item.id === updatedPatient.id ? updatedPatient : item
-                  )
-                );
-                
-                // Log the changes (we need to know what field changed)
-                // For simplicity, we'll log the entire update event
-                logRowChange({
-                  id: updatedPatient.id,
-                  fieldName: "multiple_fields", // Indicating multiple fields might have changed
-                  newValue: JSON.stringify(updatedPatient)
-                });
-              }}
+              setChange={sendRowChange}
             />
             <Button
               variant="ghost"

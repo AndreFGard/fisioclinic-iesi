@@ -10,7 +10,7 @@ import { Search } from "lucide-react"; // ou o ícone que você estiver usando
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { UserPlus } from "lucide-react";
-import { WaitingQueueRowChange,FilaDeEspera, getWaitingQueueData } from "@/lib/api";
+import { FilaDeEspera, getWaitingQueueData } from "@/lib/api";
 
 
 const CommitChangesButton = ({ trigger }) => {
@@ -58,8 +58,8 @@ const placeholderAppointments = [{
 const ReceptionistDashboard = () => {
   const [appointments, setAppointments] = useState<FilaDeEspera[]>(placeholderAppointments);
   const [searchTerm, setSearchTerm] = useState("");
-  const [changesLog, setChangesLog] = useState<WaitingQueueRowChange[]>([]);
-  const logRowChange = (c: WaitingQueueRowChange) => setChangesLog([...changesLog, c])
+  const [changesLog, setChangesLog] = useState<FilaDeEspera[]>([]);
+  const sendRowChange = (c: FilaDeEspera) => setChangesLog([...changesLog, c])
 
 
   async function fetchData() {
@@ -115,7 +115,7 @@ const ReceptionistDashboard = () => {
           </CardHeader>
           <CardContent>
             <FilaDeEsperaTable
-              columns={columnsFactory(setAppointments,logRowChange)}
+              columns={columnsFactory(setAppointments,sendRowChange)}
               data={filteredAppointments}
               changesLog={changesLog}
               setChangesLog={setChangesLog}

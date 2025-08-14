@@ -13,7 +13,7 @@ import {
   DialogTrigger,
 }  from '@/components/ui/dialog'
 import { Input } from "@/components/ui/input"
-import { WaitingQueueRowChange, FilaDeEspera, replaceEntireWaitingQueueRow } from "@/lib/api"
+import {  FilaDeEspera, replaceEntireWaitingQueueRow } from "@/lib/api"
 import { Button } from "../ui/button";
 import {Edit} from "lucide-react"
 

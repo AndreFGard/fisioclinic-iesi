@@ -16,37 +16,6 @@ export type FilaDeEspera = {
 }
 
 
-export type WaitingQueueRowChange = {
-  id: string;
-  fieldName: string;
-  newValue: any;
-};
-
-
-
-export async function updateWaitingQueueField(change: WaitingQueueRowChange): Promise<Response> {
-  const { id, fieldName, newValue } = change;
-  try {
-    const response = await fetch(`${apiUrl}/fila/${id}`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ [fieldName]: newValue }),
-    });
-
-    if (!response.ok) {
-      const errorMessage = `Erro ao atualizar a fila: ${response.status} ${response.statusText}`;
-      throw new Error(errorMessage);
-    }
-
-    return response;
-  } catch (error) {
-    console.error("Erro na atualização da fila:", error);
-    throw error;
-  }
-}
-
 export async function replaceEntireWaitingQueueRow(patient: FilaDeEspera): Promise<Response> {
     const { id } = patient;
     try {

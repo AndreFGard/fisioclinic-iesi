@@ -15,14 +15,14 @@ import {
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { updateWaitingQueueField, WaitingQueueRowChange } from "@/lib/api"
+import { FilaDeEspera, replaceEntireWaitingQueueRow } from "@/lib/api"
 import { Check } from "lucide-react"
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
-  changesLog: WaitingQueueRowChange[],
-  setChangesLog: React.Dispatch<React.SetStateAction<WaitingQueueRowChange[]>>
+  changesLog: FilaDeEspera[],
+  setChangesLog: React.Dispatch<React.SetStateAction<FilaDeEspera[]>>
 }
 
 export function FilaDeEsperaTable<TData, TValue>({
@@ -88,7 +88,7 @@ export function FilaDeEsperaTable<TData, TValue>({
         <Button
         onClick={async () => {
           try {
-            await Promise.all(changesLog.map(change => updateWaitingQueueField(change)));
+            await Promise.all(changesLog.map(change => replaceEntireWaitingQueueRow(change)));
             setChangesLog([]); // Limpa o log após salvar
             const originalText = "Salvar modificações";
             const successText =  "✅ Modificcações Salvas";
