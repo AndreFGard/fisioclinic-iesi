@@ -41,20 +41,6 @@ const CommitChangesButton = ({ trigger }) => {
 };
 
 
-const placeholderAppointments = [{
-  id: "1",
-  nome: "Ana DO PLACEHOLDER",
-  idade: 28,
-  "tel1": "(11) 91234-5678",
-  "tel2": "(11) 99876-5432",
-  bairro: "Centro",
-  diagnostico: "Fratura no braço",
-  disciplina: "Ortopedia",
-  hospital: "Hospital São Lucas",
-  "medico(a)": "Dr. Ricardo Lima",
-  "data da procura": "2025-08-10",
-  situacao: "Em tratamento",
-},]
 const ReceptionistDashboard = () => {
   const [appointments, setAppointments] = useState<FilaDeEspera[]>(placeholderAppointments);
   const [searchTerm, setSearchTerm] = useState("");
