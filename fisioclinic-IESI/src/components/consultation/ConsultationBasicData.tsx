@@ -107,14 +107,14 @@ export function ConsultationBasicData({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="student" className="text-xs sm:text-sm">
-              Aluno
+            <Label htmlFor="students" className="text-xs sm:text-sm">
+              Acadêmicos
             </Label>
             <Input
-              id="student"
-              value={consultationData.student || ""}
-              onChange={(e) => onInputChange("student", e.target.value)}
-              placeholder="Nome do aluno"
+              id="students"
+              value={consultationData.students || ""}
+              onChange={(e) => onInputChange("students", e.target.value)}
+              placeholder="Nome dos alunos"
               className="h-8 sm:h-11 text-xs sm:text-sm"
             />
           </div>

@@ -1,4 +1,5 @@
 import { TemplateOption } from "./types";
+import escala_ashworth from "@/assets/escala-ashworth.png";
 
 // Templates por área da clínica
 export const clinicTemplates: TemplateOption[] = [
@@ -69,27 +70,9 @@ export const clinicTemplates: TemplateOption[] = [
       "Avaliação neurofuncional completa com dados pessoais, exame físico e plano de tratamento",
     fields: [
       {
-        id: "therapist_student",
-        type: "text",
-        label: "Terapeuta/aluno",
-        required: true,
-      },
-      {
         id: "personal_data_section",
         type: "header",
         label: "Dados Pessoais",
-      },
-      {
-        id: "birth_date",
-        type: "date",
-        label: "Data de Nascimento",
-        required: true,
-      },
-      {
-        id: "age",
-        type: "number",
-        label: "Idade",
-        required: true,
       },
       {
         id: "marital_status",
@@ -118,11 +101,6 @@ export const clinicTemplates: TemplateOption[] = [
         id: "address",
         type: "textarea",
         label: "Endereço",
-      },
-      {
-        id: "phones",
-        type: "text",
-        label: "Telefones",
       },
       {
         id: "household_members",
@@ -160,8 +138,9 @@ export const clinicTemplates: TemplateOption[] = [
       {
         id: "additional_info",
         type: "textarea",
-        label:
-          "Informações relevantes adicionais (como diagnóstico, contraindicações, bandeiras vermelhas, amarelas etc.)",
+        label: "Informações relevantes adicionais",
+        sublabel:
+          "(como diagnóstico, contraindicações, bandeiras vermelhas, amarelas etc.)",
       },
       {
         id: "information_source",
@@ -254,8 +233,9 @@ export const clinicTemplates: TemplateOption[] = [
       {
         id: "disease_history",
         type: "textarea",
-        label:
-          "História da doença (início, desenvolvimento desde o ictus, diagnóstico prévio e outras informações relevantes)",
+        label: "História da doença",
+        sublabel:
+          "(início, desenvolvimento desde o ictus, diagnóstico prévio e outras informações relevantes)",
         required: true,
       },
       {
@@ -306,6 +286,8 @@ export const clinicTemplates: TemplateOption[] = [
         type: "header",
         label:
           "Nível estrutural – Exame físico da função e estrutura corporais",
+        sublabel:
+          "encontrar a razão para a limitação da atividade (Exame neurológico, testes específicos, ADM, força, tônus, dor e sensibilidade)",
       },
       {
         id: "general_inspection",
@@ -320,8 +302,8 @@ export const clinicTemplates: TemplateOption[] = [
       {
         id: "muscle_strength_detailed",
         type: "textarea",
-        label:
-          "Força muscular (Proximal/intermediária/distal para MMSS e MMII)",
+        label: "Força muscular",
+        sublabel: "(Proximal/intermediária/distal para MMSS e MMII)",
       },
       {
         id: "coordination",
@@ -342,6 +324,8 @@ export const clinicTemplates: TemplateOption[] = [
         id: "muscle_tone",
         type: "textarea",
         label: "Tônus",
+        consultImage: escala_ashworth,
+        imageLabel: "Escala de Ashworth",
       },
       {
         id: "superficial_sensitivity",
@@ -382,13 +366,14 @@ export const clinicTemplates: TemplateOption[] = [
         id: "deficiency_hypothesis",
         type: "textarea",
         label:
-          "Após o exame físico e o teste-tratamento, qual a sua hipótese para a causa da deficiência que limita a atividade",
+          "Após o exame físico e o teste-tratamento, qual a sua hipótese para a causa da deficiência que limita a atividade?",
+        sublabel: "(Função e estrutura corporais)",
       },
       {
         id: "structural_test",
         type: "textarea",
-        label:
-          "Qual o teste para a causa da deficiência que você usou (nível estrutural)?",
+        label: "Qual o teste para a causa da deficiência que você usou?",
+        sublabel: "(nível estrutural)",
       },
       {
         id: "positive_points",
@@ -405,30 +390,71 @@ export const clinicTemplates: TemplateOption[] = [
         type: "header",
         label: "Plano de Tratamento",
       },
+
+      // Tabela: Objetivos (Curto / Médio / Longo)
+      
       {
-        id: "short_term_objectives",
-        type: "textarea",
-        label: "Objetivos de Curto Prazo",
+        id: "treatment_objectives_table",
+        type: "table",
+        label: "Objetivos",
+        rowHeader: false,
+        rows: [""], // quantidade de linhas para preencher
+        columns: ["Curto", "Médio", "Longo"],
       },
+
+      // Seção: Reteste para o nível de atividade e estrutural
       {
-        id: "medium_term_objectives",
-        type: "textarea",
-        label: "Objetivos de Médio Prazo",
+        id: "retest_section",
+        type: "header",
+        label: "Reteste para o nível de atividade e estrutural",
       },
+      // Tabela: Reteste (Datas 1..4) para duas linhas
+      
       {
-        id: "long_term_objectives",
-        type: "textarea",
-        label: "Objetivos de Longo Prazo",
+        id: "retest_activity_structural_table",
+        type: "table",
+        label: "",
+        rowHeader: false,
+        rows: [""],
+        columns: [
+          "Teste para a limitação da atividade",
+          "Data 1",
+          "Data 2",
+          "Data 3",
+          "Data 4",
+        ],
       },
+
       {
-        id: "academics",
-        type: "text",
-        label: "Acadêmicos",
+        id: "retest_deficiency_cause_table",
+        type: "table",
+        label: "",
+        rowHeader: false,
+        rows: [""],
+        columns: [
+          "Teste para a causa da deficiência",
+          "Data 1",
+          "Data 2",
+          "Data 3",
+          "Data 4",
+        ],
       },
+
+      // Tabela: Plano de tratamento detalhado
+      
       {
-        id: "responsible_teacher",
-        type: "text",
-        label: "Professora responsável",
+        id: "detailed_treatment_plan_table",
+        type: "table",
+        label: "Plano de tratamento",
+        rows: [""],
+        rowHeader: false,
+        columns: [
+          "Objetivo/razões/propostas",
+          "Posição",
+          "Padrões/movimento ou atividade",
+          "Técnicas",
+          "Outros",
+        ],
       },
       {
         id: "evolution",
@@ -436,6 +462,165 @@ export const clinicTemplates: TemplateOption[] = [
         label: "Evolução",
         placeholder:
           "Registre aqui a evolução do paciente ao longo do tratamento",
+      },
+
+      // Conteúdos adicionais (renderizados como botão toggle)
+      
+      {
+        id: "body_functions_deficiencies",
+        type: "toggle",
+        label: "Funções Corporais – Lista de deficiências",
+        content: `1.	Mobilidade Passiva – Amplitude de Movimento (ADM)
+- Muscular
+o	Encurtamento estrutural/funcional
+o	Tônus dependente (ver 6.)
+- Tecido conectivo, tecidos conectivos (fáscia, cápsula articular etc)
+- Neural
+- Pele (tecido cicatricial)
+- Edema, linfático	2.	Força muscular – Endurance
+- Neurológico
+- Inibitório
+- Atrófico
+- Cardíaco (ver 9.)
+- Vascular (ver 9.)
+- Pulmonar (ver 10.)
+
+                                        
+-
+3.	Coordenação
+- Padrões temporais/espaciais
+- Intramuscular
+- Intermuscular
+- Destreza, acurácia terminal, habilidade, precisão
+- Velocidade	4. Equilíbrio*
+- Vestibular (ver 5.)
+- Coordenação (ver 3.)
+- Força muscular (ver 2.)
+- Tônus (ver 6.)
+- Sensibilidade (ver 5.)
+- ADM (ver 1.)
+
+*Manter a posição é uma “atividade” de acordo com a CIF
+5.	 Sensibilidade
+- Proprioceptiva
+- Tátil
+- Visual
+- Vestibular 
+- Auditiva	6. Tônus
+- Hipotonicidade
+o	Tônus postural
+- Hipertonicidade
+o	Espasticidade
+o	Rigidez
+o	Hipertonia reflexa – espasmo por dor
+- Distonia
+- Hiperatividade reflexa
+7.	Dor – avalie qual estrutura
+- Final da amplitude
+- Arco de dor
+- Dependente da carga
+- Inflamatória
+- Neural
+- Muscular
+- Outras	8. Funções neuropsicológicas
+- Emocional
+o	Insegurança, medo depressão, instabilidade emocional
+- Atenção, concentração
+- Apraxia
+- Afasia
+- Orientação espacial/temporal
+- Consciência
+- Déficits cognitivos
+- Outros
+8.	Sistema cardiovascular
+- Função da circulação do corpo
+- Força/endurance	10. Sistema pulmonar
+ - Respiração
+ - Força/endurance`,
+      },
+
+      
+      {
+        id: "appendix_fundamental_activities",
+        type: "toggle",
+        label: "Apêndice 1: Atividades Fundamentais",
+        content: `Apêndice 1: Atividades Fundamentais
+
+Essa lista descreve atividade de vida diária fundamentais. Se necessário adicione atividades para seu paciente*
+
+Atividade	Independente (I)
+Normal (N)
+Modificado (M) descreva como	Possível apenas com assistência (leve assistência, moderada assistência, considerável assistência)	Impossível
+Rolar de supino para direita ou esquerda 1,3			
+Passar de deitado para sentado 1,3,6			
+Manter-se sentado 1,3,6,7			
+Sentado para de pé, de pé para sentado 2,6,7			
+De pé 2,3,7			
+De pé em Tandem, apoio em uma perna (D/E) 2			
+Caminhar 3,5,6,7			
+Caminhar rápido/correr 6			
+Subir escadas 3,6,9			
+Descer escadas 9			
+Atividades básicas de vida diária (descrever qual atividade)			
+Atividades de membro superior (descreva qual) 4,8			
+ 
+Se não for possível avaliar o nível de independência da atividade, é possível avaliar o tempo ou distância que realizar a tarefa.
+
+Se for apropriado verifique também atividades como: transferências, transições (mudanças da posição do corpo), manutenção de certas posições, andando em terreno irregular, descendo até o chão, manejo da cadeira de rodas, pegando objetos do chão, carregando objetos, ...
+
+1.	Trunk Control Teste
+2.	Berg Balance Scale
+3.	Chedoke Mc Master Stroke Assessement
+4.	Dash Test
+5.	Functional Ambulation Categories
+6.	Rivermead Motor Assessement
+7.	Tinetti Test
+8.	Action Reseach Arm Test
+9.	Barthel Index
+10.	Functional Independence Measure (FIM) and Functional Assessement Measure (FAM)`,
+      },
+
+      
+      {
+        id: "appendix_gait_assessment",
+        type: "toggle",
+        label: "Apêndice 2: Avaliação da Marcha",
+        content: `Apêndice 2: Avaliação da Marcha
+
+Ajuda necessária:
+Velocidade habitual da marcha:          
+                       	5m/10m/20m Teste de velocidade da marcha:
+
+Comprimento do passo:
+
+
+Fases da marcha – Esquerda
+
+	Contato Inicial	Resposta à Carga	Apoio Médio	Apoio
+Terminal	Pré balanço	Balanço Inicial	Balanço
+Médio	Balanço Terminal
+Cabeça								
+Tronco								
+Pelve								
+Quadril								
+Joelho								
+Tornozelo/pé								
+Artelhos								
+
+Fases da marcha – Direita
+
+	Contato Inicial	Resposta à Carga	Apoio Médio	Apoio
+Terminal	Pré balanço	Balanço Inicial	Balanço
+Médio	Balanço Terminal
+Cabeça								
+Tronco								
+Pelve								
+Quadril								
+Joelho								
+Tornozelo/pé								
+Artelhos								
+
+Teste para a marcha: Dynamic Gait Index, 6Minute Gait Test, Functional Walking Categories, FAC, TUG etc.`,
       },
     ],
   },
