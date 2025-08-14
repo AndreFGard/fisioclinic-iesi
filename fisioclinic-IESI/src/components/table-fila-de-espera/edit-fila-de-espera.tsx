@@ -84,8 +84,8 @@ export function EditPatientDialog({ patient, setChange }: { patient: FilaDeEsper
           />
           <Input
             type="date"
-            value={editedPatient["data da procura"]}
-            onChange={(e) => handleInputChange("data da procura", e.target.value)}
+            value={editedPatient["procura"]}
+            onChange={(e) => handleInputChange("procura", e.target.value)}
             placeholder="Data da Procura"
           />
           <Input
