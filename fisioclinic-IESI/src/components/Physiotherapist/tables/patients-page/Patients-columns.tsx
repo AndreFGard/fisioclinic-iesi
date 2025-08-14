@@ -160,7 +160,9 @@ export function patientsColumns(
     },
     {
       id: "actions",
-      header: "Ações",
+      header: () => (
+        <div className="text-center">Ações</div>
+      ),
       cell: ({ row }) => <DetalhesButton pacienteId={row.original.id} />
     }
   ];

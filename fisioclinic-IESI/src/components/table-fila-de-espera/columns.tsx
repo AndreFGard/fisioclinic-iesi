@@ -28,6 +28,7 @@ export const columns = (
   sendRowChange: (change: FilaDeEspera) => void
   onPriorityChange?: (id: string, newPriority: string) => void
 ): ColumnDef<FilaDeEspera>[] => [
+
   { accessorKey: "nome", header: "Nome" },
   {
     accessorKey: "idade",
@@ -96,31 +97,129 @@ export const columns = (
         "Sem contato": "bg-gray-200 text-gray-800",
       };
 
-      if (!value) return <div className="text-center">Carregando...</div>;
-
-      const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const novoStatus = e.target.value;
-        setData(prev =>
-          prev.map(item =>
-            item.id === row.original.id ? { ...item, situacao: novoStatus } : item
-          )
-        );
-      };
-
-      return (
-        <div className="flex justify-center">
-          <select
-            value={value}
-            onChange={handleChange}
-            className={`rounded-full p-1 font-medium border text-center ${colorMap[value] || ""}`}
+            className={`text-center transition-colors duration-200 ${column.getIsSorted()
+                ? "text-blue-700 font-semibold"
+                : "text-gray-700 hover:text-blue-600 hover:bg-gray-100"
+              } rounded-md px-2 py-1 flex items-center justify-start gap-1`}
           >
-            {options.map(opt => (
-              <option key={opt} value={opt}>{opt}</option>
-            ))}
-          </select>
-        </div>
-      );
+            Data da Procura
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        );
+      },
+      cell: ({ row }) => {
+        const rawDate = row.getValue("data da procura") as string;
+        if (!rawDate) return "";
+        const date = new Date(rawDate);
+        return (
+          <div className="text-center">
+            {format(date, "dd/MM/yyyy", { locale: ptBR })}
+          </div>
+        );
+      },
+      sortingFn: (rowA, rowB, columnId) => {
+        const dateA = new Date(rowA.getValue(columnId));
+        const dateB = new Date(rowB.getValue(columnId));
+        return dateA.getTime() - dateB.getTime();
+      },
     },
+    {
+      accessorKey: "situacao",
+      header: () => <div className="text-center font-medium">Situação</div>,
+      filterFn: equalsFilter,
+      cell: ({ row }) => {
+        const value = row.getValue("situacao") as string;
+        const options = [
+          "Fila de espera",
+          "Em tratamento",
+          "Triagem",
+          "Concluído",
+          "Não compareceu",
+          "Sem contato"
+        ];
+        const colorMap: Record<string, string> = {
+          "Fila de espera": "bg-yellow-100 text-yellow-800",
+          "Em tratamento": "bg-blue-100 text-blue-800",
+          "Triagem": "bg-purple-100 text-purple-800",
+          "Concluído": "bg-green-100 text-green-800",
+          "Não compareceu": "bg-red-100 text-red-800",
+          "Sem contato": "bg-gray-200 text-gray-800",
+        };
+
+        if (!value) return <div className="text-center">Carregando...</div>;
+
+        const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+          const novoStatus = e.target.value;
+          setData(prev =>
+            prev.map(item =>
+              item.id === row.original.id ? { ...item, situacao: novoStatus } : item
+            )
+          );
+        };
+
+        return (
+          <div className="flex justify-center">
+            <select
+              value={value}
+              onChange={handleChange}
+              className={`rounded-full p-1 font-medium border text-center ${colorMap[value] || ""}`}
+            >
+              {options.map(opt => (
+                <option key={opt} value={opt}>{opt}</option>
+              ))}
+            </select>
+          </div>
+        );
+      },
+    },
+    {
+      accessorKey: "prioridade",
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          className={`text-center transition-colors duration-200 ${column.getIsSorted()
+              ? "text-blue-700 font-semibold"
+              : "text-gray-700 hover:text-blue-600 hover:bg-gray-100"
+            } rounded-md px-2 py-1 flex items-center justify-start gap-1`}
+        >
+          Prioridade
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      ),
+      cell: ({ row }) => {
+        const value = row.original.prioridade;
+        const options = ["alta", "média", "baixa"];
+        const colorMap: Record<string, string> = {
+          alta: "bg-red-100 text-red-800",
+          média: "bg-yellow-100 text-yellow-800",
+          baixa: "bg-green-100 text-green-800",
+        };
+
+        if (!value) return <div className="text-center">Carregando...</div>;
+
+        return (
+          <div className="flex justify-center">
+            <select
+              value={value}
+              onChange={(e) => onPriorityChange?.(row.original.id, e.target.value)}
+              className={`rounded-full p-1 font-medium border text-center ${colorMap[value]}`}
+            >
+              {options.map(opt => (
+                <option key={opt} value={opt}>{opt}</option>
+              ))}
+            </select>
+          </div>
+        );
+      },
+      sortingFn: (rowA, rowB) => {
+        const priorityOrder: Record<string, number> = { alta: 3, média: 2, baixa: 1 };
+        const a = priorityOrder[rowA.original.prioridade] ?? 0;
+        const b = priorityOrder[rowB.original.prioridade] ?? 0;
+        return b - a;
+      },
+    },
+
   },
   {
     accessorKey: "prioridade",
@@ -181,6 +280,11 @@ export const columns = (
     {
       id: "actions",
       header: "Ações",
+    {
+      id: "actions",
+      header: () => (
+        <div className="text-center">Ações</div>
+      ),
       cell: ({ row }) => {
         const patient = row.original;
         return (
@@ -189,6 +293,14 @@ export const columns = (
               patient={patient} 
               setChange={sendRowChange}
             />
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-9 w-9 text-blue-600 hover:bg-blue-600 hover:text-white transition-colors"
+              onClick={() => handleEdit(patient)}
+            >
+              <Edit className="h-4 w-4" />
+            </Button>
             <Button
               variant="ghost"
               size="icon"
