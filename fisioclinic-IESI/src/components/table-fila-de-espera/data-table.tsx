@@ -15,7 +15,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { updateWaitingQueueRow, WaitingQueueRowChange } from "@/lib/api"
+import { updateWaitingQueueField, WaitingQueueRowChange } from "@/lib/api"
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -86,7 +86,7 @@ export function FilaDeEsperaTable<TData, TValue>({
         <Button
         onClick={async () => {
           try {
-            await Promise.all(changesLog.map(change => updateWaitingQueueRow(change)));
+            await Promise.all(changesLog.map(change => updateWaitingQueueField(change)));
             setChangesLog([]); // Limpa o log após salvar
             const originalText = "Salvar modificações";
             const successText = "(Check) ok";

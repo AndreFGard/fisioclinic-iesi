@@ -1,14 +1,31 @@
 const apiUrl = import.meta.env.VITE_API_URL;
 
+export type FilaDeEspera = {
+  id: string
+  nome: string
+  idade: number
+  "telefone-1": string
+  "telefone-2": string
+  bairro: string
+  diagnostico: string
+  disciplina: string
+  hospital: string
+  "medico(a)": string
+  "data da procura": string
+  situacao: string
+}
+
+
 export type WaitingQueueRowChange = {
   id: string;
   fieldName: string;
   newValue: any;
 };
 
-export async function updateWaitingQueueRow(change: WaitingQueueRowChange): Promise<Response> {
+
+
+export async function updateWaitingQueueField(change: WaitingQueueRowChange): Promise<Response> {
   const { id, fieldName, newValue } = change;
-  console.log(`Apiurl: ${apiUrl}`)
   try {
     const response = await fetch(`${apiUrl}/fila/${id}`, {
       method: 'PATCH',
@@ -19,14 +36,36 @@ export async function updateWaitingQueueRow(change: WaitingQueueRowChange): Prom
     });
 
     if (!response.ok) {
-      // Lança um erro se a resposta não for bem-sucedida
       const errorMessage = `Erro ao atualizar a fila: ${response.status} ${response.statusText}`;
       throw new Error(errorMessage);
     }
 
-    return response; // Retorna a resposta em caso de sucesso
+    return response;
   } catch (error) {
     console.error("Erro na atualização da fila:", error);
-    throw error; // Propaga o erro para ser tratado onde a função for chamada
+    throw error;
   }
+}
+
+export async function replaceEntireWaitingQueueRow(patient: FilaDeEspera): Promise<Response> {
+    const { id } = patient;
+    try {
+        const response = await fetch(`${apiUrl}/fila/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(patient),
+        });
+
+        if (!response.ok) {
+            const errorMessage = `Erro ao atualizar o paciente: ${response.status} ${response.statusText}`;
+            throw new Error(errorMessage);
+        }
+
+        return response;
+    } catch (error) {
+        console.error("Erro na atualização do paciente:", error);
+        throw error;
+    }
 }
