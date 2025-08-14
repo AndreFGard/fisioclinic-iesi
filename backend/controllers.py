@@ -6,6 +6,8 @@ from repositories.data import *
 from services.rabbitmq_utils import *
 from services.consumidor_cadastro import iniciar_consumidor
 from services.consumidor_get_paciente import iniciar_consumidor_busca_paciente
+from services.consumidor_agendamento import iniciar_consumidor_agendamento
+from services.consumidor_get_agendamento import iniciar_consumidor_get_agendamento
 from schemas import *
 
 
@@ -27,6 +29,8 @@ import threading
 def startup_event():
     threading.Thread(target=iniciar_consumidor, daemon=True).start()
     threading.Thread(target=iniciar_consumidor_busca_paciente, daemon=True).start()
+    threading.Thread(target=iniciar_consumidor_agendamento, daemon=True).start()
+    threading.Thread(target=iniciar_consumidor_get_agendamento, daemon=True).start()
 
 @app.post("/cadastro_paciente")
 def cadastro_paciente(cadastro:cadastro_schema):
@@ -96,18 +100,24 @@ def agendar_paciente(agendamento: agendamento_schema):
         "name": agendamento.name,
         "schedule": [
             {
-                "id": item.id,
-                "idScheduleReturn": item.idScheduleReturn,
+                "id": "",
+                "idScheduleReturn": "",
                 "dateSchudule": item.dateSchudule,
-                "local": item.local,
-                "idCalendar": item.idCalendar,
-                "procedures": item.procedures,
+                "local": 1,
+                "idCalendar": 234,
+                "procedures": 1,
                 "hour": item.hour
             }
             for item in agendamento.schedule
         ]
     }
-    return {"status": "ok"}
+    resposta = envia_para_fila_rpc_agendamento(body)
+    return {"resposta": resposta}
+
+@app.get("/agendamento/{id_agendamento}")
+def get_agendamento(id_agendamento: str):
+    resposta = envia_para_fila_rpc_get_agendamento(id_agendamento)
+    return resposta
 
 from placeholders import filaData
 @app.get("/fila")
