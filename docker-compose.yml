@@ -11,6 +11,6 @@ services:
     image: dvs:latest
     container_name: fisioclinic-app
     ports:
-      - "8000:8000"
+      - "33347:8000"
     depends_on:
       - rabbitmq
