@@ -1,4 +1,4 @@
-from .tabelas import *
+from tabelas import *
 import json
 from datetime import date
 
@@ -141,10 +141,124 @@ with Session() as session:
         for key, value in updates.items():
             if(value == None):
                 continue
-            # converter data se for string e coluna procura
             if key == "procura" and isinstance(value, str):
                 value = date.fromisoformat(value)
             setattr(fila, key, value)
         
         session.commit()
         return True
+
+    def create_user(nome: str, senha: str, email: str):
+        existing = session.get(User, nome)
+        if existing:
+            return False
+
+        try:
+            u = User(nome, senha, email)
+            session.add(u)
+            session.commit()
+            session.refresh(u)
+            return True
+        except:
+            session.rollback()
+            return False
+
+    def create_group(nome: str):
+        existing = session.query(Grupo).filter(Grupo.nome == nome).first()
+        if existing:
+            return False
+
+        try:
+            g = Grupo(nome)
+            session.add(g)
+            session.commit()
+            session.refresh(g)
+            return True
+        except:
+            session.rollback()
+            return False
+
+    def add_user_to_group(user_id: str, grupo_id: int, eh_manager: bool = False):
+        user = session.get(User, user_id)
+        if not user:
+            raise ValueError(f"User '{user_id}' não encontrado")
+
+        grupo = session.get(Grupo, grupo_id)
+        if not grupo:
+            raise ValueError(f"Grupo id={grupo_id} não encontrado")
+
+        stmt_check = select(user_grupo).where(
+            user_grupo.c.user_id == user_id,
+            user_grupo.c.grupo_id == grupo_id
+        )
+        existing = session.execute(stmt_check).first()
+        if existing:
+            return False
+
+        try:
+            session.execute(
+                user_grupo.insert(),
+                {"user_id": user_id, "grupo_id": grupo_id, "eh_manager": eh_manager}
+            )
+            session.commit()
+            return True
+        except:
+            session.rollback()
+            raise
+
+    def get_grupos(user_id: str):
+        user = session.query(User).filter(User.id == user_id).first()
+        if not user:
+            print(f"Nenhum usuário com id {user_id}")
+            return []
+        grupos = user.grupos
+        
+        return [todict(r) for r in grupos]
+    
+    def create_prontuario(titulo: str, conteudo: str, dono_id: str, grupo_id: int = None, check_membership: bool = False):
+        dono = session.get(User, dono_id)
+        if dono is None:
+            raise ValueError(f"Dono (User) com id='{dono_id}' não encontrado")
+
+        grupo = None
+        if grupo_id is not None:
+            grupo = session.get(Grupo, grupo_id)
+            if grupo is None:
+                raise ValueError(f"Grupo com id={grupo_id} não encontrado")
+
+        try:
+            pront = Prontuario(titulo=titulo, conteudo=conteudo, grupo=grupo, dono=dono)
+            session.add(pront)
+            session.commit()
+            session.refresh(pront)
+            return True
+        except:
+            session.rollback()
+            return False
+
+    def get_prontuarios_permitidos(user_id: str, grupo_id: int):
+        stmt = (
+            select(user_grupo.c.eh_manager)
+            .where(user_grupo.c.user_id == user_id)
+            .where(user_grupo.c.grupo_id == grupo_id)
+        )
+        result = session.execute(stmt).scalar()
+        
+        if result is None:
+            return []
+        
+        if result:
+            #manager -> todos
+            tabela = session.query(Prontuario).filter(Prontuario.grupo_id == grupo_id).all()
+        else:
+            #n manager -> proprios e no grupo
+            tabela = session.query(Prontuario).filter(
+                Prontuario.grupo_id == grupo_id,
+                Prontuario.dono_id == user_id
+            ).all()
+
+        return [todict(r) for r in tabela]
+
+    def get_proprios(user_id: str):
+        tabela = session.query(Prontuario).filter(Prontuario.dono_id == user_id).all()
+        return [todict(r) for r in tabela]
