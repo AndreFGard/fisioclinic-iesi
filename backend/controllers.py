@@ -7,13 +7,25 @@ from services.rabbitmq_utils import envia_para_fila
 from services.consumidor_cadastro import iniciar_consumidor
 from schemas import *
 
-app = FastAPI()   
+
+app = FastAPI() 
+from fastapi.middleware.cors import CORSMiddleware
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allows all origins
+    allow_credentials=True,
+    allow_methods=["*"],  # Allows all methods
+    allow_headers=["*"],  # Allows all headers
+)
+  
 
 import threading
 
 @app.on_event("startup")
 def startup_event():
     threading.Thread(target=iniciar_consumidor, daemon=True).start()
+    # Configure CORS to accept requests from any origin
 
 
 
