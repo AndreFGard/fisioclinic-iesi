@@ -23,7 +23,11 @@ interface PhysiotherapistProps {
   setor: string;
 }
 
-interface FilaDeEspera {
+// Importação do tipo FilaDeEspera da API
+import { FilaDeEspera as ApiFilaDeEspera } from "@/lib/api";
+
+// Tipo local usado no componente
+interface LocalFilaDeEspera {
   id: string;
   nome: string;
   idade: number;
@@ -37,6 +41,44 @@ interface FilaDeEspera {
   "data da procura": string;
   situacao: string;
   prioridade: string;
+}
+
+// Função para converter do formato local para o formato da API
+function convertToApiFormat(local: LocalFilaDeEspera): ApiFilaDeEspera {
+  return {
+    id: local.id,
+    nome: local.nome,
+    idade: local.idade,
+    tel1: local["telefone-1"],
+    tel2: local["telefone-2"],
+    bairro: local.bairro,
+    diagnostico: local.diagnostico,
+    disciplina: local.disciplina,
+    hospital: local.hospital,
+    "medico(a)": local["medico(a)"],
+    "data da procura": local["data da procura"],
+    situacao: local.situacao,
+    prioridade: local.prioridade
+  };
+}
+
+// Função para converter do formato da API para o formato local
+function convertFromApiFormat(api: ApiFilaDeEspera): LocalFilaDeEspera {
+  return {
+    id: api.id,
+    nome: api.nome,
+    idade: api.idade,
+    "telefone-1": api.tel1,
+    "telefone-2": api.tel2,
+    bairro: api.bairro,
+    diagnostico: api.diagnostico,
+    disciplina: api.disciplina,
+    hospital: api.hospital,
+    "medico(a)": api["medico(a)"],
+    "data da procura": api["data da procura"],
+    situacao: api.situacao,
+    prioridade: api.prioridade
+  };
 }
 
 // Dados mockados
@@ -90,7 +132,7 @@ async function getDataEstudantes(): Promise<Students[]> {
   ];
 }
 
-async function geteDataFilaDeEspera(): Promise<FilaDeEspera[]> {
+async function geteDataFilaDeEspera(): Promise<LocalFilaDeEspera[]> {
   return [
     {
       id: "1",
@@ -217,12 +259,13 @@ async function geteDataFilaDeEspera(): Promise<FilaDeEspera[]> {
 
 // Componente principal
 export default function Physiotherapist({ physiotherapist, setor }: PhysiotherapistProps) {
-  const [waitingQueue, setWaitingQueue] = useState<FilaDeEspera[]>([]);
+  const [waitingQueue, setWaitingQueue] = useState<LocalFilaDeEspera[]>([]);
   const [patientsInTreatment, setPatientsInTreatment] = useState<Pacients[]>([]);
   const [students, setStudents] = useState<Students[]>([]);
   const [searchTermStudents, setSearchTermStudents] = useState("");
   const [searchTermQueue, setSearchTermQueue] = useState("");
   const [searchTermPatients, setSearchTermPatients] = useState("");
+  const [changesLog, setChangesLog] = useState<ApiFilaDeEspera[]>([]);
 
   useEffect(() => {
     // Fila de espera e pacientes
@@ -231,7 +274,7 @@ export default function Physiotherapist({ physiotherapist, setor }: Physiotherap
       const pacientes = data.filter(p => p.situacao !== "Fila de espera");
 
       setWaitingQueue(fila);
-      setPatientsInTreatment(pacientes as Pacients[]);
+      setPatientsInTreatment(pacientes as unknown as Pacients[]);
     });
 
     // Estudantes
@@ -245,6 +288,29 @@ export default function Physiotherapist({ physiotherapist, setor }: Physiotherap
       prev.map(p => (p.id === id ? { ...p, prioridade: newPriority } : p))
     );
   };
+  
+  // Função para lidar com alterações na tabela de fila de espera
+  const handleRowChange = (change: ApiFilaDeEspera) => {
+    // Adiciona a alteração ao log de alterações se ainda não existir
+    setChangesLog(prev => {
+      // Verifica se já existe uma alteração para este ID
+      const exists = prev.find(item => item.id === change.id);
+      if (exists) {
+        // Atualiza a alteração existente
+        return prev.map(item => item.id === change.id ? change : item);
+      } else {
+        // Adiciona uma nova alteração
+        return [...prev, change];
+      }
+    });
+    
+    // Atualiza o estado local também
+    setWaitingQueue(prev => {
+      // Converte o item da API para o formato local antes de atualizar
+      const localChange = convertFromApiFormat(change);
+      return prev.map(item => item.id === localChange.id ? localChange : item);
+    });
+  };
 
   const { columns } = patientsColumns(handlePriorityChange);
 
@@ -257,7 +323,7 @@ export default function Physiotherapist({ physiotherapist, setor }: Physiotherap
     );
   }
 
-  function filterQueue(queue: FilaDeEspera[], term: string) {
+  function filterQueue(queue: LocalFilaDeEspera[], term: string) {
     const t = term.toLowerCase();
     return queue.filter(item =>
       item.nome.toLowerCase().includes(t) ||
@@ -349,8 +415,14 @@ export default function Physiotherapist({ physiotherapist, setor }: Physiotherap
                   </span>
                 </div>
                 <FilaDeEsperaTable
-                  columns={columnsFactory(setWaitingQueue)}
-                  data={filteredQueue}
+                  columns={columnsFactory(
+                    (newData) => setWaitingQueue(newData as unknown as LocalFilaDeEspera[]),
+                    handleRowChange,
+                    handlePriorityChange
+                  )}
+                  data={filteredQueue.map(item => convertToApiFormat(item))}
+                  changesLog={changesLog}
+                  setChangesLog={setChangesLog}
                 />
               </CardContent>
             </Card>

@@ -1,3 +1,4 @@
 from data import *
 
-print(get_alunos("alice"))
+create_paciente({"id": 1,
+                 "nome": "Bob"})

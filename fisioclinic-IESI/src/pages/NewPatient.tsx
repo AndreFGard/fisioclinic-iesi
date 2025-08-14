@@ -25,45 +25,43 @@ import DiagnosisSelect from "@/components/DiagnosisSelect";
 import { DatePicker } from "@/components/ui/date-picker";
 import { UserPlus, MapPin, Save, Stethoscope, ArrowLeft } from "lucide-react";
 
-interface PatientData {
-  // Dados pessoais
-  fullName: string;
-  cpf: string;
-  birthDate: Date | undefined;
-  gender: string;
-
-  // Contato
-  cellphone: string;
-  cellphone2: string;
-  neighborhood: string;
-  city: string;
-
-  // Dados clínicos
-  diagnosis: string;
-  area: string;
-  hospital: string;
-  doctor: string;
-  seekDate: Date | undefined;
-  status: string;
-  observations: string;
-}
+import { createPatient, PatientData } from "@/lib/api";
+const emptyPatient: PatientData = {
+  nome: "",
+  cpf: "",
+  id: "",
+  nascimento: undefined,
+  genero: "",
+  tel1: "",
+  tel2: "",
+  bairro: "",
+  cidade: "",
+  diagnostico: "",
+  disciplina: "",
+  hospital: "",
+  doutor: "",
+  procura: undefined,
+  situacao: "",
+  obs: "",
+};
 
 const initialPatientData: PatientData = {
-  fullName: "",
-  cpf: "",
-  birthDate: undefined,
-  gender: "",
-  cellphone: "",
-  cellphone2: "",
-  neighborhood: "",
-  city: "",
-  diagnosis: "",
-  area: "",
-  hospital: "",
-  doctor: "",
-  seekDate: undefined,
-  status: "",
-  observations: "",
+  nome: "Maria da Silva",
+  cpf: "123.456.789-00",
+  id: "",
+  nascimento: new Date(1985, 4, 15),
+  genero: "feminino",
+  tel1: "(81) 91234-5678",
+  tel2: "(81) 99876-5432",
+  bairro: "Boa Viagem",
+  cidade: "Recife",
+  diagnostico: "lombalgia",
+  disciplina: "ortopedia",
+  hospital: "Hospital das Clínicas",
+  doutor: "Dr. João Pereira",
+  procura: new Date(2024, 2, 10),
+  situacao: "em-tratamento",
+  obs: "Paciente apresenta dor lombar crônica há 2 anos. Encaminhada para fisioterapia após avaliação médica.",
 };
 
 export default function NewPatient() {
@@ -72,9 +70,9 @@ export default function NewPatient() {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [touched, setTouched] = useState<{
-    birthDate?: boolean;
-    seekDate?: boolean;
-    status?: boolean;
+    nascimento?: boolean;
+    procura?: boolean;
+    situacao?: boolean;
   }>({});
 
   const areaOptions = [
@@ -116,26 +114,26 @@ export default function NewPatient() {
 
     // Validação básica dos campos obrigatórios
     if (
-      !patientData.fullName ||
-      !patientData.birthDate ||
-      !patientData.neighborhood ||
-      !patientData.city
+      !patientData.nome ||
+      !patientData.nascimento ||
+      !patientData.bairro ||
+      !patientData.cidade
     ) {
       alert(
         "Por favor, preencha todos os campos obrigatórios na seção de Dados Pessoais e Endereço."
       );
-      setTouched((t) => ({ ...t, birthDate: true }));
+      setTouched((t) => ({ ...t, nascimento: true }));
       return;
     }
 
-    if (!patientData.cellphone) {
+    if (!patientData.tel1) {
       alert("Por favor, preencha pelo menos o campo de celular.");
       return;
     }
 
-    if (!patientData.seekDate || !patientData.status) {
+    if (!patientData.procura || !patientData.situacao) {
       alert("Por favor, preencha a Data da Procura e a Situação.");
-      setTouched((t) => ({ ...t, seekDate: true, status: true }));
+      setTouched((t) => ({ ...t, procura: true, situacao: true }));
       return;
     }
 
@@ -143,15 +141,8 @@ export default function NewPatient() {
 
     try {
       // Aqui você implementaria a lógica de salvamento
-      console.log("Dados do paciente:", patientData);
+      const patientId =  await createPatient(patientData);
 
-      // Simular delay de API
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-
-      // Simular retorno da API com ID do paciente criado
-      const createdPatientId = Math.floor(Math.random() * 1000) + 1;
-
-      alert("Paciente cadastrado com sucesso!");
       navigate(`/patient/${createdPatientId}`);
       return;
     } catch (error) {
@@ -211,14 +202,14 @@ export default function NewPatient() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="md:col-span-2">
-                    <Label htmlFor="fullName">
+                    <Label htmlFor="nome">
                       Nome Completo <span className="text-red-500">*</span>
                     </Label>
                     <Input
-                      id="fullName"
-                      value={patientData.fullName}
+                      id="nome"
+                      value={patientData.nome}
                       onChange={(e) =>
-                        handleInputChange("fullName", e.target.value)
+                        handleInputChange("nome", e.target.value)
                       }
                       placeholder="Digite o nome completo"
                       className="h-11"
@@ -242,10 +233,10 @@ export default function NewPatient() {
                       Data de Nascimento <span className="text-red-500">*</span>
                     </Label>
                     <DatePicker
-                      date={patientData.birthDate}
+                      date={patientData.nascimento}
                       setDate={(date) => {
-                        handleInputChange("birthDate", date);
-                        setTouched((t) => ({ ...t, birthDate: true }));
+                        handleInputChange("nascimento", date);
+                        setTouched((t) => ({ ...t, nascimento: true }));
                       }}
                       placeholder="Selecione a data de nascimento"
                       fromYear={1920}
@@ -254,16 +245,16 @@ export default function NewPatient() {
                       toDate={new Date()}
                       closeOnSelect
                       showFooterActions
-                      invalid={touched.birthDate && !patientData.birthDate}
+                      invalid={touched.nascimento && !patientData.nascimento}
                     />
                   </div>
 
                   <div className="md:col-span-2">
                     <Label>Gênero</Label>
                     <Select
-                      value={patientData.gender}
+                      value={patientData.genero}
                       onValueChange={(value) =>
-                        handleInputChange("gender", value)
+                        handleInputChange("genero", value)
                       }
                     >
                       <SelectTrigger className="h-11">
@@ -302,14 +293,14 @@ export default function NewPatient() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="cellphone">
+                    <Label htmlFor="tel1">
                       Telefone <span className="text-red-500">*</span>
                     </Label>
                     <Input
-                      id="cellphone"
-                      value={patientData.cellphone}
+                      id="tel1"
+                      value={patientData.tel1}
                       onChange={(e) =>
-                        handleInputChange("cellphone", e.target.value)
+                        handleInputChange("tel1", e.target.value)
                       }
                       placeholder="(00) 00000-0000"
                       className="h-11"
@@ -318,12 +309,12 @@ export default function NewPatient() {
                   </div>
 
                   <div>
-                    <Label htmlFor="cellphone2">Telefone 2</Label>
+                    <Label htmlFor="tel2">Telefone 2</Label>
                     <Input
-                      id="cellphone2"
-                      value={patientData.cellphone2}
+                      id="tel2"
+                      value={patientData.tel2}
                       onChange={(e) =>
-                        handleInputChange("cellphone2", e.target.value)
+                        handleInputChange("tel2", e.target.value)
                       }
                       placeholder="(00) 00000-0000"
                       className="h-11"
@@ -331,14 +322,14 @@ export default function NewPatient() {
                   </div>
 
                   <div>
-                    <Label htmlFor="neighborhood">
+                    <Label htmlFor="bairro">
                       Bairro <span className="text-red-500">*</span>
                     </Label>
                     <Input
-                      id="neighborhood"
-                      value={patientData.neighborhood}
+                      id="bairro"
+                      value={patientData.bairro}
                       onChange={(e) =>
-                        handleInputChange("neighborhood", e.target.value)
+                        handleInputChange("bairro", e.target.value)
                       }
                       placeholder="Bairro"
                       className="h-11"
@@ -347,14 +338,14 @@ export default function NewPatient() {
                   </div>
 
                   <div>
-                    <Label htmlFor="city">
+                    <Label htmlFor="cidade">
                       Cidade <span className="text-red-500">*</span>
                     </Label>
                     <Input
-                      id="city"
-                      value={patientData.city}
+                      id="cidade"
+                      value={patientData.cidade}
                       onChange={(e) =>
-                        handleInputChange("city", e.target.value)
+                        handleInputChange("cidade", e.target.value)
                       }
                       placeholder="Cidade"
                       className="h-11"
@@ -384,11 +375,11 @@ export default function NewPatient() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="diagnosis">Diagnóstico</Label>
+                    <Label htmlFor="diagnostico">Diagnóstico</Label>
                     <DiagnosisSelect
-                      value={patientData.diagnosis}
+                      value={patientData.diagnostico}
                       onChange={(value) =>
-                        handleInputChange("diagnosis", value)
+                        handleInputChange("diagnostico", value)
                       }
                       options={diagnosisOptions}
                       placeholder="Selecione ou digite para adicionar"
@@ -398,8 +389,8 @@ export default function NewPatient() {
                   <div>
                     <Label htmlFor="area">Área</Label>
                     <AreaSelect
-                      value={patientData.area}
-                      onChange={(value) => handleInputChange("area", value)}
+                      value={patientData.disciplina}
+                      onChange={(value) => handleInputChange("disciplina", value)}
                       options={areaOptions}
                       placeholder="Selecione ou digite para adicionar"
                     />
@@ -419,12 +410,12 @@ export default function NewPatient() {
                   </div>
 
                   <div>
-                    <Label htmlFor="doctor">Médico</Label>
+                    <Label htmlFor="doutor">Médico</Label>
                     <Input
-                      id="doctor"
-                      value={patientData.doctor}
+                      id="doutor"
+                      value={patientData.doutor}
                       onChange={(e) =>
-                        handleInputChange("doctor", e.target.value)
+                        handleInputChange("doutor", e.target.value)
                       }
                       placeholder="Nome do médico"
                       className="h-11"
@@ -436,10 +427,10 @@ export default function NewPatient() {
                       Data da Procura <span className="text-red-500">*</span>
                     </Label>
                     <DatePicker
-                      date={patientData.seekDate}
+                      date={patientData.procura}
                       setDate={(date) => {
-                        handleInputChange("seekDate", date);
-                        setTouched((t) => ({ ...t, seekDate: true }));
+                        handleInputChange("procura", date);
+                        setTouched((t) => ({ ...t, procura: true }));
                       }}
                       placeholder="Selecione a data da procura"
                       fromYear={2020}
@@ -448,30 +439,30 @@ export default function NewPatient() {
                       toDate={new Date(new Date().getFullYear() + 1, 11, 31)}
                       closeOnSelect
                       showFooterActions
-                      invalid={touched.seekDate && !patientData.seekDate}
+                      invalid={touched.procura && !patientData.procura}
                     />
                   </div>
 
                   <div>
-                    <Label htmlFor="status">
+                    <Label htmlFor="situacao">
                       Situação <span className="text-red-500">*</span>
                     </Label>
                     <Select
-                      value={patientData.status}
+                      value={patientData.situacao}
                       onValueChange={(value) => {
-                        handleInputChange("status", value);
-                        setTouched((t) => ({ ...t, status: true }));
+                        handleInputChange("situacao", value);
+                        setTouched((t) => ({ ...t, situacao: true }));
                       }}
                     >
                       <SelectTrigger
                         className={cn(
                           "h-11",
-                          touched.status &&
-                            !patientData.status &&
+                          touched.situacao &&
+                            !patientData.situacao &&
                             "border-destructive focus-visible:ring-destructive"
                         )}
                         aria-invalid={
-                          touched.status && !patientData.status
+                          touched.situacao && !patientData.situacao
                             ? true
                             : undefined
                         }
@@ -494,12 +485,12 @@ export default function NewPatient() {
                   </div>
 
                   <div className="md:col-span-2">
-                    <Label htmlFor="observations">Observações</Label>
+                    <Label htmlFor="obs">Observações</Label>
                     <Textarea
-                      id="observations"
-                      value={patientData.observations}
+                      id="obs"
+                      value={patientData.obs}
                       onChange={(e) =>
-                        handleInputChange("observations", e.target.value)
+                        handleInputChange("obs", e.target.value)
                       }
                       placeholder="Observações gerais sobre o paciente ou tratamento"
                       className="min-h-[100px]"

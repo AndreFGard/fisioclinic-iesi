@@ -10,7 +10,18 @@ from services.consumidor_agendamento import iniciar_consumidor_agendamento
 from services.consumidor_get_agendamento import iniciar_consumidor_get_agendamento
 from schemas import *
 
-app = FastAPI()   
+
+app = FastAPI() 
+from fastapi.middleware.cors import CORSMiddleware
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allows all origins
+    allow_credentials=True,
+    allow_methods=["*"],  # Allows all methods
+    allow_headers=["*"],  # Allows all headers
+)
+  
 
 import threading
 
@@ -40,12 +51,12 @@ def cadastro_paciente(cadastro:cadastro_schema):
     "city": cadastro.cidade,
     "state": "",
     "zip": "",
-    "cellphone":cadastro.telefone1,
-    "phone": cadastro.telefone2,
+    "cellphone":cadastro.tel1,
+    "phone": cadastro.tel2,
     "email": "",
-    "obs": str({"diagnostico" : cadastro.diagnostico, "observacao" : cadastro.observacao,"situacao" : cadastro.situacao}),
+    "obs": str({"diagnostico" : cadastro.diagnostico, "observacao" : cadastro.obs,"situacao" : cadastro.situacao}),
     "sex": "",
-    "dateOfBirth": cadastro.dataNascimento,
+    "dateOfBirth": cadastro.nascimento,
     "country": "BR",
     "profession":cadastro.disciplina,  
     "educationLevel": "",
@@ -54,7 +65,7 @@ def cadastro_paciente(cadastro:cadastro_schema):
     "healthProfessionalResponsible":cadastro.doutor,
     "healthInsurancePlan": "",
     "healthInsurancePlanCardNumber": "",
-    "indicatedBy": str({"hospital" :cadastro.hospital,"data" :cadastro.dataProcura}),
+    "indicatedBy": str({"hospital" :cadastro.hospital,"data" :cadastro.procura}),
     "genre": cadastro.genero,
     "bloodType": "",
     "bloodFactor": "",
@@ -70,7 +81,11 @@ def cadastro_paciente(cadastro:cadastro_schema):
     "acceptMinorPatient": False,
     "cellphoneCountry": "BR"
     }
-    response = envia_para_fila_rpc(body)
+    try:
+        response = envia_para_fila_rpc(body)
+    except:
+        print("rabbit mq error")
+    response = 200
     return {"resposta": response}
 
 @app.get("/buscar_paciente/{id_paciente}")
@@ -104,9 +119,12 @@ def get_agendamento(id_agendamento: str):
     resposta = envia_para_fila_rpc_get_agendamento(id_agendamento)
     return resposta
 
+from placeholders import filaData
 @app.get("/fila")
 def fila_all():
-    return get_base()
+    x =  get_base()
+    print(x)
+    return x
 
 @app.post("/fila/filter")
 def filtro_fila(filtros: dict):
@@ -114,7 +132,7 @@ def filtro_fila(filtros: dict):
 
 @app.post("/fila")
 def add_fila(c: fila_schema):
-    if(emfileirar(c)):
+    if(emfileirar(c.model_dump())):
         return {"add": "ok"}
     else:
         raise HTTPException(status_code=400, detail="Informações faltando ou mal formatadas")
@@ -127,8 +145,9 @@ def pop_fila(id: int):
         raise HTTPException(status_code=400, detail="ID inexistente")
     
 @app.put("/fila/{id}")
-def edit_fila(id: int, change: edicao_schema):
-    if(editar(id, change)):
+def edit_fila(id: int, new_data: fila_schema):
+    print(new_data)
+    if(editar(id, new_data.model_dump())):
         return {"editado": "ok"}
     else:
         raise HTTPException(status_code=400, detail="ID inexistente")
@@ -159,7 +178,7 @@ def new_user(u: user_schema):
         return {"criado": "ok"}
     else:
         raise HTTPException(status_code=400, detail="Usuário já existe")
-    
+
 @app.post("/grupo/new")
 def new_user(u: grupo_schema):
     a = create_group(u.nome)
@@ -180,8 +199,32 @@ def add_to(u: add_schema):
 def alunos(id: str):
     return get_alunos(id)
 
+@app.get("/pacientes/{id}")
+def pacientesof(id: str):
+    return get_pacientes_do_user(id)
+
+@app.get("agendamentos/user/{id}")
+def agendofuser(id: str):
+    return get_agendamentos_do_user(id)
+
+@app.get("agendamento/paciente/{id}")
+def agendofpac(id:int):
+    return get_agendamentos_do_paciente(id)
+
+@app.get("agendamento/paciente/of/{id_p}/{id_u}")
+def agendofon(id_p: int, id_u: str):
+    return get_agendamentos_do_paciente_por_responsavel(id_p, id_u)
+
+@app.post("agendamento//new")
+def agnew(u: ag_schema):
+    if(create_agendamento(u.id, u.nome, u.user_id, u.pac_id)):
+        return {"criado": "ok"}
+    else:
+        raise HTTPException(status_code=400, detail="Ocorreu um erro")
+
 #rota catch all pra produção
 from pathlib import Path
+from placeholders import filaData
 build_path = Path(__file__).parent / "dist"
 
 try:
