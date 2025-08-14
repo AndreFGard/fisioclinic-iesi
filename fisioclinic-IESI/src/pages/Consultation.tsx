@@ -22,7 +22,7 @@ export default function Consultation() {
       hour: "2-digit",
       minute: "2-digit",
     }),
-    professional: "Dr. João Silva",
+    professional: "",
     students: "",
     area: mockPatientData.area,
     type: "consulta",
