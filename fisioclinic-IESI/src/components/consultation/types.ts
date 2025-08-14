@@ -31,7 +31,8 @@ export interface TemplateField {
     | "number"
     | "date"
     | "header"
-    | "table";
+    | "table"
+    | "toggle";
   label: string;
   sublabel?: string;
   placeholder?: string;
