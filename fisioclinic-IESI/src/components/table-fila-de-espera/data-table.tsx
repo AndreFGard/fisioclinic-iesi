@@ -15,15 +15,21 @@ import {
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { FilaDeEspera, replaceEntireWaitingQueueRow } from "@/lib/api"
+import { Check } from "lucide-react"
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
+  changesLog: FilaDeEspera[],
+  setChangesLog: React.Dispatch<React.SetStateAction<FilaDeEspera[]>>
 }
 
 export function FilaDeEsperaTable<TData, TValue>({
   columns,
   data,
+  changesLog,
+  setChangesLog
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
@@ -77,6 +83,33 @@ export function FilaDeEsperaTable<TData, TValue>({
           <option value="Não compareceu">Não compareceu</option>
           <option value="Não conseguimos contato">Não conseguimos contato</option>
         </select>
+
+        {/* BOTAO de salvar modificacoes*/ }
+        <Button
+        onClick={async () => {
+          try {
+            await Promise.all(changesLog.map(change => replaceEntireWaitingQueueRow(change)));
+            setChangesLog([]); // Limpa o log após salvar
+            const originalText = "Salvar modificações";
+            const successText =  "✅ Modificcações Salvas";
+
+            // Temporariamente altera o texto do botão para "(Check) ok"
+            const button = document.querySelector(".save-button");
+            if (button) {
+              button.textContent = successText;
+              setTimeout(() => {
+                button.textContent = originalText;
+              }, 2000); // Volta ao texto original após 2 segundos
+            }
+          } catch (error) {
+            alert("Ocorreu um erro ao salvar as modificações. Tente novamente.");
+          }
+        }}
+        disabled={changesLog.length === 0} // Desabilita o botão se não houver alterações
+        className="save-button bg-blue-600 text-white hover:bg-blue-700"
+      >
+        Salvar modificações ({changesLog.length})
+      </Button>
       </div>
 
       {/* TABELA */}
