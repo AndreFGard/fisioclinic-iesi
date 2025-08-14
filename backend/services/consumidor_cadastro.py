@@ -1,14 +1,23 @@
 import pika
 import json
 import requests
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 RABBITMQ_URL = "amqp://guest:guest@localhost:5672/"
-API_SAUDE_URL = ""
+API_SAUDE_URL = "https://api.tisaude.com/api/patients/create" # url para o POST Paciente da API
+API_SAUDE_TOKEN = os.getenv("API_SAUDE_TOKEN", "")
 
 def callback(ch, method, properties, body):
     try:
         paciente_data = json.loads(body.decode())
-        response = requests.post(API_SAUDE_URL, json=paciente_data) 
+        headers = {"Accept": "application/json"}
+        if API_SAUDE_TOKEN:
+            headers["Authorization"] = f"Bearer {API_SAUDE_TOKEN}"
+
+        response = requests.post(API_SAUDE_URL, json=paciente_data, headers=headers)
         if response.ok:
             result = response.json()
         else:
