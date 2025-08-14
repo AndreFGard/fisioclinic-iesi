@@ -120,9 +120,12 @@ def edit_fila(id: int, change: edicao_schema):
 
 #rota catch all pra produção
 from pathlib import Path
-build_path = Path(__file__).parent.parent / "dist"
+build_path = Path(__file__).parent / "dist"
 
-app.mount("/", StaticFiles(directory=build_path, html=True), name="static")
+try:
+    app.mount("/", StaticFiles(directory=build_path, html=True), name="static")
+except:
+    print("Dist files not found on root.")
 @app.get("/{full_path:path}")
 def catch_all(full_path: str):
 
@@ -130,4 +133,4 @@ def catch_all(full_path: str):
     print(index_file)
     if index_file.exists():
         return FileResponse(index_file)
-    return {"error": "index.html não encontrado"}
+    return {"error": "index.html não encontrado. Tente em :8080"}
