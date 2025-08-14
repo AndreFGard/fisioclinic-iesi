@@ -315,7 +315,11 @@ export default function Physiotherapist({ physiotherapist, setor }: Physiotherap
               <Clock className="h-4 w-4" />Fila de Espera
             </TabsTrigger>
             <TabsTrigger value="patients" className="flex items-center gap-2">
-              <Clock className="h-4 w-4" />Pacientes
+              <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+              <circle cx="12" cy="8" r="4" />
+              <path d="M4 20c0-4 4-6 8-6s8 2 8 6" />
+              </svg>
+              Pacientes
             </TabsTrigger>
             <TabsTrigger value="students" className="flex items-center gap-2">
               <GraduationCap className="h-4 w-4" />Estudantes
