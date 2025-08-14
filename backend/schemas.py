@@ -36,6 +36,7 @@ class pront_schema(BaseModel):
     titulo: str
     conteudo: Any
     user: str
+    paciente: int
     grupo: Optional[int] = None
 
 class fila_schema(BaseModel):

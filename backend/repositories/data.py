@@ -1,4 +1,4 @@
-from .tabelas import *
+from tabelas import *
 import json
 from datetime import date
 
@@ -215,7 +215,7 @@ with Session() as session:
         
         return [todict(r) for r in grupos]
     
-    def create_prontuario(titulo: str, conteudo: Any, dono_id: str, grupo_id: int = None, check_membership: bool = False):
+    def create_prontuario(titulo: str, conteudo: Any, dono_id: str, paciente_id: int, grupo_id: int = None, check_membership: bool = False):
         dono = session.get(User, dono_id)
         if dono is None:
             raise ValueError(f"Dono (User) com id='{dono_id}' não encontrado")
@@ -226,8 +226,13 @@ with Session() as session:
             if grupo is None:
                 raise ValueError(f"Grupo com id={grupo_id} não encontrado")
 
+        paciente = None
+        paciente = session.get(Paciente, paciente_id)
+        if paciente is None:
+            raise ValueError(f"Paciente com id={paciente_id} não encontrado")
+
         try:
-            pront = Prontuario(titulo=titulo, conteudo=conteudo, grupo=grupo, dono=dono)
+            pront = Prontuario(titulo=titulo, conteudo=conteudo, grupo=grupo, dono=dono, paciente=paciente)
             session.add(pront)
             session.commit()
             session.refresh(pront)
@@ -284,3 +289,94 @@ with Session() as session:
 
         users = session.execute(stmt_users).scalars().all()
         return [r for r in users]
+    
+    def get_agendamentos_do_user(user_id: str):
+        """
+        Retorna lista de Agendamento onde agendamento.user_id == user_id
+        """
+        stmt = select(Agendamento).where(Agendamento.user_id == user_id)
+        aa = session.execute(stmt).scalars().all()
+        return [todict(r) for r in aa]
+
+
+    def get_agendamentos_do_paciente(paciente_id: int):
+        """
+        Retorna lista de Agendamento onde agendamento.paciente_id == paciente_id
+        """
+        stmt = select(Agendamento).where(Agendamento.paciente_id == paciente_id)
+        aa = session.execute(stmt).scalars().all()
+        return [todict(r) for r in aa]
+
+
+    def get_pacientes_do_user(user_id: str):
+        """
+        Retorna lista de Paciente associados ao user via tabela user_paciente (N:N).
+        """
+        stmt = (
+            select(Paciente)
+            .join(user_paciente, Paciente.id == user_paciente.c.paciente_id)
+            .where(user_paciente.c.user_id == user_id)
+        )
+        aa = session.execute(stmt).scalars().all()
+        return [todict(r) for r in aa]
+
+    def get_agendamentos_do_paciente_por_responsavel(paciente_id: int, user_id: str):
+        """
+        Retorna os Agendamento onde paciente_id == paciente_id e user_id == user_id.
+        """
+        stmt = select(Agendamento).where(
+            Agendamento.paciente_id == paciente_id,
+            Agendamento.user_id == user_id
+        )
+        aa = session.execute(stmt).scalars().all()
+        return [todict(r) for r in aa]
+    # ---------- INSERÇÕES ----------
+
+    def create_paciente(paciente_id: int, nome: str):
+        """
+        Cria (ou retorna existente) um Paciente com PK = paciente_id.
+        Retorna o objeto Paciente.
+        """
+        p = session.get(Paciente, paciente_id)
+        
+
+        try:
+            p = Paciente(id=paciente_id, nome=nome if nome is not None else "")
+            session.add(p)
+            session.commit()
+            session.refresh(p)
+            return True
+        except:
+            session.rollback()
+            return False
+
+
+    def create_agendamento(agendamento_id: int, nome: str, user_id: str, paciente_id: int):
+        """
+        Cria ou atualiza um Agendamento.
+        - Se a tua model usa id vindo da API como PK (como está), passamos agendamento_id -> id.
+        - Se quiser usar external_id + id interno, ajusta o model e muda `use_external_id`.
+        Retorna o objeto Agendamento criado/atualizado.
+        """
+        # valida existência de user e paciente
+        if session.get(User, user_id) is None:
+            return False
+        if session.get(Paciente, paciente_id) is None:
+            return False
+
+        try:
+            ag = session.get(Agendamento, agendamento_id)
+            if ag:
+                ag.nome = nome
+                ag.user_id = user_id
+                ag.paciente_id = paciente_id
+                session.commit()
+                session.refresh(ag)
+                return ag
+            ag = Agendamento(id=agendamento_id, nome=nome, user_id=user_id, paciente_id=paciente_id)
+            session.add(ag)
+            session.commit()
+            session.refresh(ag)
+            return True
+        except:
+            return False
