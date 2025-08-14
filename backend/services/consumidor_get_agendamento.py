@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 RABBITMQ_URL = "amqp://guest:guest@localhost:5672/"
-API_SAUDE_TOKEN = os.getenv("API_SAUDE_TOKEN", "")
+API_SAUDE_TOKEN = os.getenv("API_SAUDE_TOKEN")
 
 def callback(ch, method, properties, body):
     try:
