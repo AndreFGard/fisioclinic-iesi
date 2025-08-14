@@ -81,27 +81,20 @@ def cadastro_paciente(cadastro:cadastro_schema):
     "acceptMinorPatient": False,
     "cellphoneCountry": "BR"
     }
-    import random
-    cd = dict(cadastro)
-    cd["id"] = random.randint(0,1000000*1000)
     try:
         response = envia_para_fila_rpc(body)
-        idp = response["patient"]["id"]
-        cd["id"] = idp
     except:
         print("rabbit mq error")
-    
-    
-    id = create_paciente(cd)
+    idp = response["patient"]["id"]
+    cd = dict(cadastro)
+    cd["id"] = idp
+    create_paciente(cd)
     response = 200
-    return {"id": id}
+    return {"resposta": response}
 
 @app.get("/buscar_paciente/{id_paciente}")
 def buscar_paciente(id_paciente: str):
-    try:
-        resposta = envia_para_fila_rpc_busca_paciente(id_paciente)
-    except:
-        resposta = 
+    resposta = envia_para_fila_rpc_busca_paciente(id_paciente)
     return resposta
 
 @app.post("/agendar_paciente")
@@ -214,24 +207,32 @@ def alunos(id: str):
 def pacientesof(id: str):
     return get_pacientes_do_user(id)
 
-@app.get("agendamentos/user/{id}")
+@app.get("/agendamentos/user/{id}")
 def agendofuser(id: str):
     return get_agendamentos_do_user(id)
 
-@app.get("agendamento/paciente/{id}")
+@app.get("/agendamento/paciente/{id}")
 def agendofpac(id:int):
     return get_agendamentos_do_paciente(id)
 
-@app.get("agendamento/paciente/of/{id_p}/{id_u}")
+@app.get("/agendamento/paciente/of/{id_p}/{id_u}")
 def agendofon(id_p: int, id_u: str):
     return get_agendamentos_do_paciente_por_responsavel(id_p, id_u)
 
-@app.post("agendamento//new")
+@app.post("/agendamento/new")
 def agnew(u: ag_schema):
     if(create_agendamento(u.id, u.nome, u.user_id, u.pac_id)):
         return {"criado": "ok"}
     else:
         raise HTTPException(status_code=400, detail="Ocorreu um erro")
+
+@app.get("/paciente/{id}")
+def getp(id: int):
+    return get_paciente_by_id(id)
+
+@app.get("/pront/pac/{id}")
+def getpr(id: int):
+    return get_prontuarios_by_paciente(id)
 
 #rota catch all pra produção
 from pathlib import Path
