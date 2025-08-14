@@ -7,9 +7,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import { PatientsTable } from "@/components/Physiotherapist/tables/patients-page/PatientsTable";
-import { Pacients, patientsColumns } from "@/components/Physiotherapist/tables/patients-page/Patients-columns";
+import {patientsColumns } from "@/components/Physiotherapist/tables/patients-page/Patients-columns";
 
 import NavBar from "@/components/NavBar";
+import { FilaDeEspera, getWaitingQueueData } from "@/lib/api";
 
 // Tipos
 interface StudentProps {
@@ -17,83 +18,20 @@ interface StudentProps {
   setor: string;
 }
 
-interface FilaDeEspera {
-  id: string;
-  nome: string;
-  idade: number;
-  "telefone-1": string;
-  "telefone-2": string;
-  bairro: string;
-  diagnostico: string;
-  disciplina: string;
-  hospital: string;
-  "medico(a)": string;
-  "data da procura": string;
-  situacao: string;
-  prioridade: string;
-}
 
 // Dados mockados
-async function geteDataFilaDeEspera(): Promise<FilaDeEspera[]> {
-  return [
-    {
-      id: "1",
-      nome: "Ana Souza",
-      idade: 28,
-      "telefone-1": "(11) 91234-5678",
-      "telefone-2": "(11) 99876-5432",
-      bairro: "Centro",
-      diagnostico: "Fratura no braço",
-      disciplina: "Ortopedia",
-      hospital: "Hospital São Lucas",
-      "medico(a)": "Dr. Ricardo Lima",
-      "data da procura": "2025-08-10",
-      situacao: "Em tratamento",
-      prioridade: "alta"
-    },
-    {
-      id: "3",
-      nome: "Mariana Lima",
-      idade: 34,
-      "telefone-1": "(31) 93456-7890",
-      "telefone-2": "(31) 97654-3210",
-      bairro: "Bairro Verde",
-      diagnostico: "Tendinite",
-      disciplina: "Fisioterapia",
-      hospital: "Hospital das Clínicas",
-      "medico(a)": "Dr. João Almeida",
-      "data da procura": "2025-08-12",
-      situacao: "Fila de espera",
-      prioridade: "média"
-    },
-    {
-      id: "4",
-      nome: "Carlos Silva",
-      idade: 45,
-      "telefone-1": "(41) 91234-5678",
-      "telefone-2": "(41) 99876-5432",
-      bairro: "Bairro Azul",
-      diagnostico: "Lesão muscular",
-      disciplina: "Fisioterapia",
-      hospital: "Hospital Santa Cruz",
-      "medico(a)": "Dr. Ana Paula",
-      "data da procura": "2025-08-15",
-      situacao: "Em tratamento",
-      prioridade: "baixa"
-    }
-  ];
-}
+
 
 // Componente principal
 export default function Sudents({ student, setor }: StudentProps) {
-  const [patientsInTreatment, setPatientsInTreatment] = useState<Pacients[]>([]);
+  const [patientsInTreatment, setPatientsInTreatment] = useState<FilaDeEspera[]>([]);
   const [searchTermPatients, setSearchTermPatients] = useState("");
 
   useEffect(() => {
     // Filtra apenas pacientes que não estão na fila de espera
-    geteDataFilaDeEspera().then(data => {
+    getWaitingQueueData().then(data => {
       const pacientes = data.filter(p => p.situacao !== "Fila de espera");
-      setPatientsInTreatment(pacientes as Pacients[]);
+      setPatientsInTreatment(pacientes);
     });
   }, []);
 
@@ -109,8 +47,8 @@ export default function Sudents({ student, setor }: StudentProps) {
     const t = searchTermPatients.toLowerCase();
     return (
       patient.nome.toLowerCase().includes(t) ||
-      (patient["telefone-1"] && patient["telefone-1"].toLowerCase().includes(t)) ||
-      (patient["telefone-2"] && patient["telefone-2"].toLowerCase().includes(t))
+      (patient["tel1"] && patient["tel1"].toLowerCase().includes(t)) ||
+      (patient["tel2"] && patient["tel2"].toLowerCase().includes(t))
     );
   });
 

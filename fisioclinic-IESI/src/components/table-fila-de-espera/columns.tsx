@@ -37,9 +37,9 @@ export const columns = (
   { accessorKey: "diagnostico", header: "Diagnóstico" },
   { accessorKey: "disciplina", header: "Disciplina", filterFn: equalsFilter },
   { accessorKey: "hospital", header: "Hospital" },
-  { accessorKey: "medico(a)", header: "Médico(a)" },
+  { accessorKey: "doutor", header: "Médico(a)" },
   {
-    accessorKey: "data da procura",
+    accessorKey: "procura",
     header: ({ column }) => {
       return (
         <Button
@@ -58,7 +58,7 @@ export const columns = (
     },
     cell: ({ row }) => {
       const rawDate = row.getValue("data da procura") as string;
-      if (!rawDate) return "";
+      if (!rawDate) return`${(row.getValue('procura'))}`;
       const date = new Date(rawDate);
       return (
         <div className="text-center">

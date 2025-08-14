@@ -10,8 +10,8 @@ export type FilaDeEspera = {
   diagnostico: string
   disciplina: string
   hospital: string
-  "medico(a)": string
-  "data da procura": string
+  doutor: string
+  procura: string
   situacao: string
   prioridade: string
 }
@@ -36,6 +36,7 @@ export type PatientData = {
   doutor: string | undefined;
   procura: Date | undefined;
   situacao: string | undefined;
+  prioridade: any | undefined;
   obs: string | undefined;
 }
 

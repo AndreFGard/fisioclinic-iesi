@@ -10,6 +10,10 @@ export interface ConsultationData {
   nextAppointment?: Date;
   selectedTemplate: string;
   templateData: Record<string, any>;
+  // Novos campos para controle do prontuário
+  isCreatingChart?: boolean; // Se é a primeira consulta criando o prontuário
+  isEditingChart?: boolean; // Se está editando um prontuário existente
+  existingChartData?: Record<string, any>; // Dados do prontuário existente para pré-preenchimento
 }
 
 export interface TemplateOption {

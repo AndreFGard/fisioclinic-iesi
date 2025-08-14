@@ -13,7 +13,10 @@ API_SAUDE_TOKEN = os.getenv("API_SAUDE_TOKEN")
 def callback(ch, method, properties, body):
     try:
         agendamento_data = json.loads(body.decode())
-        response = requests.post(API_SAUDE_URL_AGENDAMENTO, json=agendamento_data)
+        headers = {"Accept": "application/json"}
+        if API_SAUDE_TOKEN:
+            headers["Authorization"] = f"Bearer {API_SAUDE_TOKEN}"
+        response = requests.post(API_SAUDE_URL_AGENDAMENTO, json=agendamento_data,headers=headers)
 
         if response.ok:
             try:

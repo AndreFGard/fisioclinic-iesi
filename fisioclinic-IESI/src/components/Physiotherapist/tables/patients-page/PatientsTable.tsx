@@ -13,12 +13,12 @@ import {
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button"; // ✅ Import necessário
 
-import { Pacients } from "./Patients-columns";
 import { useState } from "react";
+import { FilaDeEspera } from "@/lib/api";
 
 interface Props {
-  data: Pacients[];
-  columns: ColumnDef<Pacients>[];
+  data: FilaDeEspera[];
+  columns: ColumnDef<FilaDeEspera>[];
 }
 
 export function PatientsTable({ data, columns }: Props) {
