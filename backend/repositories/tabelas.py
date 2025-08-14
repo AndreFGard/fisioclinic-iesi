@@ -55,11 +55,13 @@ class Grupo(Base):
     __tablename__ = "grupo"
     id = Column(Integer, primary_key=True, autoincrement=True)
     nome = Column(String, nullable=False)
+    criador = Column(String, ForeignKey("user.id"), nullable=False)
     usuarios = relationship("User", secondary=user_grupo, back_populates="grupos")
     prontuarios = relationship("Prontuario", back_populates="grupo")
 
-    def __init__(self, nome):
+    def __init__(self, nome, criador):
         self.nome = nome
+        self.criador = criador
 
 class Prontuario(Base):
     __tablename__ = "prontuario"

@@ -118,6 +118,49 @@ def edit_fila(id: int, change: edicao_schema):
     else:
         raise HTTPException(status_code=400, detail="ID inexistente")
 
+@app.get("/grupo/{id}")
+def own_grupos(id:str):
+    return (get_grupos(id))
+
+@app.get("/pront/{id}")
+def own_pront(id:str):
+    return get_proprios(id)
+
+@app.get("/pront/group/{grupo}/{id}")
+def pront_em_grupo(grupo: int, id: str):
+    return get_prontuarios_permitidos(id, grupo)
+
+@app.post("/pront")
+def new_pront(u: pront_schema):
+    if(create_prontuario(u.titulo, u.conteudo, u.user, u.grupo, True)):
+        return {"criado": "ok"}
+    else:
+        raise HTTPException(status_code=400, detail="Grupo não existe ou não é membro")
+    
+
+@app.post("/user/new")
+def new_user(u: user_schema):
+    if(create_user(u.username, u.senha, u.email)):
+        return {"criado": "ok"}
+    else:
+        raise HTTPException(status_code=400, detail="Usuário já existe")
+    
+@app.post("/grupo/new")
+def new_user(u: grupo_schema):
+    a = create_group(u.nome)
+    if(a != False):
+        add_user_to_group(u.criador, a, True)
+        return {"criado": "ok"}
+    else:
+        raise HTTPException(status_code=400, detail="Usuário não existe")
+    
+@app.post("grupo/add")
+def add_to(u: add_schema):
+    if(add_user_to_group(u.user, u.grupo, u.give_manager)):
+        return {"adicionado": "ok"}
+    else:
+        raise HTTPException(status_code=400, detail="Usuário ou grupo não existem")
+
 #rota catch all pra produção
 from pathlib import Path
 build_path = Path(__file__).parent / "dist"

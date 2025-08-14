@@ -163,17 +163,17 @@ with Session() as session:
             session.rollback()
             return False
 
-    def create_group(nome: str):
-        existing = session.query(Grupo).filter(Grupo.nome == nome).first()
-        if existing:
+    def create_group(nome: str, criador_id: str):
+        criador = session.get(User, criador_id)
+        if criador is None:
             return False
 
         try:
-            g = Grupo(nome)
+            g = Grupo(nome, criador_id)
             session.add(g)
             session.commit()
             session.refresh(g)
-            return True
+            return g.id
         except:
             session.rollback()
             return False
