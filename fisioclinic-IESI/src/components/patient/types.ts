@@ -19,6 +19,7 @@ export interface PatientData {
   doctor: string;
   seekDate: Date | undefined;
   status: string;
+  priority: "baixa" | "media" | "alta" | "urgente"; // Novo campo de prioridade
   observations: string;
 }
 
@@ -58,4 +59,46 @@ export interface MedicalRecord {
 export interface SelectOption {
   value: string;
   label: string;
+}
+
+// Novo tipo para o prontuário
+export interface MedicalChart {
+  id: string;
+  patientId: string;
+  currentVersion: MedicalChartVersion;
+  versions: MedicalChartVersion[];
+  status: "ativo" | "arquivado";
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface MedicalChartVersion {
+  id: string;
+  versionNumber: number;
+  consultationData: any; // Dados básicos da consulta (da aba consultation)
+  templateData: any; // Dados do template preenchido
+  templateId: string;
+  templateName: string;
+  professional: string;
+  date: Date;
+  isActive: boolean;
+}
+
+// Histórico de diferenças entre versões
+export interface MedicalChartDiff {
+  consultationId: string;
+  consultationType: "consulta" | "retorno" | "avaliacao"; // Tipo da consulta que gerou a mudança
+  previousVersion?: MedicalChartVersion;
+  currentVersion: MedicalChartVersion;
+  changes: ChartFieldChange[];
+  date: Date;
+  professional: string;
+}
+
+export interface ChartFieldChange {
+  fieldId: string;
+  fieldLabel: string;
+  previousValue: any;
+  newValue: any;
+  changeType: "added" | "modified" | "removed";
 }

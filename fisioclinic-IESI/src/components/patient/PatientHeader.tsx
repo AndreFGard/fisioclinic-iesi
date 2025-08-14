@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Card,
@@ -6,20 +7,46 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { User, ArrowLeft, PlayCircle } from "lucide-react";
-import { PatientData } from "./types";
-import { getStatusBadge, calculateAge } from "./utils";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { User, ArrowLeft, PlayCircle, Edit3, Check, X } from "lucide-react";
+import { PatientData, SelectOption } from "./types";
+import { getStatusBadge, calculateAge, getPriorityBadge } from "./utils";
 
 interface PatientHeaderProps {
   patientData: PatientData;
+  priorityOptions: SelectOption[];
   onBack?: () => void;
+  onPriorityChange?: (priority: string) => void;
 }
 
 export default function PatientHeader({
   patientData,
+  priorityOptions,
   onBack,
+  onPriorityChange,
 }: PatientHeaderProps) {
   const navigate = useNavigate();
+  const [isEditingPriority, setIsEditingPriority] = useState(false);
+  const [tempPriority, setTempPriority] = useState(patientData.priority);
+
+  const handleSavePriority = () => {
+    if (onPriorityChange) {
+      onPriorityChange(tempPriority);
+    }
+    setIsEditingPriority(false);
+  };
+
+  const handleCancelPriority = () => {
+    setTempPriority(patientData.priority);
+    setIsEditingPriority(false);
+  };
 
   return (
     <Card className="bg-card/80 backdrop-blur-sm border-0 shadow-medical mb-4 sm:mb-6">
@@ -48,8 +75,68 @@ export default function PatientHeader({
                     {calculateAge(patientData.birthDate)} anos
                   </span>
                   <span className="hidden sm:inline">•</span>
-                  <div className="flex-shrink-0">
-                    {getStatusBadge(patientData.status)}
+                  <div className="flex items-center gap-2">
+                    <div className="flex-shrink-0">
+                      {getStatusBadge(patientData.status)}
+                    </div>
+                    <span className="hidden sm:inline">•</span>
+                    <div className="flex items-center gap-1">
+                      {!isEditingPriority ? (
+                        <>
+                          {getPriorityBadge(patientData.priority)}
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => setIsEditingPriority(true)}
+                            className="h-6 w-6 p-0 ml-1"
+                          >
+                            <Edit3 className="h-3 w-3" />
+                          </Button>
+                        </>
+                      ) : (
+                        <div className="flex items-center gap-2">
+                          <Select
+                            value={tempPriority}
+                            onValueChange={(value) =>
+                              setTempPriority(
+                                value as "baixa" | "media" | "alta" | "urgente"
+                              )
+                            }
+                          >
+                            <SelectTrigger className="h-6 w-20 text-xs">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {priorityOptions.map((option) => (
+                                <SelectItem
+                                  key={option.value}
+                                  value={option.value}
+                                  className="text-xs"
+                                >
+                                  {option.label}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={handleSavePriority}
+                            className="h-6 w-6 p-0 text-green-600"
+                          >
+                            <Check className="h-3 w-3" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={handleCancelPriority}
+                            className="h-6 w-6 p-0 text-red-600"
+                          >
+                            <X className="h-3 w-3" />
+                          </Button>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </CardDescription>
               </div>
