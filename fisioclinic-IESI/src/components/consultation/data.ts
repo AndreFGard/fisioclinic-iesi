@@ -4,7 +4,7 @@ import { TemplateOption } from "./types";
 export const clinicTemplates: TemplateOption[] = [
   {
     id: "neuro-basic",
-    name: "Ficha Neurológica Básica",
+    name: "(EXEMPLO) Ficha Neurológica Básica",
     area: "neurologia",
     description: "Avaliação neurológica padrão com testes motores e cognitivos",
     fields: [
@@ -62,7 +62,7 @@ export const clinicTemplates: TemplateOption[] = [
     ],
   },
   {
-    id: "neuro-evaluation",
+    id: "neurofunctional-physiotherapy",
     name: "Ficha de Avaliação em Fisioterapia Neurofuncional",
     area: "neurologia",
     description:
