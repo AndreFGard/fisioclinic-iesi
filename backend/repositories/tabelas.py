@@ -45,6 +45,7 @@ ProntuarioTable = Table(
     Column("id", Integer, primary_key=True,autoincrement=True),
     Column("user_id", Integer, nullable=True), #foreign key, mas ha incompatibilidade com o ORM
     Column("conteudo", String, nullable=True),
+    Column("disciplina", String, nullable=True),
     Column("eh_formato", Boolean,default=False),
     Column("formato_instanciado", Integer, nullable=True)
 )

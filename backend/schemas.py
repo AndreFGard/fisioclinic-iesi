@@ -48,6 +48,7 @@ class edicao_schema(BaseModel):
 class Prontuario(BaseModel):
     id: Optional[int] = None
     user_id: Optional[int] = None
+    disciplina: Optional[str] = None
     conteudo: Optional[str|dict] = None
     eh_formato: bool = False
     formato_instanciado: Optional[int] = None

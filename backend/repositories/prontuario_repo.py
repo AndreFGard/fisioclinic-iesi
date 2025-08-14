@@ -1,8 +1,12 @@
+
+from pydantic.type_adapter import P
 from sqlalchemy import Engine,text
 from sqlalchemy.orm import query
+from sqlalchemy.sql.functions import user
 from schemas import Prontuario
-from repositories.tabelas import ProntuarioTable,VersionamentoProntuarioTable,metadata
+from repositories.tabelas import Fila, ProntuarioTable,VersionamentoProntuarioTable,metadata
 import sqlalchemy as sql
+from datetime import datetime
 
 
 class RepoProntuario:
@@ -33,7 +37,7 @@ class RepoProntuario:
                 conteudo=prontuario.conteudo
             )
             conn.execute(verStmt)
-            conn.commit()
+            return id
 
     def get_n_versao_atual(self, conn:sql.Connection, id_prontuario: int):
         query = text("""
@@ -67,10 +71,38 @@ class RepoProntuario:
                 conteudo=prontuario.conteudo
             )
 
-            conn.execute(updateStmt)
+            x = conn.execute(updateStmt).rowcount
+            if not x: 
+                raise ValueError(f"prontuary id {prontuario.id} is not present in the DB")
             conn.execute(versioningStmt)
-            conn.commit()
 
-p = Prontuario(id=1,user_id=1,conteudo="""{"oi":"eae"}""", formato_instanciado=2)
-en = sql.create_engine("sqlite:///fisio.db")
-RepoProntuario(en)
+    def get_prontuarios_usuario(self, user_id: int, disciplina:str|None=None) -> list[Prontuario]:
+        with self.engine.connect() as conn:
+            stmt = sql.select(self.prontTable).where(self.prontTable.c.user_id == user_id)
+            if disciplina:
+                stmt = stmt.where(self.prontTable.c.disciplina == disciplina)
+            result = conn.execute(stmt)
+            rows = result.mappings().fetchall()
+            prontuarios = [Prontuario(**dict(row)) for row in rows]
+            return prontuarios
+    
+    @classmethod
+    def test(cls, db_url="sqlite:///fisio.db"):
+        testP = RepoProntuario(sql.create_engine(db_url))
+        testPront = Prontuario(id=1,user_id=1,conteudo='{"oi":"eae"}', formato_instanciado=2)
+        try:
+            id = testP.criar_prontuario(testPront)
+            testPront.id = id
+            print(testP.get_prontuarios_usuario(1))
+            print("get ok")
+            now = datetime.now()
+            hours = now.hour
+            minutes = now.minute
+            testPront.conteudo = f"{hours}:{minutes}  updated"
+            testP.atualizar_prontuario(testPront)
+        except Exception as e:
+            print(e)
+
+
+
+RepoProntuario.test()
