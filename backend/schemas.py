@@ -18,6 +18,26 @@ class cadastro_schema(BaseModel):
     situacao: str
     observacao: str | None = None
 
+class user_schema(BaseModel):
+    username: str
+    senha: str
+    email: str
+
+class grupo_schema(BaseModel):
+    criador: str
+    nome: str
+
+class add_schema(BaseModel):
+    user: str
+    grupo: int
+    give_manager: bool = False
+
+class pront_schema(BaseModel):
+    titulo: str
+    conteudo: str
+    user: str
+    grupo: Optional[int] = None
+
 class fila_schema(BaseModel):
     nome: str  
     tel1: str
