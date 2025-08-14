@@ -4,6 +4,8 @@ import {
   PatientData,
   ConsultationRecord,
   MedicalRecord,
+  MedicalChart,
+  MedicalChartDiff,
   SelectOption,
 } from "./types";
 import PersonalDataTab from "./tabs/PersonalDataTab";
@@ -16,6 +18,8 @@ interface PatientTabsProps {
   patientData: PatientData;
   consultations: ConsultationRecord[];
   medicalRecords: MedicalRecord[];
+  medicalChart: MedicalChart | null;
+  medicalChartDiffs: MedicalChartDiff[];
   isEditing: boolean;
   isLoading: boolean;
   areaOptions: SelectOption[];
@@ -32,6 +36,8 @@ export default function PatientTabs({
   patientData,
   consultations,
   medicalRecords,
+  medicalChart,
+  medicalChartDiffs,
   isEditing,
   isLoading,
   areaOptions,
@@ -88,11 +94,17 @@ export default function PatientTabs({
       </TabsContent>
 
       <TabsContent value="history">
-        <HistoryTab consultations={consultations} />
+        <HistoryTab
+          consultations={consultations}
+          medicalChartDiffs={medicalChartDiffs}
+        />
       </TabsContent>
 
       <TabsContent value="medical-records">
-        <MedicalRecordsTab medicalRecords={medicalRecords} />
+        <MedicalRecordsTab
+          patientId={patientData.id}
+          medicalChart={medicalChart}
+        />
       </TabsContent>
     </Tabs>
   );

@@ -153,3 +153,42 @@ export const calculateAge = (birthDate: Date | undefined) => {
   }
   return age;
 };
+
+export const getPriorityBadge = (priority: string) => {
+  const priorityConfig = {
+    baixa: {
+      label: "Baixa",
+      className:
+        "bg-gray-100 text-gray-800 border-gray-200 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-100",
+    },
+    media: {
+      label: "Média",
+      className:
+        "bg-blue-100 text-blue-800 border-blue-200 hover:bg-blue-200 dark:bg-blue-900 dark:text-blue-100",
+    },
+    alta: {
+      label: "Alta",
+      className:
+        "bg-orange-100 text-orange-800 border-orange-200 hover:bg-orange-200 dark:bg-orange-900 dark:text-orange-100",
+    },
+    urgente: {
+      label: "Urgente",
+      className:
+        "bg-red-100 text-red-800 border-red-200 hover:bg-red-200 dark:bg-red-900 dark:text-red-100",
+    },
+  };
+
+  const config = priorityConfig[priority as keyof typeof priorityConfig];
+  return config ? (
+    <Badge variant="outline" className={config.className}>
+      {config.label}
+    </Badge>
+  ) : (
+    <Badge
+      variant="outline"
+      className="bg-gray-100 text-gray-800 border-gray-200 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-100"
+    >
+      {priority}
+    </Badge>
+  );
+};
