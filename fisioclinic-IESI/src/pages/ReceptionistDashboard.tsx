@@ -410,7 +410,7 @@ const ReceptionistDashboard = () => {
         </div>
 
         {/* Botão Novo Paciente */}
-        <Button onClick={() => navigate("/")}>
+        <Button onClick={() => navigate("/new-patient")}>
           <UserPlus className="mr-2 h-4 w-4" />
           Novo Paciente
         </Button>
