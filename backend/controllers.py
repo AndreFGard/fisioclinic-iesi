@@ -1,9 +1,16 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException,Body
 from repositories.data import *
 from services.rabbitmq_utils import envia_para_fila
+from services.consumidor_cadastro import iniciar_consumidor
 from schemas import *
 
-app = FastAPI()
+app = FastAPI()   
+
+import threading
+
+@app.on_event("startup")
+def startup_event():
+    threading.Thread(target=iniciar_consumidor, daemon=True).start()
 
 @app.get("/")
 def read_root():
@@ -59,6 +66,26 @@ def cadastro_paciente(cadastro:cadastro_schema):
     "cellphoneCountry": "BR"
     }
     envia_para_fila(body)
+    return {"status": "ok"}
+
+@app.post("/agendar_paciente")
+def agendar_paciente(agendamento: agendamento_schema):
+    body = {
+        "idPatient": agendamento.idPatient,
+        "name": agendamento.name,
+        "schedule": [
+            {
+                "id": item.id,
+                "idScheduleReturn": item.idScheduleReturn,
+                "dateSchudule": item.dateSchudule,
+                "local": item.local,
+                "idCalendar": item.idCalendar,
+                "procedures": item.procedures,
+                "hour": item.hour
+            }
+            for item in agendamento.schedule
+        ]
+    }
     return {"status": "ok"}
 
 @app.get("/fila")
