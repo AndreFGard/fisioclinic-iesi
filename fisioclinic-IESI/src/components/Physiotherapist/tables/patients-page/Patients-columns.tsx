@@ -5,6 +5,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
 import { Stethoscope, ArrowUpDown } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { FilaDeEspera } from "@/lib/api";
 
 export default function DetalhesButton({ pacienteId }: { pacienteId: string }) {
   const navigate = useNavigate();
@@ -21,31 +22,13 @@ export default function DetalhesButton({ pacienteId }: { pacienteId: string }) {
   );
 }
 
-export type Pacients = {
-  id: string;
-  nome: string;
-  idade: number;
-  "telefone-1": string;
-  "telefone-2": string;
-  diagnostico: string;
-  disciplina: string;
-  hospital: string;
-  "medico(a)": string;
-  situacao: string;
-  prioridade: string;
-};
-// Add this type definition or import it from its module if it exists elsewhere
-type FilaDeEspera = {
-  id: string;
-  situacao: string;
-  // add other fields as needed
-};
+
 
 export function patientsColumns(
   onPriorityChange?: (id: string, newPriority: string) => void,
   setData?: React.Dispatch<React.SetStateAction<FilaDeEspera[]>>
 ) {
-  const columns: ColumnDef<Pacients>[] = [
+  const columns: ColumnDef<FilaDeEspera>[] = [
     { accessorKey: "nome", header: "Paciente" },
     { accessorKey: "idade", header: "Idade", cell: ({ getValue }) => `${getValue()} anos` },
     { accessorKey: "telefone-1", header: "Telefone 1" },

@@ -10,10 +10,10 @@ import { Search } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { UserPlus } from "lucide-react";
-import { FilaDeEspera as ApiFilaDeEspera, getWaitingQueueData, replaceEntireWaitingQueueRow } from "@/lib/api";
+import { FilaDeEspera as ApiFilaDeEspera, FilaDeEspera, getWaitingQueueData, replaceEntireWaitingQueueRow } from "@/lib/api";
 
 const Receptionist = () => {
-  const [appointments, setAppointments] = useState<LocalFilaDeEspera[]>([]);
+  const [appointments, setAppointments] = useState<FilaDeEspera[]>([]);
   const [changesLog, setChangesLog] = useState<ApiFilaDeEspera[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
