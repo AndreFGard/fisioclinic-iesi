@@ -163,17 +163,17 @@ with Session() as session:
             session.rollback()
             return False
 
-    def create_group(nome: str):
-        existing = session.query(Grupo).filter(Grupo.nome == nome).first()
-        if existing:
+    def create_group(nome: str, criador_id: str):
+        criador = session.get(User, criador_id)
+        if criador is None:
             return False
 
         try:
-            g = Grupo(nome)
+            g = Grupo(nome, criador_id)
             session.add(g)
             session.commit()
             session.refresh(g)
-            return True
+            return g.id
         except:
             session.rollback()
             return False
@@ -215,7 +215,7 @@ with Session() as session:
         
         return [todict(r) for r in grupos]
     
-    def create_prontuario(titulo: str, conteudo: str, dono_id: str, grupo_id: int = None, check_membership: bool = False):
+    def create_prontuario(titulo: str, conteudo: Any, dono_id: str, grupo_id: int = None, check_membership: bool = False):
         dono = session.get(User, dono_id)
         if dono is None:
             raise ValueError(f"Dono (User) com id='{dono_id}' não encontrado")
