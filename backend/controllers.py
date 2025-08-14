@@ -85,6 +85,10 @@ def cadastro_paciente(cadastro:cadastro_schema):
         response = envia_para_fila_rpc(body)
     except:
         print("rabbit mq error")
+    idp = response["patient"]["id"]
+    cd = dict(cadastro)
+    cd["id"] = idp
+    create_paciente(cd)
     response = 200
     return {"resposta": response}
 
