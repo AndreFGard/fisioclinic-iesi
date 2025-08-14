@@ -87,3 +87,87 @@ def envia_para_fila_rpc_busca_paciente(id_paciente: str):
     connection.close()
 
     return response_data.get("body")
+
+def envia_para_fila_rpc_agendamento(agendamento_data: dict):
+    params = pika.URLParameters(RABBITMQ_URL)
+    connection = pika.BlockingConnection(params)
+    channel = connection.channel()
+
+    # Declara fila exclusiva de resposta
+    result = channel.queue_declare(queue='', exclusive=True)
+    callback_queue = result.method.queue
+
+    corr_id = str(uuid.uuid4())
+    response_data = {}
+
+    def on_response(ch, method, props, body):
+        if props.correlation_id == corr_id:
+            try:
+                response_data["body"] = json.loads(body)
+            except json.JSONDecodeError:
+                response_data["body"] = body.decode()
+            ch.stop_consuming()
+
+    channel.basic_consume(
+        queue=callback_queue,
+        on_message_callback=on_response,
+        auto_ack=True
+    )
+
+    # Publica mensagem com agendamento
+    channel.basic_publish(
+        exchange='',
+        routing_key='agendamentos_post',
+        body=json.dumps(agendamento_data),
+        properties=pika.BasicProperties(
+            reply_to=callback_queue,
+            correlation_id=corr_id
+        )
+    )
+
+    channel.start_consuming()
+    connection.close()
+
+    return response_data.get("body")
+
+def envia_para_fila_rpc_get_agendamento(id_agendamento: str):
+    params = pika.URLParameters(RABBITMQ_URL)
+    connection = pika.BlockingConnection(params)
+    channel = connection.channel()
+
+    # Declara fila exclusiva para resposta
+    result = channel.queue_declare(queue='', exclusive=True)
+    callback_queue = result.method.queue
+
+    corr_id = str(uuid.uuid4())
+    response_data = {}
+
+    def on_response(ch, method, props, body):
+        if props.correlation_id == corr_id:
+            try:
+                response_data["body"] = json.loads(body)
+            except json.JSONDecodeError:
+                response_data["body"] = body.decode()
+            ch.stop_consuming()
+
+    channel.basic_consume(
+        queue=callback_queue,
+        on_message_callback=on_response,
+        auto_ack=True
+    )
+
+    # Publica mensagem com id do agendamento
+    channel.basic_publish(
+        exchange='',
+        routing_key='agendamentos_get',
+        body=json.dumps({"idAgendamento": id_agendamento}),
+        properties=pika.BasicProperties(
+            reply_to=callback_queue,
+            correlation_id=corr_id
+        )
+    )
+
+    channel.start_consuming()
+    connection.close()
+
+    return response_data.get("body")
