@@ -43,3 +43,16 @@ class edicao_schema(BaseModel):
     procura: Optional[str] = None
     situacao: Optional[str] = None
     obs: Optional[str] = None
+class ScheduleItem(BaseModel):
+    id: int
+    idScheduleReturn: Optional[int] = None
+    dateSchudule: str  # or datetime if you want to parse dates
+    local: str
+    idCalendar: int
+    procedures: str  # or List[str] if it's a list
+    hour: str  # or time
+
+class agendamento_schema(BaseModel):
+    idPatient: int
+    name: str
+    schedule: list[ScheduleItem]
