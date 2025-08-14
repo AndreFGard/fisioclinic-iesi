@@ -124,6 +124,8 @@ class Paciente(Base):
         nascimento: Date = None,
         telefone1: str = None,
         telefone2: str = None,
+        tel1: str = None,
+        tel2: str = None,
         bairro: str = None,
         cidade: str = None,
         diagnostico: str = None,
@@ -138,8 +140,8 @@ class Paciente(Base):
         self.cpf = cpf
         self.genero = genero
         self.nascimento = nascimento
-        self.telefone1 = telefone1
-        self.telefone2 = telefone2
+        self.telefone1 = telefone1 or tel1
+        self.telefone2 = telefone2 or tel2
         self.bairro = bairro
         self.cidade = cidade
         self.diagnostico = diagnostico
