@@ -262,3 +262,25 @@ with Session() as session:
     def get_proprios(user_id: str):
         tabela = session.query(Prontuario).filter(Prontuario.dono_id == user_id).all()
         return [todict(r) for r in tabela]
+
+    def get_alunos(manager_id):
+        stmt_groups = select(user_grupo.c.grupo_id).where(
+            user_grupo.c.user_id == manager_id,
+            user_grupo.c.eh_manager == True
+        )
+        group_ids = session.execute(stmt_groups).scalars().all()
+        if not group_ids:
+            return []
+
+        stmt_users = (
+            select(User.id)
+            .join(user_grupo, User.id == user_grupo.c.user_id)
+            .where(
+                user_grupo.c.grupo_id.in_(group_ids),
+                user_grupo.c.eh_manager == False
+            )
+            .distinct()
+        )
+
+        users = session.execute(stmt_users).scalars().all()
+        return [r for r in users]

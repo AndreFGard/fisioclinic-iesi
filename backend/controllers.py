@@ -154,12 +154,16 @@ def new_user(u: grupo_schema):
     else:
         raise HTTPException(status_code=400, detail="Usuário não existe")
     
-@app.post("grupo/add")
+@app.post("/grupo/add")
 def add_to(u: add_schema):
     if(add_user_to_group(u.user, u.grupo, u.give_manager)):
         return {"adicionado": "ok"}
     else:
         raise HTTPException(status_code=400, detail="Usuário ou grupo não existem")
+
+@app.get("/alunos/{id}")
+def alunos(id: str):
+    return get_alunos(id)
 
 #rota catch all pra produção
 from pathlib import Path
