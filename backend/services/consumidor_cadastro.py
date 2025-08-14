@@ -1,5 +1,6 @@
 import pika
 import json
+from pika.adapters.utils.connection_workflow import AMQPConnectorException
 import requests
 
 RABBITMQ_URL = "amqp://guest:guest@localhost:5672/"
@@ -19,10 +20,20 @@ def callback(ch, method, properties, body):
     except Exception as e:
         print(f"Erro no consumidor: {e}")
         ch.basic_nack(delivery_tag=method.delivery_tag, requeue=True)
-
+import time
 def iniciar_consumidor():
     params = pika.URLParameters(RABBITMQ_URL)
-    connection = pika.BlockingConnection(params)
+    connection = None
+    for i in range(7):
+        try:
+            connection = pika.BlockingConnection(params)
+        except Exception as e :
+            print("trying rabbitmq connection again")
+            time.sleep(1)
+    if not connection:
+        print("giving up")
+        exit(1)
+    print("RABBIMQ CONNECTED")
     channel = connection.channel()
     channel.queue_declare(queue='pacientes', durable=True)
     channel.basic_qos(prefetch_count=1)
