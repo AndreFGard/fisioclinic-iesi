@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { updateWaitingQueueField, WaitingQueueRowChange } from "@/lib/api"
+import { Check } from "lucide-react"
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -83,13 +84,14 @@ export function FilaDeEsperaTable<TData, TValue>({
           <option value="Não conseguimos contato">Não conseguimos contato</option>
         </select>
 
+        {/* BOTAO de salvar modificacoes*/ }
         <Button
         onClick={async () => {
           try {
             await Promise.all(changesLog.map(change => updateWaitingQueueField(change)));
             setChangesLog([]); // Limpa o log após salvar
             const originalText = "Salvar modificações";
-            const successText = "(Check) ok";
+            const successText =  "✅ Modificcações Salvas";
 
             // Temporariamente altera o texto do botão para "(Check) ok"
             const button = document.querySelector(".save-button");
