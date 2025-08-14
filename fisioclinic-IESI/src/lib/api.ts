@@ -1,4 +1,4 @@
-const apiUrl = import.meta.env.API_URL;
+const apiUrl = import.meta.env.VITE_API_URL;
 
 export type WaitingQueueRowChange = {
   id: string;
@@ -8,7 +8,7 @@ export type WaitingQueueRowChange = {
 
 export async function updateWaitingQueueRow(change: WaitingQueueRowChange): Promise<Response> {
   const { id, fieldName, newValue } = change;
-
+  console.log(`Apiurl: ${apiUrl}`)
   try {
     const response = await fetch(`${apiUrl}/fila/${id}`, {
       method: 'PATCH',
