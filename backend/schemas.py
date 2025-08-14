@@ -1,11 +1,12 @@
 from pydantic import BaseModel
 from typing import Optional
+from datetime import date
 
 class cadastro_schema(BaseModel):
     nome: str  
     cpf : str | None = None
     genero : str | None = None
-    dataNascimento: str
+    nascimento: str | date
     tel1: str  
     tel2: str | None = None                
     bairro: str
@@ -14,9 +15,11 @@ class cadastro_schema(BaseModel):
     disciplina: str 
     hospital: str | None = None
     doutor: str | None = None
-    dataProcura: str
+    procura: str
     situacao: str
-    observacao: str | None = None
+    obs: str | None = None
+
+
 
 class fila_schema(BaseModel):
     id: Optional[int]

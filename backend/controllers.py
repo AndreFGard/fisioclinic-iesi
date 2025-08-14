@@ -51,9 +51,9 @@ def cadastro_paciente(cadastro:cadastro_schema):
     "cellphone":cadastro.tel1,
     "phone": cadastro.tel2,
     "email": "",
-    "obs": str({"diagnostico" : cadastro.diagnostico, "observacao" : cadastro.observacao,"situacao" : cadastro.situacao}),
+    "obs": str({"diagnostico" : cadastro.diagnostico, "observacao" : cadastro.obs,"situacao" : cadastro.situacao}),
     "sex": "",
-    "dateOfBirth": cadastro.dataNascimento,
+    "dateOfBirth": cadastro.nascimento,
     "country": "BR",
     "profession":cadastro.disciplina,  
     "educationLevel": "",
@@ -62,7 +62,7 @@ def cadastro_paciente(cadastro:cadastro_schema):
     "healthProfessionalResponsible":cadastro.doutor,
     "healthInsurancePlan": "",
     "healthInsurancePlanCardNumber": "",
-    "indicatedBy": str({"hospital" :cadastro.hospital,"data" :cadastro.dataProcura}),
+    "indicatedBy": str({"hospital" :cadastro.hospital,"data" :cadastro.procura}),
     "genre": cadastro.genero,
     "bloodType": "",
     "bloodFactor": "",
@@ -78,7 +78,11 @@ def cadastro_paciente(cadastro:cadastro_schema):
     "acceptMinorPatient": False,
     "cellphoneCountry": "BR"
     }
-    envia_para_fila(body)
+    try:
+        envia_para_fila(body)
+    except Exception as e:
+        print(f"Couldnt send new patient to the MQ: {e}")
+
     return {"status": "ok"}
 
 @app.post("/agendar_paciente")
