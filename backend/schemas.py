@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 from typing import Optional, Any
+from datetime import date
 
 class cadastro_schema(BaseModel):
     nome: str  
@@ -18,28 +19,11 @@ class cadastro_schema(BaseModel):
     situacao: str
     obs: str | None = None
 
-
-
-class user_schema(BaseModel):
-    username: str
-    senha: str
-    email: str
-
-class grupo_schema(BaseModel):
-    criador: str
+class ag_schema(BaseModel):
+    id: int
     nome: str
-
-class add_schema(BaseModel):
-    user: str
-    grupo: int
-    give_manager: bool = False
-
-class pront_schema(BaseModel):
-    titulo: str
-    conteudo: Any
-    user: str
-    paciente: int
-    grupo: Optional[int] = None
+    user_id: str
+    pac_id: int
 
 class user_schema(BaseModel):
     username: str

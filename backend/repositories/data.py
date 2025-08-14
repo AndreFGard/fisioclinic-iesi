@@ -1,4 +1,4 @@
-from tabelas import *
+from repositories.tabelas import *
 import json
 from datetime import date
 from schemas import fila_schema
