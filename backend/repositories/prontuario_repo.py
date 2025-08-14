@@ -16,8 +16,7 @@ class RepoProntuario:
         metadata.create_all(self.engine)
     
     def criar_prontuario(self, prontuario: Prontuario):
-        with self.engine.connect() as conn:
-            conn.begin()
+        with self.engine.begin() as conn:
 
             queryStmt= sql.insert(self.prontTable).values(
                 user_id=prontuario.user_id,
@@ -51,9 +50,7 @@ class RepoProntuario:
         if prontuario.id is None:
             raise ValueError("Prontuario ID is required for update")
 
-        with self.engine.connect() as conn:
-            conn.begin()
-
+        with self.engine.begin() as conn:
             updateStmt = sql.update(self.prontTable).where(
                 self.prontTable.c.id == prontuario.id
             ).values(
