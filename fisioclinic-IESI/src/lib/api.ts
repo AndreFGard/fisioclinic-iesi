@@ -64,7 +64,27 @@ export async function createPatient(patient: PatientData){
 
 export async function getPatient(id: string): Promise<PatientData>{
     try {
-        const response = await fetch(`${apiUrl}/buscar_paciente/${id}`, {
+        const response = await fetch(`${apiUrl}/paciente/${id}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+        console.log(JSON.stringify(response))
+        if (!response.ok) {
+            const errorMessage = `Erro ao buscar o paciente: ${response.status} ${response.statusText}`;
+            throw new Error(errorMessage);
+        }
+        return await response.json();
+    } catch (error) {
+        console.error("Erro ao buscar o paciente:", error);
+        throw error;
+    }
+}
+
+export async function getPront(userId: string): Promise<PatientData>{
+    try {
+        const response = await fetch(`${apiUrl}/paciente/${userId}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
