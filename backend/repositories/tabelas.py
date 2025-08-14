@@ -96,15 +96,59 @@ class Paciente(Base):
     __tablename__ = "paciente"
     id = Column(Integer, primary_key=True)
     nome = Column(String, nullable=False)
+    cpf = Column(String)
+    genero = Column(String)
+    nascimento = Column(Date)
+    telefone1 = Column(String)
+    telefone2 = Column(String)
+    bairro = Column(String)
+    cidade = Column(String)
+    diagnostico = Column(String)
+    disciplina = Column(String)
+    hospital = Column(String)
+    doutor = Column(String)
+    procura = Column(String)
+    situacao = Column(String)
+    obs = Column(String)
 
     users = relationship("User", secondary=user_paciente, back_populates="pacientes")
 
     agendamentos = relationship("Agendamento", back_populates="paciente")
     prontuarios = relationship("Prontuario", back_populates="paciente")
 
-    def __init__(self, id, nome):
-        self.id = id
+    def __init__(
+        self,
+        nome: str,
+        cpf: str = None,
+        genero: str = None,
+        nascimento: Date = None,
+        telefone1: str = None,
+        telefone2: str = None,
+        bairro: str = None,
+        cidade: str = None,
+        diagnostico: str = None,
+        disciplina: str = None,
+        hospital: str = None,
+        doutor: str = None,
+        procura: str = None,
+        situacao: str = None,
+        obs: str = None
+    ):
         self.nome = nome
+        self.cpf = cpf
+        self.genero = genero
+        self.nascimento = nascimento
+        self.telefone1 = telefone1
+        self.telefone2 = telefone2
+        self.bairro = bairro
+        self.cidade = cidade
+        self.diagnostico = diagnostico
+        self.disciplina = disciplina
+        self.hospital = hospital
+        self.doutor = doutor
+        self.procura = procura
+        self.situacao = situacao
+        self.obs = obs
 
 class Agendamento(Base):
     __tablename__ = "agendamento"

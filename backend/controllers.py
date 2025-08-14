@@ -67,6 +67,7 @@ def cadastro_paciente(cadastro:cadastro_schema):
     "cellphoneCountry": "BR"
     }
     response = envia_para_fila_rpc(body)
+    create_paciente()
     return {"resposta": response}
 
 @app.get("/buscar_paciente/{id_paciente}")
@@ -169,6 +170,29 @@ def add_to(u: add_schema):
 @app.get("/alunos/{id}")
 def alunos(id: str):
     return get_alunos(id)
+
+@app.get("/pacientes/{id}")
+def pacientesof(id: str):
+    return get_pacientes_do_user(id)
+
+@app.get("agendamentos/user/{id}")
+def agendofuser(id: str):
+    return get_agendamentos_do_user(id)
+
+@app.get("agendamento/paciente/{id}")
+def agendofpac(id:int):
+    return get_agendamentos_do_paciente(id)
+
+@app.get("agendamento/paciente/of/{id_p}/{id_u}")
+def agendofon(id_p: int, id_u: str):
+    return get_agendamentos_do_paciente_por_responsavel(id_p, id_u)
+
+@app.post("agendamento//new")
+def agnew(u: ag_schema):
+    if(create_agendamento(u.id, u.nome, u.user_id, u.pac_id)):
+        return {"criado": "ok"}
+    else:
+        raise HTTPException(status_code=400, detail="Ocorreu um erro")
 
 #rota catch all pra produção
 from pathlib import Path

@@ -332,16 +332,21 @@ with Session() as session:
         return [todict(r) for r in aa]
     # ---------- INSERÇÕES ----------
 
-    def create_paciente(paciente_id: int, nome: str):
+    def create_paciente(id, nome, cpf, genero, nascimento, telefone1, telefone2,
+                    bairro, cidade, diagnostico, disciplina, hospital, doutor,
+                    procura, situacao, obs):
         """
-        Cria (ou retorna existente) um Paciente com PK = paciente_id.
-        Retorna o objeto Paciente.
+        Cria (ou retorna existente) um Paciente com PK = id.
+        Usa EXATAMENTE o construtor definido na classe Paciente.
         """
-        p = session.get(Paciente, paciente_id)
-        
+        existing = session.get(Paciente, id)
+        if existing:
+            return True
 
         try:
-            p = Paciente(id=paciente_id, nome=nome if nome is not None else "")
+            p = Paciente(id, nome, cpf, genero, nascimento, telefone1, telefone2,
+                        bairro, cidade, diagnostico, disciplina, hospital, doutor,
+                        procura, situacao, obs)
             session.add(p)
             session.commit()
             session.refresh(p)

@@ -64,6 +64,13 @@ class edicao_schema(BaseModel):
     procura: Optional[str] = None
     situacao: Optional[str] = None
     obs: Optional[str] = None
+
+class ag_schema(BaseModel):
+    id: int
+    nome: str
+    user_id: str
+    pac_id: int
+
 class ScheduleItem(BaseModel):
     id: int
     idScheduleReturn: Optional[int] = None
