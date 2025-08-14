@@ -3,50 +3,13 @@
 import { ColumnDef } from "@tanstack/react-table"
 import { Button } from "@/components/ui/button"
 import { Edit, Trash2, ArrowUpDown } from "lucide-react"
-import { toast } from "@/components/ui/use-toast"
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import * as React from "react";
+import {  FilaDeEspera, replaceEntireWaitingQueueRow } from "@/lib/api"
+import { EditPatientDialog,handleDeleteToast } from "../table-fila-de-espera/edit-fila-de-espera";
 
-export type FilaDeEspera = {
-  id: string
-  nome: string
-  idade: number
-  "telefone-1": string
-  "telefone-2": string
-  bairro: string
-  diagnostico: string
-  disciplina: string
-  hospital: string
-  "medico(a)": string
-  "data da procura": string
-  situacao: string
-}
 
-function handleEdit(patient: FilaDeEspera) {
-  console.log("Editar paciente:", patient);
-}
-
-function handleDeleteToast(
-  patient: FilaDeEspera,
-  setData: React.Dispatch<React.SetStateAction<FilaDeEspera[]>>
-) {
-  const toastInstance = toast({
-    title: "Excluir paciente",
-    description: `Deseja excluir ${patient.nome}?`,
-    action: (
-      <Button
-        variant="destructive"
-        size="sm"
-        onClick={() => {
-          setData(prev => prev.filter(p => p.id !== patient.id))
-          toastInstance.dismiss()
-        }}
-      >
-        Confirmar
-      </Button>
-    ),
-  })
-}
 
 // Função de filtro personalizada para igualdade exata
 const equalsFilter = (row: any, columnId: string, filterValue: string) => {
@@ -56,7 +19,8 @@ const equalsFilter = (row: any, columnId: string, filterValue: string) => {
 }
 
 export const columns = (
-  setData: React.Dispatch<React.SetStateAction<FilaDeEspera[]>>
+  setData: React.Dispatch<React.SetStateAction<FilaDeEspera[]>>,
+  sendRowChange: (change: FilaDeEspera) => void
 ): ColumnDef<FilaDeEspera>[] => [
     { accessorKey: "nome", header: "Nome" },
     {
@@ -64,8 +28,8 @@ export const columns = (
       header: () => <div className="text-center">Idade</div>,
       cell: ({ row }) => <div className="text-center font-medium">{row.getValue("idade")} anos</div>,
     },
-    { accessorKey: "telefone-1", header: "Telefone 1" },
-    { accessorKey: "telefone-2", header: "Telefone 2" },
+    { accessorKey: "tel1", header: "Telefone 1" },
+    { accessorKey: "tel2", header: "Telefone 2" },
     { accessorKey: "bairro", header: "Bairro" },
     { accessorKey: "diagnostico", header: "Diagnóstico" },
     { accessorKey: "disciplina", header: "Disciplina", filterFn: equalsFilter },
@@ -137,6 +101,10 @@ export const columns = (
               item.id === row.original.id ? { ...item, situacao: novoStatus } : item
             )
           );
+          row.original.situacao = novoStatus; // Atualiza o valor na linha original
+          sendRowChange(row.original);
+
+          console.log(`row id is ${row.original.id}`)
         };
 
         return (
@@ -161,11 +129,10 @@ export const columns = (
         const patient = row.original;
         return (
           <div className="flex justify-center space-x-2">
-            <Button variant="ghost" size="icon"
-              className="h-9 w-9 text-blue-600 hover:bg-blue-600 hover:text-white transition-colors"
-              onClick={() => handleEdit(patient)}>
-              <Edit className="h-4 w-4" />
-            </Button>
+            <EditPatientDialog 
+              patient={patient} 
+              setChange={sendRowChange}
+            />
             <Button
               variant="ghost"
               size="icon"

@@ -1,7 +1,7 @@
 from tabelas import *
 import json
 from datetime import date
-
+from schemas import fila_schema
 db = create_engine("sqlite:///fisio.db")
 Session = sessionmaker(bind=db)
 Base.metadata.create_all(bind=db)
@@ -113,12 +113,13 @@ with Session() as session:
 
     def get_base():
         """
-        visualização padrão da fila que deve aparecer no site
-        ordenado por data de procura
+        Visualização padrão da fila que deve aparecer no site,
+        ordenado por data de procura.
+        Retorna uma lista de objetos compatíveis com o schema `fila_schema`.
         """
         q = session.query(Fila).order_by(asc(Fila.procura))
         rows = q.all()
-        return [todict(r) for r in rows]
+        return [fila_schema(**todict(r)) for r in rows]
 
     def pop(id: int):
         fila = session.get(Fila, id)
