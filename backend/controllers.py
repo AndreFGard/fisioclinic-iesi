@@ -128,15 +128,12 @@ def pop_fila(id: int):
     
 @app.put("/fila/{id}")
 def edit_fila(id: int, new_data: fila_schema):
+    print(new_data)
     if(editar(id, new_data.model_dump())):
         return {"editado": "ok"}
     else:
         raise HTTPException(status_code=400, detail="ID inexistente")
 
-@app.patch('/fila/{id}')
-def patch_fila(id:int, change: dict):
-    #WIP
-    print(change)
 
 
 #rota catch all pra produção
