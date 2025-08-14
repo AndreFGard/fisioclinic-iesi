@@ -3,7 +3,7 @@ from fastapi import FastAPI, File, HTTPException,Body
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from repositories.data import *
-from services.rabbitmq_utils import envia_para_fila
+from services.rabbitmq_utils import envia_para_fila_rpc
 from services.consumidor_cadastro import iniciar_consumidor
 from schemas import *
 
@@ -66,8 +66,8 @@ def cadastro_paciente(cadastro:cadastro_schema):
     "acceptMinorPatient": False,
     "cellphoneCountry": "BR"
     }
-    envia_para_fila(body)
-    return {"status": "ok"}
+    response = envia_para_fila_rpc(body)
+    return {"resposta": response}
 
 @app.post("/agendar_paciente")
 def agendar_paciente(agendamento: agendamento_schema):
