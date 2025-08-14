@@ -98,7 +98,10 @@ def cadastro_paciente(cadastro:cadastro_schema):
 
 @app.get("/buscar_paciente/{id_paciente}")
 def buscar_paciente(id_paciente: str):
-    resposta = envia_para_fila_rpc_busca_paciente(id_paciente)
+    try:
+        resposta = envia_para_fila_rpc_busca_paciente(id_paciente)
+    except:
+        resposta = 
     return resposta
 
 @app.post("/agendar_paciente")
