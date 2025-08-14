@@ -1,12 +1,14 @@
 "use client";
 
 import {
-  ColumnDef,
   flexRender,
   getCoreRowModel,
-  useReactTable
+  getSortedRowModel,
+  useReactTable,
+  ColumnDef,
 } from "@tanstack/react-table";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
 import type { Students } from "./Students-columns";
 
 interface Props {
@@ -14,11 +16,17 @@ interface Props {
   columns?: ColumnDef<Students>[];
 }
 
+import { useState } from "react";
+
 export function StudentsTable({ data, columns }: Props) {
+  const [sorting, setSorting] = useState([]);
   const table = useReactTable({
     data,
     columns: columns!,
-    getCoreRowModel: getCoreRowModel()
+    getCoreRowModel: getCoreRowModel(),
+    state: { sorting },
+    onSortingChange: setSorting,
+    getSortedRowModel: getSortedRowModel(),
   });
 
   return (
@@ -55,6 +63,29 @@ export function StudentsTable({ data, columns }: Props) {
           )}
         </TableBody>
       </Table>
+
+      <div className="flex items-center justify-between py-4 px-2">
+        <div className="flex gap-2">
+          <Button
+            onClick={() => table.previousPage()}
+            disabled={!table.getCanPreviousPage()}
+          >
+            Anterior
+          </Button>
+          <Button
+            onClick={() => table.nextPage()}
+            disabled={!table.getCanNextPage()}
+          >
+            Próximo
+          </Button>
+        </div>
+        <div>
+          Página{" "}
+          <strong>
+            {table.getState().pagination.pageIndex + 1} de {table.getPageCount()}
+          </strong>
+        </div>
+      </div>
     </div>
   );
 }

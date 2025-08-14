@@ -44,39 +44,48 @@ async function getDataEstudantes(): Promise<Students[]> {
   return [
     {
       id: "1",
-      name: "Ana Souza",
-      semester: "5",
-      specialization: "Fisioterapia",
-      status: "Ativo",
-      university: "Universidade de São Paulo",
-      supervisor: "Prof. Dr. João Silva",
-      startDate: "2020-02-10",
-      performance: "Bom",
-      observations: "Nenhuma"
+      nome: "Ana Souza",
+      semestre: 5,
     },
     {
       id: "2",
-      name: "Mariana Lima",
-      semester: "6",
-      specialization: "Fisioterapia",
-      status: "Ativo",
-      university: "Universidade Estadual de Campinas",
-      supervisor: "Prof. Dr. Carlos Oliveira",
-      startDate: "2019-08-15",
-      performance: "Ótimo",
-      observations: "Participa de projetos de extensão"
+      nome: "Mariana Lima",
+      semestre: 6,
     },
     {
       id: "3",
-      name: "Lucas Pereira",
-      semester: "4",
-      specialization: "Fisioterapia",
-      status: "Inativo",
-      university: "Universidade Federal de Minas Gerais",
-      supervisor: "Prof. Dr. Ana Costa",
-      startDate: "2021-01-20",
-      performance: "Regular",
-      observations: "Reprovado em disciplinas"
+      nome: "Lucas Pereira",
+      semestre: 4,
+    },
+    {
+      id: "4",
+      nome: "Carlos Silva",
+      semestre: 7,
+    },
+    {
+      id: "5",
+      nome: "Juliana Alves",
+      semestre: 8,
+    },
+    {
+      id: "6",
+      nome: "Fernanda Dias",
+      semestre: 3,
+    },
+    {
+      id: "7",
+      nome: "Rafael Costa",
+      semestre: 2,
+    },
+    {
+      id: "8",
+      nome: "Patrícia Gomes",
+      semestre: 1,
+    },
+    {
+      id: "9",
+      nome: "Bruno Martins",
+      semestre: 6,
     }
   ];
 }
@@ -211,6 +220,9 @@ export default function Physiotherapist({ physiotherapist, setor }: Physiotherap
   const [waitingQueue, setWaitingQueue] = useState<FilaDeEspera[]>([]);
   const [patientsInTreatment, setPatientsInTreatment] = useState<Pacients[]>([]);
   const [students, setStudents] = useState<Students[]>([]);
+  const [searchTermStudents, setSearchTermStudents] = useState("");
+  const [searchTermQueue, setSearchTermQueue] = useState("");
+  const [searchTermPatients, setSearchTermPatients] = useState("");
 
   useEffect(() => {
     // Fila de espera e pacientes
@@ -235,6 +247,40 @@ export default function Physiotherapist({ physiotherapist, setor }: Physiotherap
   };
 
   const { columns } = patientsColumns(handlePriorityChange);
+
+  // Funções de filtragem
+  function filterStudents(students: Students[], term: string) {
+    const t = term.toLowerCase();
+    return students.filter(student =>
+      student.nome.toLowerCase().includes(t) ||
+      student.semestre.toString().includes(t)
+    );
+  }
+
+  function filterQueue(queue: FilaDeEspera[], term: string) {
+    const t = term.toLowerCase();
+    return queue.filter(item =>
+      item.nome.toLowerCase().includes(t) ||
+      item["telefone-1"].toLowerCase().includes(t) ||
+      item["telefone-2"].toLowerCase().includes(t) ||
+      item.diagnostico.toLowerCase().includes(t) ||
+      item.bairro.toLowerCase().includes(t)
+    );
+  }
+
+  function filterPatients(patients: Pacients[], term: string) {
+    const t = term.toLowerCase();
+    return patients.filter(patient =>
+      patient.nome.toLowerCase().includes(t) ||
+      (patient["telefone-1"] && patient["telefone-1"].toLowerCase().includes(t)) ||
+      (patient["telefone-2"] && patient["telefone-2"].toLowerCase().includes(t))
+    );
+  }
+
+  // Filtrados
+  const filteredStudents = filterStudents(students, searchTermStudents);
+  const filteredQueue = filterQueue(waitingQueue, searchTermQueue);
+  const filteredPatients = filterPatients(patientsInTreatment, searchTermPatients);
 
   return (
     <div className="min-h-screen max-w-full bg-background">
@@ -283,9 +329,24 @@ export default function Physiotherapist({ physiotherapist, setor }: Physiotherap
                 <CardTitle>Fila de Espera</CardTitle>
               </CardHeader>
               <CardContent>
+                <div className="flex items-center space-x-4 mb-4">
+                  <div className="relative">
+                    <svg className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" /></svg>
+                    <input
+                      type="text"
+                      placeholder="Buscar por nome, telefone, diagnóstico ou bairro..."
+                      value={searchTermQueue}
+                      onChange={e => setSearchTermQueue(e.target.value)}
+                      className="pl-10 w-80 border rounded-md py-2"
+                    />
+                  </div>
+                  <span className="text-sm text-muted-foreground">
+                    {filteredQueue.length} de {waitingQueue.length} pacientes na fila
+                  </span>
+                </div>
                 <FilaDeEsperaTable
                   columns={columnsFactory(setWaitingQueue)}
-                  data={waitingQueue}
+                  data={filteredQueue}
                 />
               </CardContent>
             </Card>
@@ -298,7 +359,22 @@ export default function Physiotherapist({ physiotherapist, setor }: Physiotherap
                 <CardTitle>Em atendimento</CardTitle>
               </CardHeader>
               <CardContent>
-                <PatientsTable data={patientsInTreatment} columns={columns} />
+                <div className="flex items-center space-x-4 mb-4">
+                  <div className="relative">
+                    <svg className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" /></svg>
+                    <input
+                      type="text"
+                      placeholder="Buscar por nome, telefone, diagnóstico ou bairro..."
+                      value={searchTermPatients}
+                      onChange={e => setSearchTermPatients(e.target.value)}
+                      className="pl-10 w-80 border rounded-md py-2"
+                    />
+                  </div>
+                  <span className="text-sm text-muted-foreground">
+                    {filteredPatients.length} de {patientsInTreatment.length} pacientes
+                  </span>
+                </div>
+                <PatientsTable data={filteredPatients} columns={columns} />
               </CardContent>
             </Card>
           </TabsContent>
@@ -312,9 +388,23 @@ export default function Physiotherapist({ physiotherapist, setor }: Physiotherap
                 </CardTitle>
               </CardHeader>
               <CardContent>
+                <div className="flex items-center space-x-4 mb-4">
+                  <div className="relative">
+                    <svg className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" /></svg>
+                    <input
+                      type="text"
+                      placeholder="Buscar por nome ou semestre..."
+                      value={searchTermStudents}
+                      onChange={e => setSearchTermStudents(e.target.value)}
+                      className="pl-10 w-80 border rounded-md py-2"
+                    />
+                  </div>
+                  <span className="text-sm text-muted-foreground">
+                    {filteredStudents.length} de {students.length} estudantes
+                  </span>
+                </div>
                 <StudentsTable
-                  data={students}
-                  columns={studentsColumns}
+                  data={filteredStudents} columns={studentsColumns}
                 />
               </CardContent>
             </Card>

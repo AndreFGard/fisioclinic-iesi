@@ -1,69 +1,78 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { BookOpen, GraduationCap } from "lucide-react";
+import { ArrowUpDown } from "lucide-react";
 
 export type Students = {
   id: string;
-  name: string;
-  semester: string;
-  specialization: string;
-  status: string;
-  university: string;
-  supervisor: string;
-  startDate: string;
-  performance: string;
-  observations: string;
+  nome: string;
+  semestre: number;
 };
 
-function statusColor(status: string) {
-  switch (status.toLowerCase()) {
-    case "ativo": return "default";
-    case "em observação": return "secondary";
-    default: return "outline";
-  }
-}
-
-function performanceColor(performance: string) {
-  switch (performance.toLowerCase()) {
-    case "excelente": return "default";
-    case "bom": return "secondary";
-    case "regular": return "outline";
-    default: return "default";
-  }
-}
-
 export const studentsColumns: ColumnDef<Students>[] = [
-  { accessorKey: "name", header: "Nome" },
-  { accessorKey: "semester", header: "Semestre" },
-  { accessorKey: "university", header: "Universidade" },
-  { accessorKey: "specialization", header: "Especialização" },
   {
-    accessorKey: "status",
-    header: "Status",
-    cell: ({ getValue }) => <Badge variant={statusColor(getValue() as string)}>{getValue() as string}</Badge>
+    accessorKey: "nome",
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        onClick={() =>
+          column.toggleSorting(column.getIsSorted() === "asc")
+        }
+        className={`text-left transition-all duration-300 
+          ${column.getIsSorted()
+            ? "text-blue-700 font-semibold"
+            : "text-gray-700 hover:text-blue-600 hover:bg-gray-100"
+          } rounded-md px-2 py-1 flex items-center justify-start gap-1`}
+      >
+        Nome
+        <ArrowUpDown
+          className={`h-4 w-4 transition-transform duration-300 ${column.getIsSorted() ? "rotate-180" : ""
+            }`}
+        />
+      </Button>
+    ),
+    cell: ({ row }) => {
+      const nome = row.getValue("nome") as string;
+      return <div className="text-left">{nome}</div>;
+    },
+    enableSorting: true,
+    sortingFn: (rowA, rowB, columnId) => {
+      const a = rowA.getValue(columnId) as string;
+      const b = rowB.getValue(columnId) as string;
+      return a.localeCompare(b);
+    }
   },
   {
-    accessorKey: "performance",
-    header: "Performance",
-    cell: ({ getValue }) => <Badge variant={performanceColor(getValue() as string)}>{getValue() as string}</Badge>
-  },
-  {
-    id: "actions",
-    header: "Ações",
-    cell: ({ row }) => (
-      <div className="flex gap-2">
-        <Button size="sm" variant="outline">
-          <BookOpen className="h-4 w-4 mr-1" />
-          Detalhes
-        </Button>
-        <Button variant="outline">
-          <GraduationCap className="h-4 w-4 mr-1" />
-          Relatório
-        </Button>
-      </div>
-    )
+    accessorKey: "semestre",
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        onClick={() =>
+          column.toggleSorting(column.getIsSorted() === "asc")
+        }
+        className={`relative w-full text-center transition-all duration-300 
+      ${column.getIsSorted()
+            ? "text-blue-700 font-semibold"
+            : "text-gray-700 hover:text-blue-600 hover:bg-gray-100"
+          } rounded-md px-2 py-1 flex items-center justify-center gap-1`}
+      >
+        <span className="flex-1 text-center">Semestre</span>
+        <ArrowUpDown
+          className={`h-4 w-4 transition-transform duration-300 ${column.getIsSorted() ? "rotate-180" : ""
+            }`}
+        />
+      </Button>
+    ),
+    cell: ({ row }) => {
+      const semestre = row.getValue("semestre") as number;
+      return <div className="text-center">{semestre}</div>;
+    },
+    enableSorting: true,
+    sortingFn: (rowA, rowB, columnId) => {
+      const a = rowA.getValue(columnId) as number;
+      const b = rowB.getValue(columnId) as number;
+      return a - b;
+    }
   }
 ];
