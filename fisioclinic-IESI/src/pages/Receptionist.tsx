@@ -41,7 +41,7 @@ const Receptionist = () => {
     // Atualiza o estado local também
     setAppointments(prev => {
       // Converte o item da API para o formato local antes de atualizar
-      const localChange = convertFromApiFormat(change);
+      const localChange = (change);
       return prev.map(item => item.id === localChange.id ? localChange : item);
     });
   };
@@ -56,8 +56,8 @@ const Receptionist = () => {
   // Filtragem por nome ou telefones
   const filteredAppointments = appointments.filter(patient =>
     patient.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    patient["telefone-1"].includes(searchTerm) ||
-    patient["telefone-2"].includes(searchTerm)
+    patient["tel1"].includes(searchTerm) ||
+    patient["tel2"].includes(searchTerm)
   );
 
   return (
@@ -96,11 +96,11 @@ const Receptionist = () => {
           <CardContent>
             <FilaDeEsperaTable
               columns={columnsFactory(
-                (newData) => setAppointments(newData as unknown as LocalFilaDeEspera[]),
+                (newData) => setAppointments(newData),
                 handleRowChange,
                 handlePriorityChange
               )}
-              data={filteredAppointments.map(item => convertToApiFormat(item))}
+              data={filteredAppointments}
               changesLog={changesLog}
               setChangesLog={setChangesLog}
             />

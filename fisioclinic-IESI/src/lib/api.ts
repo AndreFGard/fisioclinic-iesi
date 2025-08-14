@@ -36,6 +36,7 @@ export type PatientData = {
   doutor: string | undefined;
   procura: Date | undefined;
   situacao: string | undefined;
+  prioridade: any | undefined;
   obs: string | undefined;
 }
 

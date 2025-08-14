@@ -7,9 +7,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import { PatientsTable } from "@/components/Physiotherapist/tables/patients-page/PatientsTable";
-import { Pacients, patientsColumns } from "@/components/Physiotherapist/tables/patients-page/Patients-columns";
+import {patientsColumns } from "@/components/Physiotherapist/tables/patients-page/Patients-columns";
 
 import NavBar from "@/components/NavBar";
+import { FilaDeEspera, getWaitingQueueData } from "@/lib/api";
 
 // Tipos
 interface StudentProps {
@@ -23,14 +24,14 @@ interface StudentProps {
 
 // Componente principal
 export default function Sudents({ student, setor }: StudentProps) {
-  const [patientsInTreatment, setPatientsInTreatment] = useState<Pacients[]>([]);
+  const [patientsInTreatment, setPatientsInTreatment] = useState<FilaDeEspera[]>([]);
   const [searchTermPatients, setSearchTermPatients] = useState("");
 
   useEffect(() => {
     // Filtra apenas pacientes que não estão na fila de espera
-    geteDataFilaDeEspera().then(data => {
+    getWaitingQueueData().then(data => {
       const pacientes = data.filter(p => p.situacao !== "Fila de espera");
-      setPatientsInTreatment(pacientes as Pacients[]);
+      setPatientsInTreatment(pacientes);
     });
   }, []);
 
@@ -46,8 +47,8 @@ export default function Sudents({ student, setor }: StudentProps) {
     const t = searchTermPatients.toLowerCase();
     return (
       patient.nome.toLowerCase().includes(t) ||
-      (patient["telefone-1"] && patient["telefone-1"].toLowerCase().includes(t)) ||
-      (patient["telefone-2"] && patient["telefone-2"].toLowerCase().includes(t))
+      (patient["tel1"] && patient["tel1"].toLowerCase().includes(t)) ||
+      (patient["tel2"] && patient["tel2"].toLowerCase().includes(t))
     );
   });
 

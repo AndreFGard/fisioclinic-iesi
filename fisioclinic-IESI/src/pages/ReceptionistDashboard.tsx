@@ -41,22 +41,9 @@ const CommitChangesButton = ({ trigger }) => {
 };
 
 
-const placeholderAppointments: FilaDeEspera[] = [{
-  id: "1",
-  nome: "Ana DO PLACEHOLDER",
-  idade: 28,
-  tel1: "(11) 91234-5678",
-  tel2: "(11) 99876-5432",
-  bairro: "Centro",
-  diagnostico: "Fratura no braço",
-  disciplina: "Ortopedia",
-  hospital: "Hospital São Lucas",
-  doutor: "Dr. Ricardo Lima",
-  procura: "2025-08-10",
-  situacao: "Em tratamento",
-},]
+
 const ReceptionistDashboard = () => {
-  const [appointments, setAppointments] = useState<FilaDeEspera[]>(placeholderAppointments);
+  const [appointments, setAppointments] = useState<FilaDeEspera[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [changesLog, setChangesLog] = useState<FilaDeEspera[]>([]);
   const sendRowChange = (c: FilaDeEspera) => setChangesLog([...changesLog, c])

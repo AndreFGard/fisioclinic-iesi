@@ -10,7 +10,7 @@ import { FilaDeEsperaTable } from "@/components/table-fila-de-espera/data-table"
 import { columns as columnsFactory } from "@/components/table-fila-de-espera/columns";
 
 import { PatientsTable } from "@/components/Physiotherapist/tables/patients-page/PatientsTable";
-import { Pacients, patientsColumns } from "@/components/Physiotherapist/tables/patients-page/Patients-columns";
+import {patientsColumns } from "@/components/Physiotherapist/tables/patients-page/Patients-columns";
 
 import { StudentsTable } from "@/components/Physiotherapist/tables/students-page/StudentsTable";
 import { Students, studentsColumns } from "@/components/Physiotherapist/tables/students-page/Students-columns";
@@ -24,7 +24,7 @@ interface PhysiotherapistProps {
 }
 
 // Importação do tipo FilaDeEspera da API
-import { FilaDeEspera as ApiFilaDeEspera, getWaitingQueueData } from "@/lib/api";
+import { FilaDeEspera as ApiFilaDeEspera, FilaDeEspera, getWaitingQueueData } from "@/lib/api";
 
 
 
@@ -83,8 +83,8 @@ async function getDataEstudantes(): Promise<Students[]> {
 
 // Componente principal
 export default function Physiotherapist({ physiotherapist, setor }: PhysiotherapistProps) {
-  const [waitingQueue, setWaitingQueue] = useState<LocalFilaDeEspera[]>([]);
-  const [patientsInTreatment, setPatientsInTreatment] = useState<Pacients[]>([]);
+  const [waitingQueue, setWaitingQueue] = useState<FilaDeEspera[]>([]);
+  const [patientsInTreatment, setPatientsInTreatment] = useState<FilaDeEspera[]>([]);
   const [students, setStudents] = useState<Students[]>([]);
   const [searchTermStudents, setSearchTermStudents] = useState("");
   const [searchTermQueue, setSearchTermQueue] = useState("");
@@ -98,7 +98,7 @@ export default function Physiotherapist({ physiotherapist, setor }: Physiotherap
       const pacientes = data.filter(p => p.situacao !== "Fila de espera");
 
       setWaitingQueue(fila);
-      setPatientsInTreatment(pacientes as unknown as Pacients[]);
+      setPatientsInTreatment(pacientes as unknown as FilaDeEspera[]);
     });
 
     // Estudantes
@@ -131,7 +131,7 @@ export default function Physiotherapist({ physiotherapist, setor }: Physiotherap
     // Atualiza o estado local também
     setWaitingQueue(prev => {
       // Converte o item da API para o formato local antes de atualizar
-      const localChange = convertFromApiFormat(change);
+      const localChange = (change);
       return prev.map(item => item.id === localChange.id ? localChange : item);
     });
   };
@@ -147,23 +147,23 @@ export default function Physiotherapist({ physiotherapist, setor }: Physiotherap
     );
   }
 
-  function filterQueue(queue: LocalFilaDeEspera[], term: string) {
+  function filterQueue(queue: FilaDeEspera[], term: string) {
     const t = term.toLowerCase();
     return queue.filter(item =>
       item.nome.toLowerCase().includes(t) ||
-      item["telefone-1"].toLowerCase().includes(t) ||
-      item["telefone-2"].toLowerCase().includes(t) ||
+      item["tel1"].toLowerCase().includes(t) ||
+      item["tel2"].toLowerCase().includes(t) ||
       item.diagnostico.toLowerCase().includes(t) ||
       item.bairro.toLowerCase().includes(t)
     );
   }
 
-  function filterPatients(patients: Pacients[], term: string) {
+  function filterPatients(patients: FilaDeEspera[], term: string) {
     const t = term.toLowerCase();
     return patients.filter(patient =>
       patient.nome.toLowerCase().includes(t) ||
-      (patient["telefone-1"] && patient["telefone-1"].toLowerCase().includes(t)) ||
-      (patient["telefone-2"] && patient["telefone-2"].toLowerCase().includes(t))
+      (patient["tel1"] && patient["tel1"].toLowerCase().includes(t)) ||
+      (patient["tel2"] && patient["tel2"].toLowerCase().includes(t))
     );
   }
 
@@ -240,11 +240,11 @@ export default function Physiotherapist({ physiotherapist, setor }: Physiotherap
                 </div>
                 <FilaDeEsperaTable
                   columns={columnsFactory(
-                    (newData) => setWaitingQueue(newData as unknown as LocalFilaDeEspera[]),
+                    (newData) => setWaitingQueue(newData as unknown as FilaDeEspera[]),
                     handleRowChange,
                     handlePriorityChange
                   )}
-                  data={filteredQueue.map(item => convertToApiFormat(item))}
+                  data={filteredQueue.map(item => (item))}
                   changesLog={changesLog}
                   setChangesLog={setChangesLog}
                 />
