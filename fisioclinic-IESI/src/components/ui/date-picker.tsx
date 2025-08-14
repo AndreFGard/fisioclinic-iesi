@@ -29,6 +29,7 @@ interface DatePickerProps {
   todayLabel?: string;
   clearLabel?: string;
   invalid?: boolean;
+  className?: string;
 }
 
 export function DatePicker({
@@ -45,6 +46,7 @@ export function DatePicker({
   todayLabel = "Hoje",
   clearLabel = "Limpar",
   invalid,
+  className,
 }: DatePickerProps) {
   const [open, setOpen] = React.useState(false);
 
@@ -70,9 +72,10 @@ export function DatePicker({
         <Button
           variant={"outline"}
           className={cn(
-            "w-full justify-start text-left font-normal h-11",
+            "w-full justify-start text-left font-normal h-8 sm:h-11 text-xs sm:text-sm",
             invalid && "border-destructive focus-visible:ring-destructive",
-            !date && "text-muted-foreground"
+            !date && "text-muted-foreground",
+            className
           )}
           aria-invalid={invalid ? true : undefined}
           aria-label={
@@ -83,11 +86,13 @@ export function DatePicker({
               : "Abrir seletor de data"
           }
         >
-          <CalendarIcon className="mr-2 h-4 w-4" />
+          <CalendarIcon className="mr-1 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4" />
           {date ? (
             format(date, "dd/MM/yyyy", { locale: ptBR })
           ) : (
-            <span>{placeholder ?? "Selecione a data"}</span>
+            <span className="truncate">
+              {placeholder ?? "Selecione a data"}
+            </span>
           )}
         </Button>
       </PopoverTrigger>
@@ -112,11 +117,23 @@ export function DatePicker({
           initialFocus
         />
         {showFooterActions && (
-          <div className="flex items-center justify-between gap-2 border-t p-2">
-            <Button type="button" variant="ghost" size="sm" onClick={setToday}>
+          <div className="flex items-center justify-between gap-1 sm:gap-2 border-t p-2">
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              onClick={setToday}
+              className="text-xs sm:text-sm px-2 sm:px-3"
+            >
               {todayLabel}
             </Button>
-            <Button type="button" variant="ghost" size="sm" onClick={clear}>
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              onClick={clear}
+              className="text-xs sm:text-sm px-2 sm:px-3"
+            >
               {clearLabel}
             </Button>
           </div>
