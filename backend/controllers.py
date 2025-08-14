@@ -1,4 +1,7 @@
-from fastapi import FastAPI, HTTPException,Body
+from operator import index
+from fastapi import FastAPI, File, HTTPException,Body
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 from repositories.data import *
 from services.rabbitmq_utils import envia_para_fila
 from services.consumidor_cadastro import iniciar_consumidor
@@ -12,9 +15,7 @@ import threading
 def startup_event():
     threading.Thread(target=iniciar_consumidor, daemon=True).start()
 
-@app.get("/")
-def read_root():
-    return {"status": "ok"}
+
 
 @app.post("/cadastro_paciente")
 def cadastro_paciente(cadastro:cadastro_schema):
@@ -116,3 +117,20 @@ def edit_fila(id: int, change: edicao_schema):
         return {"editado": "ok"}
     else:
         raise HTTPException(status_code=400, detail="ID inexistente")
+
+#rota catch all pra produção
+from pathlib import Path
+build_path = Path(__file__).parent / "dist"
+
+try:
+    app.mount("/", StaticFiles(directory=build_path, html=True), name="static")
+except:
+    print("Dist files not found on root.")
+@app.get("/{full_path:path}")
+def catch_all(full_path: str):
+
+    index_file = build_path / "index.html"
+    print(index_file)
+    if index_file.exists():
+        return FileResponse(index_file)
+    return {"error": "index.html não encontrado. Tente em :8080"}
