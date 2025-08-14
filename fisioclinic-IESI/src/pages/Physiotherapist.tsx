@@ -10,7 +10,7 @@ import { FilaDeEsperaTable } from "@/components/table-fila-de-espera/data-table"
 import { columns as columnsFactory } from "@/components/table-fila-de-espera/columns";
 
 import { PatientsTable } from "@/components/Physiotherapist/tables/patients-page/PatientsTable";
-import { Pacients, patientsColumns } from "@/components/Physiotherapist/tables/patients-page/Patients-columns";
+import {patientsColumns } from "@/components/Physiotherapist/tables/patients-page/Patients-columns";
 
 import { StudentsTable } from "@/components/Physiotherapist/tables/students-page/StudentsTable";
 import { Students, studentsColumns } from "@/components/Physiotherapist/tables/students-page/Students-columns";
@@ -24,62 +24,9 @@ interface PhysiotherapistProps {
 }
 
 // Importação do tipo FilaDeEspera da API
-import { FilaDeEspera as ApiFilaDeEspera } from "@/lib/api";
+import { FilaDeEspera as ApiFilaDeEspera, FilaDeEspera, getWaitingQueueData } from "@/lib/api";
 
-// Tipo local usado no componente
-interface LocalFilaDeEspera {
-  id: string;
-  nome: string;
-  idade: number;
-  "telefone-1": string;
-  "telefone-2": string;
-  bairro: string;
-  diagnostico: string;
-  disciplina: string;
-  hospital: string;
-  "medico(a)": string;
-  "data da procura": string;
-  situacao: string;
-  prioridade: string;
-}
 
-// Função para converter do formato local para o formato da API
-function convertToApiFormat(local: LocalFilaDeEspera): ApiFilaDeEspera {
-  return {
-    id: local.id,
-    nome: local.nome,
-    idade: local.idade,
-    tel1: local["telefone-1"],
-    tel2: local["telefone-2"],
-    bairro: local.bairro,
-    diagnostico: local.diagnostico,
-    disciplina: local.disciplina,
-    hospital: local.hospital,
-    "medico(a)": local["medico(a)"],
-    "data da procura": local["data da procura"],
-    situacao: local.situacao,
-    prioridade: local.prioridade
-  };
-}
-
-// Função para converter do formato da API para o formato local
-function convertFromApiFormat(api: ApiFilaDeEspera): LocalFilaDeEspera {
-  return {
-    id: api.id,
-    nome: api.nome,
-    idade: api.idade,
-    "telefone-1": api.tel1,
-    "telefone-2": api.tel2,
-    bairro: api.bairro,
-    diagnostico: api.diagnostico,
-    disciplina: api.disciplina,
-    hospital: api.hospital,
-    "medico(a)": api["medico(a)"],
-    "data da procura": api["data da procura"],
-    situacao: api.situacao,
-    prioridade: api.prioridade
-  };
-}
 
 // Dados mockados
 async function getDataEstudantes(): Promise<Students[]> {
@@ -132,135 +79,12 @@ async function getDataEstudantes(): Promise<Students[]> {
   ];
 }
 
-async function geteDataFilaDeEspera(): Promise<LocalFilaDeEspera[]> {
-  return [
-    {
-      id: "1",
-      nome: "Ana Souza",
-      idade: 28,
-      "telefone-1": "(11) 91234-5678",
-      "telefone-2": "(11) 99876-5432",
-      bairro: "Centro",
-      diagnostico: "Fratura no braço",
-      disciplina: "Ortopedia",
-      hospital: "Hospital São Lucas",
-      "medico(a)": "Dr. Ricardo Lima",
-      "data da procura": "2025-08-10",
-      situacao: "Em tratamento",
-      prioridade: "alta"
-    },
-    {
-      id: "3",
-      nome: "Mariana Lima",
-      idade: 34,
-      "telefone-1": "(31) 93456-7890",
-      "telefone-2": "(31) 97654-3210",
-      bairro: "Bairro Verde",
-      diagnostico: "Tendinite",
-      disciplina: "Fisioterapia",
-      hospital: "Hospital das Clínicas",
-      "medico(a)": "Dr. João Almeida",
-      "data da procura": "2025-08-12",
-      situacao: "Fila de espera",
-      prioridade: "média"
-    },
-    {
-      id: "4",
-      nome: "Carlos Silva",
-      idade: 45,
-      "telefone-1": "(41) 91234-5678",
-      "telefone-2": "(41) 99876-5432",
-      bairro: "Bairro Azul",
-      diagnostico: "Lesão muscular",
-      disciplina: "Fisioterapia",
-      hospital: "Hospital Santa Cruz",
-      "medico(a)": "Dr. Ana Paula",
-      "data da procura": "2025-08-15",
-      situacao: "Em tratamento",
-      prioridade: "baixa"
-    },
-    {
-      id: "5",
-      nome: "Lucas Pereira",
-      idade: 52,
-      "telefone-1": "(21) 92345-6789",
-      "telefone-2": "(21) 98765-4321",
-      bairro: "Copacabana",
-      diagnostico: "Hérnia de disco",
-      disciplina: "Neurologia",
-      hospital: "Hospital Central",
-      "medico(a)": "Dr. Fernanda Costa",
-      "data da procura": "2025-08-18",
-      situacao: "Fila de espera",
-      prioridade: "alta"
-    },
-    {
-      id: "6",
-      nome: "Juliana Alves",
-      idade: 39,
-      "telefone-1": "(85) 93456-1234",
-      "telefone-2": "(85) 97654-5678",
-      bairro: "Meireles",
-      diagnostico: "Luxação no ombro",
-      disciplina: "Ortopedia",
-      hospital: "Hospital Regional",
-      "medico(a)": "Dr. Paulo Mendes",
-      "data da procura": "2025-08-20",
-      situacao: "Em tratamento",
-      prioridade: "média"
-    },
-    {
-      id: "7",
-      nome: "Fernanda Dias",
-      idade: 31,
-      "telefone-1": "(62) 91234-8765",
-      "telefone-2": "(62) 99876-5432",
-      bairro: "Setor Oeste",
-      diagnostico: "Artrose",
-      disciplina: "Reumatologia",
-      hospital: "Hospital Goiânia",
-      "medico(a)": "Dr. Lucas Martins",
-      "data da procura": "2025-08-22",
-      situacao: "Fila de espera",
-      prioridade: "baixa"
-    },
-    {
-      id: "8",
-      nome: "Rafael Costa",
-      idade: 47,
-      "telefone-1": "(19) 93456-7890",
-      "telefone-2": "(19) 97654-3210",
-      bairro: "Jardim das Flores",
-      diagnostico: "Lesão no joelho",
-      disciplina: "Fisioterapia",
-      hospital: "Hospital Campinas",
-      "medico(a)": "Dr. Mariana Lopes",
-      "data da procura": "2025-08-25",
-      situacao: "Em tratamento",
-      prioridade: "alta"
-    },
-    {
-      id: "9",
-      nome: "Patrícia Gomes",
-      idade: 29,
-      "telefone-1": "(27) 91234-5678",
-      "telefone-2": "(27) 99876-5432",
-      bairro: "Praia do Canto",
-      diagnostico: "Entorse de tornozelo",
-      disciplina: "Ortopedia",
-      hospital: "Hospital Vitória",
-      "medico(a)": "Dr. Eduardo Silva",
-      "data da procura": "2025-08-28",
-      situacao: "Fila de espera",
-      prioridade: "média"
-    }
-  ];
-}
+
 
 // Componente principal
 export default function Physiotherapist({ physiotherapist, setor }: PhysiotherapistProps) {
-  const [waitingQueue, setWaitingQueue] = useState<LocalFilaDeEspera[]>([]);
-  const [patientsInTreatment, setPatientsInTreatment] = useState<Pacients[]>([]);
+  const [waitingQueue, setWaitingQueue] = useState<FilaDeEspera[]>([]);
+  const [patientsInTreatment, setPatientsInTreatment] = useState<FilaDeEspera[]>([]);
   const [students, setStudents] = useState<Students[]>([]);
   const [searchTermStudents, setSearchTermStudents] = useState("");
   const [searchTermQueue, setSearchTermQueue] = useState("");
@@ -269,12 +93,12 @@ export default function Physiotherapist({ physiotherapist, setor }: Physiotherap
 
   useEffect(() => {
     // Fila de espera e pacientes
-    geteDataFilaDeEspera().then(data => {
+    getWaitingQueueData().then(data => {
       const fila = data.filter(p => p.situacao === "Fila de espera");
       const pacientes = data.filter(p => p.situacao !== "Fila de espera");
 
       setWaitingQueue(fila);
-      setPatientsInTreatment(pacientes as unknown as Pacients[]);
+      setPatientsInTreatment(pacientes as unknown as FilaDeEspera[]);
     });
 
     // Estudantes
@@ -307,7 +131,7 @@ export default function Physiotherapist({ physiotherapist, setor }: Physiotherap
     // Atualiza o estado local também
     setWaitingQueue(prev => {
       // Converte o item da API para o formato local antes de atualizar
-      const localChange = convertFromApiFormat(change);
+      const localChange = (change);
       return prev.map(item => item.id === localChange.id ? localChange : item);
     });
   };
@@ -323,23 +147,23 @@ export default function Physiotherapist({ physiotherapist, setor }: Physiotherap
     );
   }
 
-  function filterQueue(queue: LocalFilaDeEspera[], term: string) {
+  function filterQueue(queue: FilaDeEspera[], term: string) {
     const t = term.toLowerCase();
     return queue.filter(item =>
       item.nome.toLowerCase().includes(t) ||
-      item["telefone-1"].toLowerCase().includes(t) ||
-      item["telefone-2"].toLowerCase().includes(t) ||
+      item["tel1"].toLowerCase().includes(t) ||
+      item["tel2"].toLowerCase().includes(t) ||
       item.diagnostico.toLowerCase().includes(t) ||
       item.bairro.toLowerCase().includes(t)
     );
   }
 
-  function filterPatients(patients: Pacients[], term: string) {
+  function filterPatients(patients: FilaDeEspera[], term: string) {
     const t = term.toLowerCase();
     return patients.filter(patient =>
       patient.nome.toLowerCase().includes(t) ||
-      (patient["telefone-1"] && patient["telefone-1"].toLowerCase().includes(t)) ||
-      (patient["telefone-2"] && patient["telefone-2"].toLowerCase().includes(t))
+      (patient["tel1"] && patient["tel1"].toLowerCase().includes(t)) ||
+      (patient["tel2"] && patient["tel2"].toLowerCase().includes(t))
     );
   }
 
@@ -416,11 +240,11 @@ export default function Physiotherapist({ physiotherapist, setor }: Physiotherap
                 </div>
                 <FilaDeEsperaTable
                   columns={columnsFactory(
-                    (newData) => setWaitingQueue(newData as unknown as LocalFilaDeEspera[]),
+                    (newData) => setWaitingQueue(newData as unknown as FilaDeEspera[]),
                     handleRowChange,
                     handlePriorityChange
                   )}
-                  data={filteredQueue.map(item => convertToApiFormat(item))}
+                  data={filteredQueue.map(item => (item))}
                   changesLog={changesLog}
                   setChangesLog={setChangesLog}
                 />

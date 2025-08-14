@@ -37,7 +37,7 @@ export const columns = (
   { accessorKey: "diagnostico", header: "Diagnóstico" },
   { accessorKey: "disciplina", header: "Disciplina", filterFn: equalsFilter },
   { accessorKey: "hospital", header: "Hospital" },
-  { accessorKey: "medico(a)", header: "Médico(a)" },
+  { accessorKey: "doutor", header: "Médico(a)" },
   {
     accessorKey: "data da procura",
     header: ({ column }) => {
