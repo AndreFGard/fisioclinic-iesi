@@ -82,7 +82,7 @@ uvicorn main:app --reload
 
 ### 3. Frontend (React + Vite)
 ```bash
-cd fisioclinic-IESI
+cd fisioclinic-IESI/scr
 npm install
 npm run dev
 ```
