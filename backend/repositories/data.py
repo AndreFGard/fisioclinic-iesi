@@ -216,31 +216,31 @@ with Session() as session:
         
         return [todict(r) for r in grupos]
     
+
     def create_prontuario(titulo: str, conteudo: Any, dono_id: str, paciente_id: int, grupo_id: int = None, check_membership: bool = False):
-        dono = session.get(User, dono_id)
+        
+        dono = session.get(User, "pedro")
         if dono is None:
             raise ValueError(f"Dono (User) com id='{dono_id}' não encontrado")
 
-        grupo = None
-        if grupo_id is not None:
-            grupo = session.get(Grupo, grupo_id)
-            if grupo is None:
-                raise ValueError(f"Grupo com id={grupo_id} não encontrado")
+        # grupo = None
+        # if grupo_id is not None:
+        #     grupo = session.get(Grupo, grupo_id)
+        #     if grupo is None:
+        #         raise ValueError(f"Grupo com id={grupo_id} não encontrado")
 
         paciente = None
         paciente = session.get(Paciente, paciente_id)
         if paciente is None:
             raise ValueError(f"Paciente com id={paciente_id} não encontrado")
 
-        try:
-            pront = Prontuario(titulo=titulo, conteudo=conteudo, grupo=grupo, dono=dono, paciente=paciente)
-            session.add(pront)
-            session.commit()
-            session.refresh(pront)
-            return True
-        except:
-            session.rollback()
-            return False
+    
+        pront = Prontuario(titulo=titulo, conteudo=conteudo,grupo=None, dono=dono, paciente=paciente)
+        session.add(pront)
+        session.commit()
+        session.refresh(pront)
+        return True
+    
 
     def get_prontuarios_permitidos(user_id: str, grupo_id: int):
         stmt = (

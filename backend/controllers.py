@@ -173,7 +173,7 @@ def pront_em_grupo(grupo: int, id: str):
 
 @app.post("/pront")
 def new_pront(u: pront_schema):
-    if(create_prontuario(u.titulo, u.conteudo, u.user, u.grupo, True)):
+    if(create_prontuario(u.titulo, u.conteudo, u.user, u.paciente, True)):
         return {"criado": "ok"}
     else:
         raise HTTPException(status_code=400, detail="Grupo não existe ou não é membro")

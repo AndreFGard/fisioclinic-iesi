@@ -92,6 +92,9 @@ class Prontuario(Base):
         self.dono = dono
         self.paciente = paciente
 
+
+
+
 class Paciente(Base):
     __tablename__ = "paciente"
     '''

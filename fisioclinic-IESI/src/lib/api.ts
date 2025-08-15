@@ -40,6 +40,79 @@ export type PatientData = {
   obs: string | undefined;
 }
 
+export interface MedicalChart {
+  id: string;
+  patientId: string;
+  currentVersion: MedicalChartVersion;
+  versions: MedicalChartVersion[];
+  status: "ativo" | "arquivado";
+  createdAt: Date;
+  updatedAt: Date;
+}
+export interface MedicalChartVersion {
+  id: string;
+  versionNumber: number;
+  consultationData: any; // Dados básicos da consulta (da aba consultation)
+  templateData: any; // Dados do template preenchido
+  templateId: string;
+  templateName: string;
+  professional: string;
+  date: Date;
+  isActive: boolean;
+}
+
+export interface ProntuaryAPI {
+    titulo: string;
+    conteudo: any;
+    user: string;
+    paciente: string;
+    grupo: number | undefined
+}
+
+export async function createProntuary(user_id:string, pront:ProntuaryAPI ) {
+    try {
+        const response = await fetch(`${apiUrl}/pront`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(pront),
+        });
+        console.log(JSON.stringify(response))
+        if (!response.ok) {
+            const errorMessage = `Erro ao criar o prontuario: ${response.status} ${response.statusText}`;
+            throw new Error(errorMessage);
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error("Erro ao criar o prontuario:", error);
+        throw error;
+    }
+}
+
+export async function getProntuaries(user_id: string){
+    try {
+        const response = await fetch(`${apiUrl}/pront/pac/${user_id}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+        console.log(JSON.stringify(response))
+        if (!response.ok) {
+            const errorMessage = `Erro ao pegar prontuario: ${response.status} ${response.statusText}`;
+            throw new Error(errorMessage);
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error("Erro  ao pegar prontuario:", error);
+        throw error;
+    }
+}
+
+
 export async function createPatient(patient: PatientData){
     try {
         const response = await fetch(`${apiUrl}/cadastro_paciente`, {

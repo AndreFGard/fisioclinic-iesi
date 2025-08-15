@@ -6,62 +6,70 @@ import {
   ChartFieldChange,
 } from "@/components/patient";
 import { useMedicalChartHistory } from "./useMedicalChartHistory";
+import { createProntuary, getProntuaries, ProntuaryAPI } from "@/lib/api";
 
-// Chave para armazenamento local
-const STORAGE_KEY = "medicalCharts";
 
-interface StoredMedicalCharts {
-  [patientId: string]: MedicalChart;
-}
 
 export function useMedicalChart(patientId: string) {
   const [medicalChart, setMedicalChart] = useState<MedicalChart | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const { diffs, addDiff, clearHistory } = useMedicalChartHistory(patientId);
 
-  // Carregar dados do localStorage na inicialização
+
+  // Carregar prontuário do backend na inicialização
   useEffect(() => {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    if (stored) {
+    let isMounted = true;
+    setIsLoading(true);
+    async function fetchChart() {
       try {
-        const charts: StoredMedicalCharts = JSON.parse(stored);
-        if (charts[patientId]) {
-          // Converter strings de data de volta para objetos Date
-          const chart = charts[patientId];
-          chart.createdAt = new Date(chart.createdAt);
-          chart.updatedAt = new Date(chart.updatedAt);
-          chart.currentVersion.date = new Date(chart.currentVersion.date);
-          chart.versions.forEach((version) => {
-            version.date = new Date(version.date);
-          });
-          setMedicalChart(chart);
+        const prontuaries = await getProntuaries(patientId);
+        // Supondo que o backend retorna um array de versões ou um objeto de prontuário
+        if (prontuaries && prontuaries.length > 0) {
+          // Adaptar para o formato MedicalChart se necessário
+          // Aqui assumimos que o backend retorna um array de versões, pegando a mais recente
+          // Você pode precisar ajustar conforme o formato real da resposta
+          const versions = prontuaries.map((item: any, idx: number) => ({
+            ...item,
+            date: new Date(item.date),
+            isActive: item.isActive ?? true,
+            versionNumber: item.versionNumber ?? idx + 1,
+          }));
+          const latest = versions[versions.length - 1];
+          const chart: MedicalChart = {
+            id: latest.id || Date.now().toString(),
+            patientId,
+            createdAt: latest.createdAt ? new Date(latest.createdAt) : new Date(),
+            updatedAt: latest.updatedAt ? new Date(latest.updatedAt) : new Date(),
+            currentVersion: latest,
+            versions,
+            status: latest.status || "ativo",
+          };
+          if (isMounted) setMedicalChart(chart);
+        } else {
+          if (isMounted) setMedicalChart(null);
         }
       } catch (error) {
-        console.error("Erro ao carregar prontuário do localStorage:", error);
+        console.error("Erro ao carregar prontuário do backend:", error);
+        if (isMounted) setMedicalChart(null);
+      } finally {
+        if (isMounted) setIsLoading(false);
       }
     }
-    setIsLoading(false);
+    fetchChart();
+    return () => {
+      isMounted = false;
+    };
   }, [patientId]);
 
-  // Função para salvar no localStorage
-  const saveToStorage = (chart: MedicalChart) => {
-    try {
-      const stored = localStorage.getItem(STORAGE_KEY);
-      const charts: StoredMedicalCharts = stored ? JSON.parse(stored) : {};
-      charts[patientId] = chart;
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(charts));
-    } catch (error) {
-      console.error("Erro ao salvar prontuário no localStorage:", error);
-    }
-  };
 
-  // Criar novo prontuário
-  const createMedicalChart = (
+
+  // Criar novo prontuário e salvar no backend
+  const createMedicalChart = async (
     consultationData: any,
     templateData: any,
     templateId: string,
     templateName: string
-  ): MedicalChart => {
+  ): Promise<MedicalChart> => {
     const newVersion: MedicalChartVersion = {
       id: Date.now().toString(),
       versionNumber: 1,
@@ -92,19 +100,31 @@ export function useMedicalChart(patientId: string) {
       status: "ativo",
     };
 
-    setMedicalChart(newChart);
-    saveToStorage(newChart);
+    // Salvar no backend
+    const prontuaryPayload: ProntuaryAPI = {
+      titulo: templateName,
+      conteudo: newChart,
+      user: consultationData.professional || "Dr. Médico",
+      paciente: patientId,
+      grupo: undefined,
+    };
+    try {
+      await createProntuary(patientId, prontuaryPayload);
+      setMedicalChart(newChart);
+    } catch (error) {
+      console.error("Erro ao criar prontuário no backend:", error);
+    }
     return newChart;
   };
 
-  // Atualizar prontuário existente
-  const updateMedicalChart = (
+  // Atualizar prontuário existente e salvar no backend
+  const updateMedicalChart = async (
     consultationData: any,
     templateData: any,
     templateId: string,
     templateName: string,
     previousVersion: MedicalChartVersion
-  ): { chart: MedicalChart; diff: MedicalChartDiff } => {
+  ): Promise<{ chart: MedicalChart; diff: MedicalChartDiff }> => {
     if (!medicalChart) {
       throw new Error("Nenhum prontuário existente para atualizar");
     }
@@ -181,25 +201,28 @@ export function useMedicalChart(patientId: string) {
       versions: [...medicalChart.versions, newVersion],
     };
 
-    setMedicalChart(updatedChart);
-    saveToStorage(updatedChart);
+    // Salvar no backend
+    const prontuaryPayload: ProntuaryAPI = {
+      titulo: templateName,
+      conteudo: updatedChart,
+      user: consultationData.professional || "Dr. Médico",
+      paciente: patientId,
+      grupo: undefined,
+    };
+    try {
+      await createProntuary(patientId, prontuaryPayload);
+      setMedicalChart(updatedChart);
+    } catch (error) {
+      console.error("Erro ao atualizar prontuário no backend:", error);
+    }
     addDiff(diff); // Adicionar ao histórico
     return { chart: updatedChart, diff };
   };
 
-  // Limpar prontuário (para testes)
+  // Limpar prontuário (para testes) - apenas limpa do estado local
   const clearMedicalChart = () => {
     setMedicalChart(null);
-    try {
-      const stored = localStorage.getItem(STORAGE_KEY);
-      if (stored) {
-        const charts: StoredMedicalCharts = JSON.parse(stored);
-        delete charts[patientId];
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(charts));
-      }
-    } catch (error) {
-      console.error("Erro ao limpar prontuário:", error);
-    }
+    // Se desejar, pode implementar deleção no backend aqui
   };
 
   return {
