@@ -139,8 +139,10 @@ def filtro_fila(filtros: dict):
 
 @app.post("/fila")
 def add_fila(c: fila_schema):
+    c.procura  = c.procura[0:10]
+    c.id = None
     if(emfileirar(c.model_dump())):
-        return {"add": "ok"}
+        return {"id": None}
     else:
         raise HTTPException(status_code=400, detail="Informações faltando ou mal formatadas")
 

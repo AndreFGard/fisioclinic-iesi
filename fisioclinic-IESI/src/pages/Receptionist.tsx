@@ -85,6 +85,12 @@ const Receptionist = () => {
           <UserPlus className="mr-2 h-4 w-4" />
           Novo Paciente
         </Button>
+
+        {/* Botão Novo Enfileirado */}
+        <Button onClick={() => navigate("/new-enfileirado")}>
+          <UserPlus className="mr-2 h-4 w-4" />
+          Adicionar à fila
+        </Button>
       </div>
 
 

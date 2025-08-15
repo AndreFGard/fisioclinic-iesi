@@ -46,15 +46,12 @@ with Session() as session:
         if isinstance(dados["procura"], str):
             dados["procura"] = date.fromisoformat(dados["procura"])
 
-        try:
-            fila = Fila(**dados)
-            session.add(fila)
-            session.commit()
-            session.refresh(fila)
-            return True
-        except:
-            session.rollback()
-            return False
+        fila = Fila(**dados)
+        session.add(fila)
+        session.commit()
+        session.refresh(fila)
+        return True
+
 
     def filtrar_filas(filters: dict = None, limit: int = 0):
         """
