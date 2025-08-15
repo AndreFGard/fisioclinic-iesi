@@ -165,18 +165,6 @@ export default function LoginForm() {
             Esqueceu sua senha?
           </button>
         </div>
-
-        <div className="text-center pt-4 border-t">
-          <p className="text-sm text-muted-foreground mb-2">
-            Área administrativa
-          </p>
-          <Link
-            to="/new-patient"
-            className="text-sm text-primary hover:text-primary/80 transition-colors underline"
-          >
-            Cadastrar Novo Paciente
-          </Link>
-        </div>
       </CardContent>
     </Card>
   );
