@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
+import {toast} from "@/components/ui/use-toast"
 import {
   Card,
   CardContent,
@@ -142,8 +143,12 @@ export default function NewPatient() {
     try {
       // Aqui você implementaria a lógica de salvamento
       const patientId =  await createPatient(patientData);
-
-      navigate(`/patient/${createdPatientId}`);
+      console.log(JSON.stringify(patientId))
+      toast({
+              title: "Sucesso",
+              description: `Paciente atualizado com sucesso com id: ${patientId["id"]}`,
+            });
+      navigate(`/patient/${patientId['id']}`);
       return;
     } catch (error) {
       console.error("Erro ao cadastrar paciente:", error);

@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Stethoscope, GraduationCap, UserCheck } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 type UserType = "fisioterapeuta" | "aluno" | "recepcionista";
 
@@ -44,6 +45,7 @@ const userTypes: UserTypeOption[] = [
 ];
 
 export default function LoginForm() {
+  const navigate = useNavigate();
   const [selectedUserType, setSelectedUserType] =
     useState<UserType>("fisioterapeuta");
   const [email, setEmail] = useState("");
@@ -52,8 +54,17 @@ export default function LoginForm() {
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     console.log("Login attempt:", { userType: selectedUserType, email });
-    // Aqui você implementaria a lógica de autenticação
+
+    // Redirecionamento de acordo com o tipo de usuário
+    const routeMap: Record<UserType, string> = {
+      fisioterapeuta: "/physiotherapist",
+      aluno: "/students",
+      recepcionista: "/receptionist",
+    };
+
+    navigate(routeMap[selectedUserType]);
   };
+
 
   return (
     <Card className="w-full max-w-md mx-auto bg-card/80 backdrop-blur-sm border-0 shadow-medical">
@@ -63,7 +74,7 @@ export default function LoginForm() {
         </div>
         <div>
           <CardTitle className="text-2xl font-bold text-foreground">
-            Sistema FisioClínica
+            Sistema Clinica Escola de Fisioterapia
           </CardTitle>
           <CardDescription className="text-muted-foreground">
             Faça login para acessar o sistema

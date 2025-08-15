@@ -116,7 +116,7 @@ class Paciente(Base):
     nome = Column(String, nullable=False)
     cpf = Column(String)
     genero = Column(String)
-    nascimento = Column(Date)
+    nascimento = Column(String)
     tel1 = Column(String)
     tel2 = Column(String)
     bairro = Column(String)
