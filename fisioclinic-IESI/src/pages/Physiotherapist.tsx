@@ -24,7 +24,7 @@ interface PhysiotherapistProps {
 }
 
 // Importação do tipo FilaDeEspera da API
-import { FilaDeEspera as ApiFilaDeEspera, FilaDeEspera, getWaitingQueueData } from "@/lib/api";
+import { FilaDeEspera as ApiFilaDeEspera, FilaDeEspera, getPatient, getPatientList, getWaitingQueueData } from "@/lib/api";
 
 
 
@@ -93,19 +93,22 @@ export default function Physiotherapist({ physiotherapist, setor }: Physiotherap
 
   useEffect(() => {
     // Fila de espera e pacientes
-    getWaitingQueueData().then(data => {
+    async function a() {
+      const data = await getWaitingQueueData();
       const fila = data.filter(p => p.situacao === "Fila de espera");
-      const pacientes = data.filter(p => p.situacao !== "Fila de espera");
+      //const pacientes = data.filter(p => p.situacao !== "Fila de espera");
+      const pacientes = await getPatientList();
 
       setWaitingQueue(fila);
       setPatientsInTreatment(pacientes as unknown as FilaDeEspera[]);
-    });
 
-    // Estudantes
-    getDataEstudantes().then(data => {
-      setStudents(data);
-    });
+      // Estudantes
+      const estudantes = await getDataEstudantes();
+      setStudents(estudantes);
+    }
+    a();
   }, []);
+
 
   const handlePriorityChange = (id: string, newPriority: string) => {
     setPatientsInTreatment(prev =>

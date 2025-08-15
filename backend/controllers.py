@@ -179,7 +179,11 @@ def new_pront(u: pront_schema):
         return {"criado": "ok"}
     else:
         raise HTTPException(status_code=400, detail="Grupo não existe ou não é membro")
-    
+
+
+@app.get("/getpatients")
+def getpatients():
+    return get_patients()
 
 @app.post("/user/new")
 def new_user(u: user_schema):

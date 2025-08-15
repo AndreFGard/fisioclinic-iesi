@@ -169,3 +169,26 @@ export async function getWaitingQueueData(): Promise<FilaDeEspera[]> {
         throw error;
     }
 }
+
+export async function getPatientList(): Promise<FilaDeEspera[]> {
+    try {
+        const response = await fetch(`${apiUrl}/getpatients`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        if (!response.ok) {
+            const errorMessage = `Erro ao buscar a fila: ${response.status} ${response.statusText}`;
+            throw new Error(errorMessage);
+        }
+
+        const data: FilaDeEspera[] = await response.json();
+        return data;
+    } catch (error) {
+        console.error("Erro ao buscar a fila:", error);
+        throw error;
+    }
+}
+

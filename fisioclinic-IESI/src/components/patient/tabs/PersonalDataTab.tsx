@@ -452,7 +452,7 @@ export default function PersonalDataTab({
                     <SelectItem value="primeira-consulta">
                       Primeira Consulta
                     </SelectItem>
-                    <SelectItem value="em-tratamento">Em Tratamento</SelectItem>
+                    <SelectItem value="Em tratamento">Em Tratamento</SelectItem>
                     <SelectItem value="retorno">Retorno</SelectItem>
                     <SelectItem value="alta">Alta</SelectItem>
                     <SelectItem value="aguardando">Aguardando</SelectItem>

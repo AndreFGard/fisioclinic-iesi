@@ -342,6 +342,12 @@ with Session() as session:
 
     # ---------- INSERÇÕES ----------
 
+    def get_patients():
+        with Session() as session:
+            x = session.query(Paciente)
+            return [(todict(y)) for y in x]
+
+
     def create_paciente(etc: dict):
         with Session() as session:
             p = Paciente(**etc)

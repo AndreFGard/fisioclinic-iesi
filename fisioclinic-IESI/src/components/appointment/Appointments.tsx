@@ -64,7 +64,7 @@ const mockPatients: FilaDeEspera[] = [
   },
   {
     id: "3",
-    nome: "Mariana Lima",
+    nome: "Marianix limix Lima",
     idade: 28,
     tel1: "(31) 93456-7890",
     tel2: "(31) 97654-3210",
@@ -457,7 +457,7 @@ export default function appointments({ onBack }: appointmentProps) {
                       </div>
                       <div>
                         <span className="font-medium">Idade:</span>{" "}
-                        {selectedPatient.idade} anos
+                        
                       </div>
                       <div>
                         <span className="font-medium">Telefone:</span>{" "}

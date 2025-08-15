@@ -61,7 +61,7 @@ const initialPatientData: PatientData = {
   hospital: "Hospital das Clínicas",
   doutor: "Dr. João Pereira",
   procura: new Date(2024, 2, 10),
-  situacao: "em-tratamento",
+  situacao: "Em tratamento",
   obs: "Paciente apresenta dor lombar crônica há 2 anos. Encaminhada para fisioterapia após avaliação médica.",
 };
 
@@ -481,7 +481,7 @@ export default function NewPatient({ val }: { val: string }) {
                         <SelectItem value="primeira-consulta">
                           Primeira Consulta
                         </SelectItem>
-                        <SelectItem value="em-tratamento">
+                        <SelectItem value="Em tratamento">
                           Em Tratamento
                         </SelectItem>
                         <SelectItem value="retorno">Retorno</SelectItem>
