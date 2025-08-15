@@ -35,7 +35,7 @@ def startup_event():
 @app.post("/cadastro_paciente")
 def cadastro_paciente(cadastro:cadastro_schema):
     body = {
-    "name":cadastro.nome,
+    "name": cadastro.nome,
     "birthName": None,
     "flagWhatsapp": False,
     "cns": "",
@@ -43,7 +43,7 @@ def cadastro_paciente(cadastro:cadastro_schema):
     "address":cadastro.bairro,
     "number": "",
     "rg": "",
-    "cpf": cadastro.cpf,
+    "cpf": '',
     "passport": "",
     "passport_valid_date": "",
     "apartment": "",
@@ -56,7 +56,7 @@ def cadastro_paciente(cadastro:cadastro_schema):
     "email": "",
     "obs": str({"diagnostico" : cadastro.diagnostico, "observacao" : cadastro.obs,"situacao" : cadastro.situacao}),
     "sex": "",
-    "dateOfBirth": cadastro.nascimento,
+    "dateOfBirth": '15/08/2005',
     "country": "BR",
     "profession":cadastro.disciplina,  
     "educationLevel": "",
@@ -86,6 +86,7 @@ def cadastro_paciente(cadastro:cadastro_schema):
     cd["id"] = random.randint(0,1000000*1000)
     try:
         response = envia_para_fila_rpc(body)
+        print(response)
         idp = response["patient"]["id"]
         cd["id"] = idp
     except:
