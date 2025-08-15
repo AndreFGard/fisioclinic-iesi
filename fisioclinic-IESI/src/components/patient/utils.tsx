@@ -9,7 +9,7 @@ export const getStatusBadge = (status: string) => {
       className:
         "bg-blue-100 text-blue-800 border-blue-200 hover:bg-blue-200 dark:bg-blue-900 dark:text-blue-100",
     },
-    "em-tratamento": {
+    "Em tratamento": {
       label: "Em Tratamento",
       variant: "secondary" as const,
       className:

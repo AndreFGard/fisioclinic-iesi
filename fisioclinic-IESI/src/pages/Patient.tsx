@@ -35,29 +35,45 @@ export default function Patient() {
   const [isLoading, setIsLoading] = useState(false);
   const [activeTab, setActiveTab] = useState("personal-data");
 
-  // Carregar dados do paciente baseado no ID
+  // Carregar dados do paciente e consultas do backend
   useEffect(() => {
-    const fetchData = async () => {
-      if (id) {
-        const patient = await getPatient(id);
-        if (patient) {
-          setPatientData(patient);
+    if (!id) return;
+    setIsLoading(true);
+    // Buscar dados do paciente
+    getPatient(id)
+      .then((data) => {
+        // Garante que o id do paciente seja o da URL se não vier do backend
+        const converted: PatientData = {
+          id: String(data.id ?? id ?? ""),
+          nome: data.nome ?? "",
+          cpf: data.cpf ?? "",
+          nascimento: data.nascimento ? new Date(data.nascimento) : undefined,
+          tel1: data.tel1 ?? "",
+          tel2: data.tel2 ?? "",
+          bairro: data.bairro ?? "",
+          cidade: data.cidade ?? "",
+          genero: data.genero ?? "",
+          diagnostico: data.diagnostico ?? "",
+          disciplina: data.disciplina ?? "",
+          hospital: data.hospital ?? "",
+          doutor: data.doutor ?? "",
+          procura: data.procura ? new Date(data.procura) : undefined,
+          situacao: data.situacao ?? "",
+          prioridade: data.prioridade ?? "baixa",
+          obs: data.obs ?? "",
+        };
+        setPatientData(converted);
+      })
+      .catch((err) => {
+        console.error("Erro ao buscar paciente:", err);
+        setPatientData(null);
+      });
+    // Buscar consultas do paciente (mock)
+    const consultas = getConsultationsByPatient(id);
+    setConsultations(consultas);
+    setIsLoading(false);
+  }, [id]);
 
-          // Carregar consultas do paciente
-          const patientConsultations = getConsultationsByPatient(id);
-          setConsultations(patientConsultations);
-
-          // Carregar diffs mockados para o paciente (se existirem e não houver dados no localStorage)
-          const patientDiffs = getMedicalChartDiffsByPatient(id);
-          setMockDiffs(patientDiffs);
-        } else {
-          // Paciente não encontrado, redirecionar ou mostrar erro
-          navigate("/");
-        }
-      }
-    };
-    fetchData();
-  }, [id, navigate]);
 
   // Se os dados do paciente ainda não foram carregados, mostrar loading
   if (!patientData) {

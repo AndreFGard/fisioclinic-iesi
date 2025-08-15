@@ -46,15 +46,12 @@ with Session() as session:
         if isinstance(dados["procura"], str):
             dados["procura"] = date.fromisoformat(dados["procura"])
 
-        try:
-            fila = Fila(**dados)
-            session.add(fila)
-            session.commit()
-            session.refresh(fila)
-            return True
-        except:
-            session.rollback()
-            return False
+        fila = Fila(**dados)
+        session.add(fila)
+        session.commit()
+        session.refresh(fila)
+        return True
+
 
     def filtrar_filas(filters: dict = None, limit: int = 0):
         """
@@ -339,9 +336,17 @@ with Session() as session:
     def get_paciente_by_id(paciente_id):
         """Retorna o objeto Paciente ou None."""
         paciente = session.get(Paciente, paciente_id)
+        if paciente is None:
+            return {}
         return todict(paciente)
 
     # ---------- INSERÇÕES ----------
+
+    def get_patients():
+        with Session() as session:
+            x = session.query(Paciente)
+            return [(todict(y)) for y in x]
+
 
     def create_paciente(etc: dict):
         with Session() as session:

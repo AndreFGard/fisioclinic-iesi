@@ -30,7 +30,6 @@ export function patientsColumns(
 ) {
   const columns: ColumnDef<FilaDeEspera>[] = [
     { accessorKey: "nome", header: "Paciente" },
-    { accessorKey: "idade", header: "Idade", cell: ({ getValue }) => `${getValue()} anos` },
     { accessorKey: "tel1", header: "Telefone 1" },
     { accessorKey: "tel2", header: "Telefone 2" },
     { accessorKey: "diagnostico", header: "Diagnóstico" },

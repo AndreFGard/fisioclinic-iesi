@@ -24,7 +24,7 @@ export const mockPatientData: PatientData = {
   hospital: "Hospital das Clínicas",
   doctor: "Dr. João Silva",
   seekDate: new Date(2024, 0, 15),
-  status: "em-tratamento",
+  status: "Em tratamento",
   priority: "media", // Adicionar prioridade
   observations:
     "Paciente com histórico de dores lombares recorrentes. Apresenta melhora significativa após início do tratamento.",

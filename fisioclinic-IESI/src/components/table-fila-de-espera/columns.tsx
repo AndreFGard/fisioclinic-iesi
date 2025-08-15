@@ -26,11 +26,7 @@ export const columns = (
   onPriorityChange?: (id: string, newPriority: string) => void
 ): ColumnDef<FilaDeEspera>[] => [
   { accessorKey: "nome", header: "Nome" },
-  {
-    accessorKey: "idade",
-    header: () => <div className="text-center">Idade</div>,
-    cell: ({ row }) => <div className="text-center font-medium">{row.getValue("idade")} anos</div>,
-  },
+
   { accessorKey: "tel1", header: "Telefone 1" },
   { accessorKey: "tel2", header: "Telefone 2" },
   { accessorKey: "bairro", header: "Bairro" },

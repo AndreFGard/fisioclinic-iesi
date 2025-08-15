@@ -96,7 +96,7 @@ const mockAppointments: AppointmentRecord[] = [
   {
     id: "3",
     patientId: "3",
-    patientName: "Mariana Lima",
+    patientName: "Mariana mariano Lima",
     patientAge: 28,
     diagnosis: "Tendinite",
     date: "2025-08-16",

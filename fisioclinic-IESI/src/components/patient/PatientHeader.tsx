@@ -27,14 +27,17 @@ interface PatientHeaderProps {
 }
 
 export default function PatientHeader({
+  // Exemplo: pegar o id do paciente atual
   patientData,
   priorityOptions,
   onBack,
   onPriorityChange,
 }: PatientHeaderProps) {
+  // Pega o id do paciente atual corretamente
+  const pacienteId = patientData.id;
   const navigate = useNavigate();
   const [isEditingPriority, setIsEditingPriority] = useState(false);
-  const [tempPriority, setTempPriority] = useState(patientData.priority);
+  const [tempPriority, setTempPriority] = useState(patientData.prioridade);
 
   const handleSavePriority = () => {
     if (onPriorityChange) {
@@ -44,12 +47,14 @@ export default function PatientHeader({
   };
 
   const handleCancelPriority = () => {
-    setTempPriority(patientData.priority);
+    setTempPriority(patientData.prioridade);
     setIsEditingPriority(false);
   };
 
   return (
     <Card className="bg-card/80 backdrop-blur-sm border-0 shadow-medical mb-4 sm:mb-6">
+      {/* Exemplo de uso do id do paciente atual */}
+      <div className="text-xs text-muted-foreground mb-2">ID do paciente: {pacienteId}</div>
       <CardHeader className="p-4 sm:p-6">
         <div className="flex flex-col space-y-4 lg:flex-row lg:items-center lg:justify-between lg:space-y-0">
           <div className="flex flex-col space-y-3 sm:flex-row sm:items-center sm:space-y-0 sm:space-x-4">
@@ -68,22 +73,22 @@ export default function PatientHeader({
               </div>
               <div className="min-w-0 flex-1">
                 <CardTitle className="text-lg sm:text-xl lg:text-2xl font-bold text-foreground truncate">
-                  {patientData.fullName}
+                  {patientData.nome}
                 </CardTitle>
                 <CardDescription className="text-muted-foreground flex flex-col space-y-1 sm:flex-row sm:items-center sm:space-y-0 sm:space-x-2 text-sm">
-                  <span className="whitespace-nowrap">
-                    {calculateAge(patientData.birthDate)} anos
-                  </span>
+                  <div className="whitespace-nowrap">
+                    {calculateAge(patientData.nascimento)} anos
+                  </div>
                   <span className="hidden sm:inline">•</span>
                   <div className="flex items-center gap-2">
                     <div className="flex-shrink-0">
-                      {getStatusBadge(patientData.status)}
+                      {getStatusBadge(patientData.situacao)}
                     </div>
                     <span className="hidden sm:inline">•</span>
                     <div className="flex items-center gap-1">
                       {!isEditingPriority ? (
                         <>
-                          {getPriorityBadge(patientData.priority)}
+                          {getPriorityBadge(patientData.prioridade)}
                           <Button
                             variant="ghost"
                             size="sm"
@@ -145,7 +150,13 @@ export default function PatientHeader({
 
           <div className="flex flex-col space-y-2 sm:flex-row sm:items-center sm:space-y-0 sm:space-x-2 w-full lg:w-auto">
             <Button
-              onClick={() => navigate(`/consultation/${patientData.id}`)}
+              onClick={() => {
+                if (pacienteId) {
+                  navigate(`/consultation/${pacienteId}`);
+                } else {
+                  alert('ID do paciente não encontrado.');
+                }
+              }}
               className="flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 w-full sm:w-auto"
             >
               <PlayCircle className="h-4 w-4" />

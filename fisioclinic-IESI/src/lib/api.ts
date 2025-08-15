@@ -61,6 +61,28 @@ export async function createPatient(patient: PatientData){
         throw error;
     }
 }
+export async function createEnfileirado(patient: PatientData){
+    try {
+        const response = await fetch(`${apiUrl}/fila`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(patient),
+        });
+        console.log(JSON.stringify(response))
+        if (!response.ok) {
+            const errorMessage = `Erro ao criar o paciente: ${response.status} ${response.statusText}`;
+            throw new Error(errorMessage);
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error("Erro ao criar o paciente:", error);
+        throw error;
+    }
+}
+
 
 export async function getPatient(id: string): Promise<PatientData>{
     try {
@@ -147,3 +169,26 @@ export async function getWaitingQueueData(): Promise<FilaDeEspera[]> {
         throw error;
     }
 }
+
+export async function getPatientList(): Promise<FilaDeEspera[]> {
+    try {
+        const response = await fetch(`${apiUrl}/getpatients`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        if (!response.ok) {
+            const errorMessage = `Erro ao buscar a fila: ${response.status} ${response.statusText}`;
+            throw new Error(errorMessage);
+        }
+
+        const data: FilaDeEspera[] = await response.json();
+        return data;
+    } catch (error) {
+        console.error("Erro ao buscar a fila:", error);
+        throw error;
+    }
+}
+

@@ -139,8 +139,10 @@ def filtro_fila(filtros: dict):
 
 @app.post("/fila")
 def add_fila(c: fila_schema):
+    c.procura  = c.procura[0:10]
+    c.id = None
     if(emfileirar(c.model_dump())):
-        return {"add": "ok"}
+        return {"id": None}
     else:
         raise HTTPException(status_code=400, detail="Informações faltando ou mal formatadas")
 
@@ -177,7 +179,11 @@ def new_pront(u: pront_schema):
         return {"criado": "ok"}
     else:
         raise HTTPException(status_code=400, detail="Grupo não existe ou não é membro")
-    
+
+
+@app.get("/getpatients")
+def getpatients():
+    return get_patients()
 
 @app.post("/user/new")
 def new_user(u: user_schema):

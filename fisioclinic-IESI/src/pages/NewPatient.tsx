@@ -26,7 +26,7 @@ import DiagnosisSelect from "@/components/DiagnosisSelect";
 import { DatePicker } from "@/components/ui/date-picker";
 import { UserPlus, MapPin, Save, Stethoscope, ArrowLeft } from "lucide-react";
 
-import { createPatient, PatientData } from "@/lib/api";
+import { createEnfileirado, createPatient, PatientData } from "@/lib/api";
 const emptyPatient: PatientData = {
   nome: "",
   cpf: "",
@@ -61,11 +61,13 @@ const initialPatientData: PatientData = {
   hospital: "Hospital das Clínicas",
   doutor: "Dr. João Pereira",
   procura: new Date(2024, 2, 10),
-  situacao: "em-tratamento",
+  situacao: "Em tratamento",
   obs: "Paciente apresenta dor lombar crônica há 2 anos. Encaminhada para fisioterapia após avaliação médica.",
 };
 
-export default function NewPatient() {
+
+export default function NewPatient({ val }: { val: string }) {
+    const funfun = (val == "pat") ? createPatient : createEnfileirado;
   const [patientData, setPatientData] =
     useState<PatientData>(initialPatientData);
   const navigate = useNavigate();
@@ -142,13 +144,14 @@ export default function NewPatient() {
 
     try {
       // Aqui você implementaria a lógica de salvamento
-      const patientId =  await createPatient(patientData);
+      const patientId =  await funfun(patientData);
       console.log(JSON.stringify(patientId))
       toast({
               title: "Sucesso",
               description: `Paciente atualizado com sucesso com id: ${patientId["id"]}`,
             });
-      navigate(`/patient/${patientId['id']}`);
+      if (val != "pat"){ navigate("/receptionist")}
+      else {navigate(`/patient/${patientId['id']}`)}
       return;
     } catch (error) {
       console.error("Erro ao cadastrar paciente:", error);
@@ -478,7 +481,7 @@ export default function NewPatient() {
                         <SelectItem value="primeira-consulta">
                           Primeira Consulta
                         </SelectItem>
-                        <SelectItem value="em-tratamento">
+                        <SelectItem value="Em tratamento">
                           Em Tratamento
                         </SelectItem>
                         <SelectItem value="retorno">Retorno</SelectItem>

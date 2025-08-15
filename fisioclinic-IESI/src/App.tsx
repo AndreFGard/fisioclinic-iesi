@@ -27,7 +27,9 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/receptionist" element={<Receptionist />} />
-          <Route path="/new-patient" element={<NewPatient />} />
+          <Route path="/new-enfileirado" element={<NewPatient val={"eai"} />} />
+          <Route path="/new-patient" element={<NewPatient val={"pat"}/>} />
+
           <Route path="/patient/:id" element={<Patient />} />
 
           <Route path="/consultation/:id" element={<Consultation />} />

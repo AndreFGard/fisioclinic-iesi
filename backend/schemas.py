@@ -47,7 +47,7 @@ class pront_schema(BaseModel):
     grupo: Optional[int] = None
 
 class fila_schema(BaseModel):
-    id: Optional[int]
+    id: Optional[int|str]
     nome: str  
     tel1: str
     tel2: Optional[str] = None         

@@ -81,6 +81,19 @@ const Receptionist = () => {
           </span>
         </div>
 
+
+        {/* Botão Novo Paciente */}
+        <Button onClick={() => navigate("/new-patient")}>
+          <UserPlus className="mr-2 h-4 w-4" />
+          Novo Paciente
+        </Button>
+
+        {/* Botão Novo Enfileirado */}
+        <Button onClick={() => navigate("/new-enfileirado")}>
+          <UserPlus className="mr-2 h-4 w-4" />
+          Adicionar à fila
+        </Button>
+
         {/* Botões de Ação */}
         <div className="flex items-center space-x-3">
           <Button
@@ -96,6 +109,7 @@ const Receptionist = () => {
             Novo Paciente
           </Button>
         </div>
+
       </div>
 
 
