@@ -91,7 +91,7 @@ export const columns = (
         "Sem contato": "bg-gray-200 text-gray-800",
       };
 
-      if (!value) return <div className="text-center">Carregando...</div>;
+      if (!value) return <div className="text-center">Normal</div>;
 
       const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const novoStatus = e.target.value;
@@ -144,7 +144,7 @@ export const columns = (
         baixa: "bg-green-100 text-green-800",
       };
 
-      if (!value) return <div className="text-center">Carregando...</div>;
+      if (!value) return <div className="text-center">Normal</div>;
 
       return (
         <div className="flex justify-center">
