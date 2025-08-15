@@ -246,7 +246,8 @@ def getpr(id: int):
 #rota catch all pra produção
 from pathlib import Path
 from placeholders import filaData
-build_path = Path(__file__).parent / "dist"
+# Set build_path to the parent's dist directory (../fisioclinic-IESI/dist)
+build_path = Path(__file__).parent.parent / "fisioclinic-IESI" / "dist"
 
 try:
     app.mount("/", StaticFiles(directory=build_path, html=True), name="static")
