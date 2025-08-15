@@ -89,7 +89,7 @@ const Receptionist = () => {
             className="flex items-center gap-2"
           >
             <Calendar className="h-4 w-4" />
-            Agendar Consulta
+            Agendamentos
           </Button>
           <Button onClick={() => navigate("/new-patient")}>
             <UserPlus className="mr-2 h-4 w-4" />
