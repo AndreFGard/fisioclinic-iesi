@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { UserPlus } from "lucide-react";
 import { FilaDeEspera as ApiFilaDeEspera, FilaDeEspera, getWaitingQueueData, replaceEntireWaitingQueueRow } from "@/lib/api";
+import { Calendar } from "lucide-react"; // ou o ícone que você estiver usando
 
 const Receptionist = () => {
   const [appointments, setAppointments] = useState<FilaDeEspera[]>([]);
@@ -80,6 +81,7 @@ const Receptionist = () => {
           </span>
         </div>
 
+
         {/* Botão Novo Paciente */}
         <Button onClick={() => navigate("/new-patient")}>
           <UserPlus className="mr-2 h-4 w-4" />
@@ -91,6 +93,23 @@ const Receptionist = () => {
           <UserPlus className="mr-2 h-4 w-4" />
           Adicionar à fila
         </Button>
+
+        {/* Botões de Ação */}
+        <div className="flex items-center space-x-3">
+          <Button
+            variant="outline"
+            onClick={() => navigate("/lista-agendamentos")}
+            className="flex items-center gap-2"
+          >
+            <Calendar className="h-4 w-4" />
+            Agendamentos
+          </Button>
+          <Button onClick={() => navigate("/new-patient")}>
+            <UserPlus className="mr-2 h-4 w-4" />
+            Novo Paciente
+          </Button>
+        </div>
+
       </div>
 
 
