@@ -339,6 +339,8 @@ with Session() as session:
     def get_paciente_by_id(paciente_id):
         """Retorna o objeto Paciente ou None."""
         paciente = session.get(Paciente, paciente_id)
+        if paciente is None:
+            return {}
         return todict(paciente)
 
     # ---------- INSERÇÕES ----------

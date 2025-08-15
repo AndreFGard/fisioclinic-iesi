@@ -1,5 +1,7 @@
 export interface PatientData {
+  // Identificação
   id: string;
+
   // Dados pessoais
   nome: string;
   cpf: string;
@@ -19,7 +21,7 @@ export interface PatientData {
   doutor: string;
   procura: Date | undefined;
   situacao: string;
-  prioridade: "baixa" | "media" | "alta" | "urgente"; // Novo campo de prioridade
+  prioridade: "baixa" | "media" | "alta" | "urgente";
   obs: string;
 }
 
