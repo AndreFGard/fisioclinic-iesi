@@ -1,127 +1,126 @@
-# 📌 FisioClinic
-
-![Status do Projeto](https://img.shields.io/badge/status-em_desenvolvimento-yellow)
-![Backend](https://img.shields.io/badge/backend-NestJS-red)
-![Frontend](https://img.shields.io/badge/frontend-React-blueviolet)
-![Database](https://img.shields.io/badge/database-PostgreSQL-blue)
-
----
-
-## 📖 Tabela de Conteúdos
-- [📝 Descrição](#-descrição)
-- [🎯 Objetivo](#-objetivo)
-- [✨ Funcionalidades](#-funcionalidades)
-- [🚀 Tecnologias Utilizadas](#-tecnologias-utilizadas)
-- [⚙️ Como Executar o Projeto](#️-como-executar-o-projeto)
-- [📂 Estrutura do Projeto](#-estrutura-do-projeto)
-- [👥 Integrantes do Grupo](#-integrantes-do-grupo)
+<div align="center">
+  <img src="fisioclinic-IESI/public/logo.png" alt="Fisioclinic Logo" width="120" />
+  
+  <h1>Fisioclinic-IESI</h1>
+  <p><strong>Gestão de Clínica de Fisioterapia Universitária</strong></p>
+  <p>Uma solução completa para o gerenciamento de pacientes, agendamentos, prontuários e equipes em clínicas-escola de fisioterapia.</p>
+</div>
 
 ---
 
-## 📝 Descrição
+## ✨ Visão Geral
 
-O **FisioClinic** é um sistema web voltado para digitalizar e gerenciar os prontuários eletrônicos da clínica de fisioterapia da UFPE. O sistema centraliza as informações dos pacientes, tratamentos e atendimentos, permitindo que os profissionais de saúde acessem e atualizem os dados de forma rápida, segura e organizada.
-
-Além disso, o projeto visa otimizar os seguintes processos de negócio da clínica:
--   Registro e atualização de prontuários de forma digital.
--   Agendamento e controle de sessões de fisioterapia.
--   Histórico de atendimentos acessível para profissionais autorizados.
--   Geração de relatórios administrativos e clínicos.
--   Controle de permissões para diferentes tipos de usuários (recepção, fisioterapeutas, administração).
-
-#### Benefícios Esperados:
--   📈 **Aumento da produtividade** com a eliminação de registros manuais.
--   🔒 **Segurança e privacidade** dos dados de pacientes.
--   🕒 **Redução do tempo de atendimento** com acesso rápido às informações.
--   ♻️ **Sustentabilidade** com diminuição do uso de papel.
--   ✅ **Padronização** dos processos administrativos e clínicos.
+O <strong>Fisioclinic-IESI</strong> é um sistema robusto, moderno e seguro, desenvolvido para atender às necessidades de clínicas universitárias de fisioterapia. Ele integra cadastro de pacientes, fila de espera, agendamento, prontuários eletrônicos, gestão de profissionais e estudantes, tudo em uma interface intuitiva e responsiva.
 
 ---
 
-## 🎯 Objetivo
-
-Desenvolver uma solução integrada para gerenciar o fluxo de informações da clínica de fisioterapia, modernizando a gestão de prontuários e contribuindo para um atendimento mais ágil e eficiente.
-
----
-
-## ✨ Funcionalidades
-
--   [✅] Cadastro e gerenciamento de pacientes
--   [🚧] Criação e atualização de prontuários eletrônicos
--   [🚧] Agendamento de consultas e sessões
--   [✅] Controle de acesso por nível de usuário
--   [❌] Geração de relatórios administrativos e clínicos
-
-> **Legenda:**
-> -   ✅: Implementado
-> -   🚧: Em desenvolvimento
-> -   ❌: Não iniciado
+## 🚀 Funcionalidades Principais
+- **Fila de Mensagens**
+- **Cadastro e Gerenciamento de Pacientes**
+- **Fila de Espera Dinâmica**
+- **Agendamento Inteligente de Consultas**
+- **Prontuário Eletrônico Completo**
+- **Gestão de Equipes (Profissionais e Estudantes)**
+- **Filtros Avançados e Busca Rápida**
+- **Controle de Prioridade e Situação Clínica**
+- **Painéis Específicos para Recepção, Fisioterapeutas e Estudantes**
+- **Segurança e Privacidade dos Dados**
 
 ---
 
-## 🚀 Tecnologias Utilizadas
+## 🏗️ Estrutura do Projeto
 
-| Categoria          | Tecnologia                                                              |
-| :----------------- | :---------------------------------------------------------------------- |
-| **Backend** | **NestJS (TypeScript)**, **TypeORM**, **PostgreSQL**, **Class Validator** |
-| **Frontend** | **React (TypeScript)**, **Styled Components**, **Axios** |
-| **Banco de Dados** | **PostgreSQL** |
-| **DevOps** | **Docker** & **Docker Compose** |
-| **Controle de Versão** | **Git** & **GitHub** |
+```
+├── backend/                # API FastAPI, banco de dados, lógica de negócio
+│   ├── controllers.py      # Rotas e controladores principais
+│   ├── repositories/       # Camada de acesso a dados
+│   ├── services/           # Serviços e integrações (RabbitMQ, etc)
+│   ├── schemas.py          # Schemas Pydantic (validação)
+│   └── ...
+├── fisioclinic-IESI/       # Frontend React + Vite + Shadcn UI
+│   ├── src/
+│   │   ├── components/     # Componentes reutilizáveis
+│   │   ├── pages/          # Páginas principais
+│   │   ├── hooks/          # Hooks customizados
+│   │   └── lib/            # Funções utilitárias e API
+│   └── ...
+├── docker-compose.yml      # Orquestração de containers
+├── Dockerfile              # Imagem do backend
+└── README.md               # Este arquivo
+```
 
 ---
 
-## ⚙️ Como Executar o Projeto
+## ⚡ Como Executar Localmente
 
 ### Pré-requisitos
--   [Git](https://git-scm.com/)
--   [Docker](https://www.docker.com/products/docker-desktop/)
--   [Docker Compose](https://docs.docker.com/compose/install/)
+- [Node.js](https://nodejs.org/) >= 18
+- [Python](https://www.python.org/) >= 3.11
+- [Docker](https://www.docker.com/) (opcional, recomendado)
 
-### Passo a Passo
-1.  **Clone o repositório:**
-    ```bash
-    git clone [https://github.com/AndreFGard/fisioclinic-iesi.git](https://github.com/AndreFGard/fisioclinic-iesi.git)
-    ```
-2.  **Acesse o diretório do projeto:**
-    ```bash
-    cd fisioclinic-iesi
-    ```
-3.  **Configure as variáveis de ambiente do Backend:**
-    -   Crie uma cópia do arquivo `back-end/.env.example` e renomeie para `back-end/.env`.
-    -   Preencha as variáveis no arquivo `.env` conforme necessário.
-4.  **Suba os contêineres com Docker Compose:**
-    ```bash
-    docker-compose up -d --build
-    ```
-5.  **Acesse a aplicação no navegador:**
-    -   **Frontend:** `http://localhost:3000`
-    -   **Backend (API):** `http://localhost:3001`
+### 1. Clone o repositório
+```bash
+ git clone https://github.com/seu-usuario/fisioclinic-iesi.git
+ cd fisioclinic-iesi
+```
 
----
+### 2. Backend (API FastAPI)
 
-## 📂 Estrutura do Projeto
+#### Usando Docker (recomendado)
+```bash
+docker-compose up --build
+```
 
-├── back-end/
-│   ├── src/
-│   ├── .env.example
-│   ├── Dockerfile
-│   └── package.json
-├── front-end/
-│   ├── src/
-│   ├── Dockerfile
-│   └── package.json
-├── .gitignore
-├── docker-compose.yml
-└── README.md
+#### Ou manualmente
+```bash
+cd backend
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+uvicorn main:app --reload
+```
+
+### 3. Frontend (React + Vite)
+```bash
+cd fisioclinic-IESI
+npm install
+npm run dev
+```
+
+Acesse: [http://localhost:8080](http://localhost:8080)
 
 ---
 
-## 👥 Integrantes do Grupo
+## 🧩 Tecnologias Utilizadas
+- **Frontend:** React, Vite, TypeScript, Shadcn UI, TailwindCSS, React Query, React Router
+- **Backend:** FastAPI, SQLAlchemy, Pydantic, SQLite, RabbitMQ
+- **DevOps:** Docker, Docker Compose
 
-| Nome              | Função no Projeto           |
-| :---------------- | :-------------------------- |
-| André Felipe Gard | Backend & DevOps            |
-| `[Nome Completo]`   | Frontend                    |
-| `[Nome Completo]`   | Banco de Dados & Testes     |
-| `[Nome Completo]`   | Documentação & Requisitos |
+---
+
+## 📚 Documentação
+- O backend expõe uma API RESTful documentada automaticamente via Swagger em [http://localhost:8000/docs](http://localhost:8000/docs)
+- O frontend é modular, com componentes reutilizáveis e tipagem forte.
+
+---
+
+## 👥 Contribuição
+
+Contribuições são bem-vindas! Siga as etapas abaixo:
+1. Fork este repositório
+2. Crie uma branch (`git checkout -b feature/sua-feature`)
+3. Commit suas alterações (`git commit -m 'feat: minha contribuição'`)
+4. Push para o branch (`git push origin feature/sua-feature`)
+5. Abra um Pull Request
+
+---
+
+## 🛡️ Licença
+
+Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
+
+---
+
+<div align="center">
+  <strong>Fisioclinic-IESI</strong> — Gestão séria, eficiente e inovadora para clínicas universitárias de fisioterapia.
+</div>
