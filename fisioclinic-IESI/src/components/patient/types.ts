@@ -1,26 +1,26 @@
 export interface PatientData {
   id: string;
   // Dados pessoais
-  fullName: string;
+  nome: string;
   cpf: string;
-  birthDate: Date | undefined;
-  gender: string;
+  nascimento: Date | undefined;
+  genero: string;
 
   // Contato
-  cellphone: string;
-  cellphone2: string;
-  neighborhood: string;
-  city: string;
+  tel1: string;
+  tel2: string;
+  bairro: string;
+  cidade: string;
 
   // Dados clínicos
-  diagnosis: string;
-  area: string;
+  diagnostico: string;
+  disciplina: string;
   hospital: string;
-  doctor: string;
-  seekDate: Date | undefined;
-  status: string;
-  priority: "baixa" | "media" | "alta" | "urgente"; // Novo campo de prioridade
-  observations: string;
+  doutor: string;
+  procura: Date | undefined;
+  situacao: string;
+  prioridade: "baixa" | "media" | "alta" | "urgente"; // Novo campo de prioridade
+  obs: string;
 }
 
 export interface ConsultationRecord {

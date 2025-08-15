@@ -15,6 +15,7 @@ import {
   priorityOptions,
 } from "@/components/patient";
 import { useMedicalChart } from "@/hooks/useMedicalChart";
+import { getPatient } from "@/lib/api";
 
 export default function Patient() {
   const { id } = useParams<{ id: string }>();
@@ -36,23 +37,26 @@ export default function Patient() {
 
   // Carregar dados do paciente baseado no ID
   useEffect(() => {
-    if (id) {
-      const patient = getPatientData(id);
-      if (patient) {
-        setPatientData(patient);
+    const fetchData = async () => {
+      if (id) {
+        const patient = await getPatient(id);
+        if (patient) {
+          setPatientData(patient);
 
-        // Carregar consultas do paciente
-        const patientConsultations = getConsultationsByPatient(id);
-        setConsultations(patientConsultations);
+          // Carregar consultas do paciente
+          const patientConsultations = getConsultationsByPatient(id);
+          setConsultations(patientConsultations);
 
-        // Carregar diffs mockados para o paciente (se existirem e não houver dados no localStorage)
-        const patientDiffs = getMedicalChartDiffsByPatient(id);
-        setMockDiffs(patientDiffs);
-      } else {
-        // Paciente não encontrado, redirecionar ou mostrar erro
-        navigate("/");
+          // Carregar diffs mockados para o paciente (se existirem e não houver dados no localStorage)
+          const patientDiffs = getMedicalChartDiffsByPatient(id);
+          setMockDiffs(patientDiffs);
+        } else {
+          // Paciente não encontrado, redirecionar ou mostrar erro
+          navigate("/");
+        }
       }
-    }
+    };
+    fetchData();
   }, [id, navigate]);
 
   // Se os dados do paciente ainda não foram carregados, mostrar loading

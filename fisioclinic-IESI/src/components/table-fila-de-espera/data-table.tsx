@@ -33,6 +33,7 @@ export function FilaDeEsperaTable<TData, TValue>({
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
+  const [saveButtonText, setSaveButtonText] = React.useState("Salvar modificações");
 
   const table = useReactTable({
     data,
@@ -75,40 +76,45 @@ export function FilaDeEsperaTable<TData, TValue>({
             table.getColumn("situacao")?.setFilterValue(e.target.value)
           }
         >
-          <option value="">Todas as situações</option>
-          <option value="Fila de espera">Fila de espera</option>
-          <option value="Em tratamento">Em tratamento</option>
-          <option value="Triagem">Triagem</option>
-          <option value="Concluído">Concluído</option>
-          <option value="Não compareceu">Não compareceu</option>
-          <option value="Não conseguimos contato">Não conseguimos contato</option>
+          <option value="">Todas as disciplinas</option>
+          <option value="Ortopedia">Ortopédica</option>
+          <option value="Traumatologia">Traumatológica</option>
+          <option value="Cardiologia">Cardiologia / Cardiovascular</option>
+          <option value="Pneumologia">Pneumologia</option>
+          <option value="Neurologia">Neurológica</option>
+          <option value="Pediatria">Pediátrica</option>
+          <option value="Geriatrica">Geriátrica</option>
+          <option value="Desportiva">Desportiva / Esportiva</option>
+          <option value="Oncologica">Oncológica</option>
+          <option value="Uroginecologica">Uroginecológica / Pélvica</option>
+          <option value="Dermatofuncional">Dermatofuncional</option>
+          <option value="Ocupacional">Ocupacional / Ergonomia</option>
+          <option value="Aquatica">Aquática</option>
+          <option value="Fisioterapia">Fisioterapia</option>
         </select>
 
-        {/* BOTAO de salvar modificacoes*/ }
-        <Button
+      {/* Estado para controlar o texto do botão */}
+      {/*
+        Adicione este estado logo após os outros useState hooks:
+        const [saveButtonText, setSaveButtonText] = React.useState("Salvar modificações");
+      */}
+      <Button
         onClick={async () => {
           try {
             await Promise.all(changesLog.map(change => replaceEntireWaitingQueueRow(change)));
             setChangesLog([]); // Limpa o log após salvar
-            const originalText = "Salvar modificações";
-            const successText =  "✅ Modificcações Salvas";
-
-            // Temporariamente altera o texto do botão para "(Check) ok"
-            const button = document.querySelector(".save-button");
-            if (button) {
-              button.textContent = successText;
-              setTimeout(() => {
-                button.textContent = originalText;
-              }, 2000); // Volta ao texto original após 2 segundos
-            }
+            setSaveButtonText("✅ Modificações Salvas");
+            setTimeout(() => {
+              setSaveButtonText("Salvar modificações");
+            }, 2000);
           } catch (error) {
             alert("Ocorreu um erro ao salvar as modificações. Tente novamente.");
           }
         }}
-        disabled={changesLog.length === 0} // Desabilita o botão se não houver alterações
+        disabled={changesLog.length === 0}
         className="save-button bg-blue-600 text-white hover:bg-blue-700"
       >
-        Salvar modificações ({changesLog.length})
+        {saveButtonText} ({changesLog.length})
       </Button>
       </div>
 
